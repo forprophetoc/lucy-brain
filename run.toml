@@ -1,0 +1,5 @@
+# Live-send config. enabled=false kills ALL transmission instantly.
+[live_send]
+enabled = false   # DISARMED after live burst (13 sent, count=14/16). Flip to true to re-arm.
+ghl_location_id = "nABhWvCMp0bV0jtb6uLW"
+max_live_sends = 16

@@ -1,0 +1,26 @@
+# === Secrets / credentials — NEVER commit ===
+.env
+.env.*
+*.env
+*.key
+*.pem
+*secret*
+*token*
+credentials*
+
+# === Live runtime state + PII (real contact maps, counters, send state) ===
+data/
+live-map*.json
+*.live_count
+
+# === Raw datasets (defensive — controls build CSVs in-memory; never commit real data) ===
+contacts.csv
+events.csv
+*-dataset.csv
+*.dataset.csv
+
+# === Python / editor cruft ===
+__pycache__/
+*.pyc
+*.pyo
+*.bak
