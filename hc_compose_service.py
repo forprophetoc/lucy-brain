@@ -65,11 +65,24 @@ def compose(req: dict) -> dict:
         "service": ident.get("service") or "tub_refinish",
         "package": "", "estimate_amount": "", "tags": "", "persona_note": "",
     }
-    event = {
-        "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
-        "event_type": "inbound_reply", "scheduled_at": _now_iso(req),
-        "inbound_text": str(req.get("inbound_text") or ""), "expected_behavior": "",
-    }
+    # Proactive due-date sweep (TS-decided who's due; date math is NOT the brain's job).
+    # A non-inbound event_type means harness skips enforce_inbound_timing's never-silent
+    # floor (INBOUND_EVENT_TYPES = {"inbound_reply"}), so the brain's OWN send_decision
+    # governs a proactive draft. The inbound_reply path below stays byte-equivalent.
+    trigger = (req.get("trigger") or "inbound_reply").strip()
+    is_sweep = trigger in ("due_date_sweep", "proactive")
+    if is_sweep:
+        event = {
+            "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
+            "event_type": "due_date_followup", "scheduled_at": _now_iso(req),
+            "inbound_text": "", "expected_behavior": "",
+        }
+    else:
+        event = {
+            "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
+            "event_type": "inbound_reply", "scheduled_at": _now_iso(req),
+            "inbound_text": str(req.get("inbound_text") or ""), "expected_behavior": "",
+        }
     # Seam 1 — recall: replay the passed history VERBATIM into the brain's transcript
     # (oldest->newest), so prior facts (e.g. a price stated earlier) are recallable.
     # Recall comes from history ONLY, never from identity/contact fields.
