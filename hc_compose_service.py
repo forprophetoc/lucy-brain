@@ -17,10 +17,11 @@ stays DARK until Oscar flips LUCY_LIVE.
 Never-silent floor preserved: an inbound that is not a clean send_now-with-reply maps to
 escalate_human (never silent), matching the engine's own gate.
 
-v1 fidelity note: processes the current inbound as a single `inbound_reply` event through
-the EXACT run_bakeoff path the control gauntlet validates. `history` / `memory` are accepted
-(contract honored) but not yet replayed into the brain context — documented follow-up, not
-a silent drop.
+Fidelity note: processes the current inbound as a single `inbound_reply` event through
+the EXACT run_bakeoff path the control gauntlet validates. `history` is replayed VERBATIM
+into the brain's transcript (oldest->newest) via run_bakeoff(seed_history=...) so prior
+facts are recallable; the current inbound is the only scored turn. `memory` is accepted
+(contract honored) but not replayed.
 """
 import csv
 import io
@@ -69,8 +70,14 @@ def compose(req: dict) -> dict:
         "event_type": "inbound_reply", "scheduled_at": _now_iso(req),
         "inbound_text": str(req.get("inbound_text") or ""), "expected_behavior": "",
     }
+    # Seam 1 — recall: replay the passed history VERBATIM into the brain's transcript
+    # (oldest->newest), so prior facts (e.g. a price stated earlier) are recallable.
+    # Recall comes from history ONLY, never from identity/contact fields.
+    history = req.get("history") or []
+    seed_history = {cid: history} if history else None
     out = run_bakeoff(_csv([contact], CONTACT_COLS), _csv([event], EVENT_COLS),
-                      backend="claude", num_smoke_test_events=1)
+                      backend="claude", num_smoke_test_events=1,
+                      seed_history=seed_history)
     results = out.get("results") or []
     if not results:
         return {"reply": "", "send_decision": "escalate_human", "facts": {},
@@ -80,10 +87,14 @@ def compose(req: dict) -> dict:
     reply = (rec.get("suggested_customer_message") or "").strip()
     # Never-silent floor: clean send_now-with-reply -> send_now; anything else -> escalate_human.
     escalate = bool(rec.get("escalate_oscar")) or rec.get("send_decision") != "send_now" or not reply
+    # Seam 2 — scheduling: surface facts.followup_date from the brain when it resolved a
+    # stated timeline; omit (empty facts) when the brain emitted none. Inference-only; no send.
+    followup_date = (rec.get("followup_date") or "").strip()
+    facts = {"followup_date": followup_date} if followup_date else {}
     return {
         "reply": reply,
         "send_decision": "escalate_human" if escalate else "send_now",
-        "facts": {},  # brain schema has no followup_date output yet (documented)
+        "facts": facts,
         "language": rec.get("language") or "",
         "memory_facts_used": list(rec.get("memory_facts_used") or []),
         "reasoning": rec.get("rationale") or "",

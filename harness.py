@@ -183,6 +183,7 @@ class Recommendation:
     memory_facts_used: list = field(default_factory=list)   # prior-arc facts used this turn; [] if none
     escalate_oscar: bool = False                            # True -> flag Oscar (hand-off / set DND)
     escalation_reason: str = ""                             # why escalated; "" if not
+    followup_date: str = ""                                 # canonical YYYY-MM-DD from a stated timeline; "" if none
     phase: int = 1
     created_ts: float = field(default_factory=lambda: time.time())
 
@@ -258,6 +259,7 @@ Respond with ONLY a JSON object, no prose, with these keys:
   memory_facts_used: array of the specific prior facts you used this turn (e.g. ["package=gold", "price=451"]); [] if none
   escalate_oscar: boolean — true when this needs Oscar's attention/hand-off (do-not-contact request, legal/refund/safety, or anything you should not handle autonomously); else false
   escalation_reason: short string naming why (e.g. "do-not-contact request"); "" when escalate_oscar is false
+  followup_date: canonical YYYY-MM-DD when the customer states a timeline ("ready in January", "after we're back from Ohio next month", "call me in 3 weeks"), resolved relative to the provided local_time/now; "" when no timeline is stated. Do NOT invent a date when none is implied.
 """
 
 def build_user_prompt(context_brief: dict) -> str:
@@ -348,7 +350,8 @@ OUTPUT_INSTRUCTION = (
     "Output ONLY a single JSON object with EXACTLY these keys: "
     "action_type, confidence, message_to_oscar, rationale, evidence, "
     "suggested_customer_message, estimate_readiness, send_decision, "
-    "language, memory_facts_used, escalate_oscar, escalation_reason. "
+    "language, memory_facts_used, escalate_oscar, escalation_reason, "
+    "followup_date. "
     "language = ISO code of the language you wrote the customer message in "
     "(\"en\", \"es\", ...); use \"\" if there is no customer message. "
     "memory_facts_used = list of the specific prior facts you used this turn "
@@ -356,6 +359,9 @@ OUTPUT_INSTRUCTION = (
     "escalate_oscar = boolean true when this needs Oscar (do-not-contact request, "
     "legal/refund/safety, or anything you should not handle autonomously); else false. "
     "escalation_reason = short string naming why; \"\" when escalate_oscar is false. "
+    "followup_date = canonical YYYY-MM-DD resolved from the customer's stated timeline "
+    "relative to local_time (e.g. \"ready in January\", \"in 3 weeks\"); \"\" when no "
+    "timeline is stated. Do NOT invent a date when none is implied. "
     "No prose, no markdown fences."
 )
 
@@ -393,6 +399,7 @@ def _infer_result(
     memory_facts_used: Optional[List[str]] = None,
     escalate_oscar: bool = False,
     escalation_reason: str = "",
+    followup_date: str = "",
     usage: Any = None,
     cost_usd: Any = None,
     error: str = "",
@@ -412,6 +419,7 @@ def _infer_result(
         "memory_facts_used": list(memory_facts_used) if memory_facts_used else [],
         "escalate_oscar": bool(escalate_oscar),
         "escalation_reason": escalation_reason,
+        "followup_date": followup_date,
         "usage": usage,
         "cost_usd": cost_usd,
         "error": error,
@@ -519,6 +527,7 @@ def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
         memory_facts_used=rec.get("memory_facts_used", []),
         escalate_oscar=bool(rec.get("escalate_oscar", False)),
         escalation_reason=rec.get("escalation_reason", ""),
+        followup_date=rec.get("followup_date", ""),
         usage=usage,
         cost_usd=cost_usd,
         error="",
@@ -654,13 +663,36 @@ def enforce_inbound_timing(
     return recommendation
 
 
+def _seed_messages_from_history(history: List[Dict[str, Any]], now_ts: float) -> List[Message]:
+    # Replay a conversation history (oldest->newest) VERBATIM into LeadState.messages.
+    # customer -> sender "customer"; lucy -> sender "shop". Prior turns are seeded as-is;
+    # they are NOT re-scored or regenerated. ts uses the entry's value when parseable, else
+    # falls back to now_ts (transcript() preserves list order regardless of ts).
+    msgs: List[Message] = []
+    for h in history or []:
+        who = (h.get("from") or "").strip().lower()
+        text = str(h.get("text") or "")
+        sender = "customer" if who == "customer" else "shop"
+        raw_ts = h.get("ts")
+        try:
+            ts = float(raw_ts)
+        except (TypeError, ValueError):
+            try:
+                ts = to_timestamp(str(raw_ts))
+            except (ValueError, TypeError):
+                ts = now_ts
+        msgs.append(Message(ts=ts, sender=sender, text=text))
+    return msgs
+
+
 def run_bakeoff(
     contacts_csv_string: str,
     events_csv_string: str,
     backend: str,
     claude_api_key: Optional[str] = None,
     gemini_api_key: Optional[str] = None,
-    num_smoke_test_events: int = 12
+    num_smoke_test_events: int = 12,
+    seed_history: Optional[Dict[str, List[Dict[str, Any]]]] = None,
 ) -> Dict[str, Any]:
     # No-key guard: refuse to run if a metered API key is present. Lucy runs on the
     # logged-in `claude` subscription via `claude -p`; an ANTHROPIC_API_KEY would
@@ -688,10 +720,17 @@ def run_bakeoff(
             print(f"Warning: Contact {contact_id} not found for event {event['event_id']}")
             continue
 
+        first_seen = contact_id not in lead_states
         current_lead_state = lead_states.setdefault(contact_id, LeadState(
             lead_id=contact_id,
             contact_name=f"{contact['first_name']} {contact['last_name']}"
         ))
+        # Seam 1: pre-seed prior conversation VERBATIM (only on this contact's first event,
+        # before any scoring). Default seed_history={} -> byte-unchanged for controls.py.
+        if first_seen and seed_history and seed_history.get(contact_id):
+            now_for_seed = to_timestamp(event['scheduled_at'])
+            current_lead_state.messages = _seed_messages_from_history(
+                seed_history[contact_id], now_for_seed) + current_lead_state.messages
 
         now = datetime.fromisoformat(event['scheduled_at'])
         # Corrected timezone handling
@@ -736,6 +775,7 @@ def run_bakeoff(
                 memory_facts_used=list(raw_llm_output.get("memory_facts_used", [])),
                 escalate_oscar=bool(raw_llm_output.get("escalate_oscar", False)),
                 escalation_reason=raw_llm_output.get("escalation_reason", ""),
+                followup_date=raw_llm_output.get("followup_date", ""),
                 phase=raw_llm_output.get("phase", 1),
                 created_ts=now_timestamp,
             )
