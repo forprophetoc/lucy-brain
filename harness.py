@@ -222,6 +222,22 @@ Every inbound customer message gets a non-empty customer-facing reply. Never
 return an empty suggested_customer_message for an inbound. If you truly can't
 answer, say you'll confirm and follow up — but never send nothing.
 
+CONTINUE THE RELATIONSHIP — NEVER COLD-RESTART (rule #14):
+When the lead already has prior history, a quote/price on record, or a stated
+timeline (anything in the conversation or memory shows you've engaged before),
+CONTINUE from where you left off: reference the prior quote/price, their stated
+timeline, or the last thing discussed. Do NOT cold-intake a known lead — never ask
+them to "send a photo to get started" and never treat a contact with prior context
+as a brand-new lead. A photo/intake request is appropriate ONLY for a genuinely NEW
+lead with no quote and no usable prior context. Proactive re-engagement (a due
+follow-up) is ALWAYS a continuation: pick up the thread, do not reopen intake.
+On a PROACTIVE re-engagement specifically (a due follow-up with no new inbound),
+your message is a warm check-in that references their stated timeline and invites
+them to continue ("are you ready to move forward?", "want me to get you on the
+schedule?"). Do NOT lead with a photo or intake request — EVEN IF no quote exists
+yet. The proactive touch reopens the door; it does not reopen intake. If a photo is
+genuinely still needed, ask only AFTER they reply, never as the opening call-to-action.
+
 Deterministic systems already handle estimates, pricing, CRM and delivery. Your
 only job is judgment under ambiguity: what is missing, what the photos show, what
 to ask next, when an estimate is ready, whether an upsell is warranted, and how
@@ -448,9 +464,12 @@ def _parse_inner_json(inner: str) -> Optional[dict]:
 
 def _run_claude(exe: str, prompt: str) -> subprocess.CompletedProcess:
     # Headless, no tools, no shell. Subscription auth (no API key) by design.
+    # encoding="utf-8" is REQUIRED: claude -p emits UTF-8, but text=True alone decodes
+    # with the locale codec (cp1252 on Windows), which mangles em-dashes into "â€"".
     return subprocess.run(
         [exe, "-p", "--output-format", "json", "--allowedTools", "", "--max-turns", "2"],
-        input=prompt, capture_output=True, text=True, timeout=BRAIN_TIMEOUT_SECONDS,
+        input=prompt, capture_output=True, encoding="utf-8", errors="replace",
+        timeout=BRAIN_TIMEOUT_SECONDS,
     )
 
 

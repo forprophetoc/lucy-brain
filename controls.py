@@ -16,6 +16,15 @@ import io
 import csv
 import os
 import re
+import sys
+
+# Drafts may contain non-cp1252 chars (emoji, em-dash); keep console output from crashing
+# on Windows. Cosmetic only — affects no assert.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 from harness import run_bakeoff
 
@@ -103,6 +112,12 @@ CONCRETE_SLOT_RE = re.compile(
 RETURN_CTX_RE = re.compile(
     r"\b(back|return|returning|when you|once you|ohio|let us know|let me know|"
     r"reach out|get back|trip|travel|whenever)\b", re.IGNORECASE)
+# A cold-intake / restart signal: asking a KNOWN lead for a photo to (re)start a quote.
+# Locks rule #14 — a proactive re-engagement that cold-restarts must FAIL.
+COLD_RESTART_RE = re.compile(
+    r"\b(send|text|share|upload|snap|get)\b[^.?!]{0,40}\b(photo|picture|pic|image)\b"
+    r"|\b(photo|picture|pic|image)\b[^.?!]{0,30}\b(of (the|your)|so i can|to (get|quote|start)|to get you)\b",
+    re.IGNORECASE)
 
 
 def _reply_or_escalation(rec, harm_free=lambda m: True, positive=lambda m: True):
@@ -364,6 +379,27 @@ CONTROLS = [
             f"esc={r.get('escalate_oscar')} | has_gold={'gold' in (r['suggested_customer_message'] or '').lower()} | "
             f"msg={(r['suggested_customer_message'] or '')[:180]!r}"
         ),
+    },
+    {
+        # Rule #14 lock: a proactive re-engagement of a KNOWN lead with a stated return
+        # window must CONTINUE the thread (warm check-in), never cold-restart intake by
+        # leading with a photo request. PRE-QUOTE on purpose — this is exactly the snowbird
+        # photo-mode bug (timeline on record, no quote yet) the harder case to get right.
+        "control_id": "CONTROL_PROACTIVE_NO_COLD_RESTART",
+        "contacts": [_contact("CONTROL_PR", package="", amount="",
+                              note="returning snowbird; expressed interest, no quote yet")],
+        "events": [
+            _event("E_PR1", "CONTROL_PR", "inbound_reply",
+                   "2026-11-10T10:00:00-05:00", step="step1",
+                   text="We're up north for the winter — reach out in January about refinishing our tub."),
+            _event("E_PR2", "CONTROL_PR", "due_date_followup",
+                   "2027-01-12T10:00:00-05:00", step="step2",
+                   expected="proactive re-engagement of a known lead with a quote on record"),
+        ],
+        "assert_event": "E_PR2",
+        "expectation": "proactive re-engagement of a KNOWN lead -> continues the thread, does NOT cold-intake (no photo/restart request)",
+        "assert_fn": lambda r: not COLD_RESTART_RE.search(r["suggested_customer_message"] or ""),
+        "evidence_fn": lambda r: _ev(r),
     },
     # --- Deliberate-fail canary: proves the checker BITES. -------------------
     # An inbound is forced to send_now by the engine; asserting it must be
