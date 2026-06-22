@@ -89,7 +89,7 @@ def compose(req: dict) -> dict:
     history = req.get("history") or []
     seed_history = {cid: history} if history else None
     out = run_bakeoff(_csv([contact], CONTACT_COLS), _csv([event], EVENT_COLS),
-                      backend="claude", num_smoke_test_events=1,
+                      backend=os.environ.get("HC_BACKEND", "claude"), num_smoke_test_events=1,
                       seed_history=seed_history)
     results = out.get("results") or []
     if not results:

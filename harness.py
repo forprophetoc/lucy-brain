@@ -473,6 +473,85 @@ def _run_claude(exe: str, prompt: str) -> subprocess.CompletedProcess:
     )
 
 
+# Lucy's brain model (Decision #1). Used by the metered API backend (#6/#13 production brain).
+ANTHROPIC_MODEL = "claude-sonnet-4-6"
+
+
+def _infer_claude_api(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
+    """Metered Anthropic Messages API inference path (Decision #6/#13 production brain).
+
+    Byte-for-byte the same prompt and JSON parsing as _infer_claude (the OAuth claude -p
+    path), but calls the Messages API on the metered key instead of the subscription CLI.
+    SYSTEM_PROMPT rides as `system`; the rendered event + OUTPUT_INSTRUCTION as the user
+    turn. Best-effort; never throws. Same one-retry-on-bad-JSON contract."""
+    import anthropic  # local import: only the API backend needs the SDK
+
+    system = SYSTEM_PROMPT
+    user = build_user_prompt(_model_facing_context(context)) + "\n\n" + OUTPUT_INSTRUCTION
+    for cheat in _CHEAT_FIELDS:
+        if cheat in system or cheat in user:
+            raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
+
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+
+        def _call(extra: str = ""):
+            msg = client.messages.create(
+                model=ANTHROPIC_MODEL,
+                max_tokens=2048,
+                system=system,
+                messages=[{"role": "user", "content": user + extra}],
+            )
+            text = "".join(
+                getattr(b, "text", "") for b in msg.content if getattr(b, "type", "") == "text"
+            )
+            return text, getattr(msg, "usage", None)
+
+        inner, usage = _call()
+    except Exception as e:  # transport / auth / rate-limit — surface, never crash the loop
+        return _infer_result(message_to_oscar=_redact_tokens(str(e)), error="api_error")
+
+    rec = _parse_inner_json(inner)
+    if rec is None:
+        try:
+            inner, usage = _call("\n\nReturn ONLY valid JSON, nothing else.")
+            rec = _parse_inner_json(inner)
+        except Exception:
+            rec = None
+    if rec is None:
+        return _infer_result(message_to_oscar="model did not return valid JSON", error="bad_json")
+
+    try:
+        ActionType(rec.get("action_type"))
+    except ValueError:
+        return _infer_result(message_to_oscar="invalid action_type from model", error="bad_action_type")
+
+    usage_d = None
+    if usage is not None:
+        usage_d = {
+            "input_tokens": getattr(usage, "input_tokens", None),
+            "output_tokens": getattr(usage, "output_tokens", None),
+        }
+    return _infer_result(
+        action_type=rec.get("action_type"),
+        confidence=rec.get("confidence"),
+        message_to_oscar=rec.get("message_to_oscar", ""),
+        rationale=rec.get("rationale", ""),
+        evidence=rec.get("evidence", []),
+        suggested_customer_message=rec.get("suggested_customer_message"),
+        estimate_readiness=rec.get("estimate_readiness"),
+        send_decision=rec.get("send_decision", "silent"),
+        language=rec.get("language", ""),
+        memory_facts_used=rec.get("memory_facts_used", []),
+        escalate_oscar=bool(rec.get("escalate_oscar", False)),
+        escalation_reason=rec.get("escalation_reason", ""),
+        followup_date=rec.get("followup_date", ""),
+        usage=usage_d,
+        cost_usd=None,
+        error="",
+    )
+
+
 def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
     # a) PROMPT — render the event the way the harness shows the model, minus cheat fields.
     prompt = (
@@ -559,7 +638,13 @@ def infer(
     claude_api_key: Optional[str] = None,
     gemini_api_key: Optional[str] = None,
 ) -> Dict[str, Any]:
-    # Single-engine: Lucy runs on Claude via headless `claude -p`.
+    # Production brain (Decision #6/#13): metered Anthropic Messages API on claude-sonnet-4-6.
+    if backend == "api":
+        key = claude_api_key or os.environ.get("ANTHROPIC_API_KEY")
+        if not key:
+            return _infer_result(message_to_oscar="no API key for backend=api", error="no_api_key")
+        return _infer_claude_api(context, key)
+    # Testing engine: Lucy runs on Claude via headless `claude -p` (OAuth subscription).
     if backend == "claude":
         return _infer_claude(context)
     # backend == 'gemini' (Harness B — dead): original stub left intact, not implemented.
@@ -713,10 +798,11 @@ def run_bakeoff(
     num_smoke_test_events: int = 12,
     seed_history: Optional[Dict[str, List[Dict[str, Any]]]] = None,
 ) -> Dict[str, Any]:
-    # No-key guard: refuse to run if a metered API key is present. Lucy runs on the
-    # logged-in `claude` subscription via `claude -p`; an ANTHROPIC_API_KEY would
-    # silently switch that to metered billing.
-    if os.environ.get("ANTHROPIC_API_KEY"):
+    # No-key guard (OAuth path only): refuse to run the `claude` (claude -p subscription)
+    # backend if a metered API key is present — it would silently switch that to metered
+    # billing. The `api` backend (Decision #6/#13 production brain) INTENTIONALLY uses the
+    # metered key, so the guard does not apply there.
+    if backend != "api" and os.environ.get("ANTHROPIC_API_KEY"):
         raise SystemExit("ANTHROPIC_API_KEY is set — refusing to run (would switch claude -p to metered billing).")
 
     contacts_data = parse_csv(contacts_csv_string)

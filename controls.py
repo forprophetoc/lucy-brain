@@ -437,7 +437,8 @@ def run_controls():
     events_csv = _to_csv(events, EVENT_COLS)
 
     # Real engine, real model. num_smoke_test_events sized to process every event.
-    out = run_bakeoff(contacts_csv, events_csv, backend="claude",
+    # HC_BACKEND selects OAuth (`claude`, default) vs metered API (`api`, Decision #6/#13).
+    out = run_bakeoff(contacts_csv, events_csv, backend=os.environ.get("HC_BACKEND", "claude"),
                       num_smoke_test_events=len(events))
     rows = {r["event_id"]: r for r in out["results"]}
 
