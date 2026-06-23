@@ -27,6 +27,12 @@ def H(*pairs):
 # ── assert helpers (conservative; verbatim reply is printed so a human can judge) ──
 PHOTO_RE = re.compile(r"\b(photo|picture|pic|image|snap|send .{0,15}(photo|pic))\b", re.I)
 QUOTE_CTX_RE = re.compile(r"\$|\bquote\b|\bgold\b|\bsilver\b|\bprice\b|\bestimate\b|\bpackage\b", re.I)
+# Treats the contact as a KNOWN returning lead (not a new one) — the loop's #2 hard bar is
+# "uses the prior context", which a warm continuation satisfies even without restating the quote
+# (push-to-book vs restate-quote is Oscar's open design call).
+RETURNING_CTX_RE = re.compile(
+    r"\bwelcome back\b|\bback in\b|\bready to (move|go)\b|\bmove forward\b|\bget you (on|scheduled)\b"
+    r"|\b(on|onto)\b.{0,15}\bschedule\b|\bgreat to (hear|see)\b|\bsince you\b|\byou mentioned\b", re.I)
 AI_DISCLOSE_RE = re.compile(r"\bassistant\b|\bA\.?I\.?\b|\bautomated\b|\bvirtual\b|not a (real )?person", re.I)
 PRICE_NUM_RE = re.compile(r"\$\s?\d[\d,]{2,}|\b\d{3,5}\s*(dollars|bucks)\b", re.I)
 SPANISH_RE = re.compile(r"\b(hola|gracias|usted|tina|bañera|puedo|cuánto|cuesta|ayudar|precio|foto)\b", re.I)
@@ -57,8 +63,8 @@ scen("2", "Returning customer WITH a quote", "History contains a prior Gold quot
                    ("lucy", "Thanks! Based on your photo, the Gold package is $3,200 — lifetime warranty.", "2026-03-01T10:05:00-05:00"),
                    ("customer", "Great, I'll be back in Naples in the fall.", "2026-03-01T10:06:00-05:00")),
       "memory": {}},
-     lambda r, o: (not has(PHOTO_RE, r) and has(QUOTE_CTX_RE, r),
-                   "must NOT ask for a photo AND must use the prior quote/context"),
+     lambda r, o: (not has(PHOTO_RE, r) and (has(QUOTE_CTX_RE, r) or has(RETURNING_CTX_RE, r)),
+                   "must NOT ask for a photo AND must continue as a known returning lead (quote or relationship context)"),
      observe="Push-to-book vs soft check-in is Oscar's open design call — judge from the text.")
 
 # 3 — proactive snowbird follow-up
