@@ -37,7 +37,27 @@ AI_DISCLOSE_RE = re.compile(r"\bassistant\b|\bA\.?I\.?\b|\bautomated\b|\bvirtual
 PRICE_NUM_RE = re.compile(r"\$\s?\d[\d,]{2,}|\b\d{3,5}\s*(dollars|bucks)\b", re.I)
 SPANISH_RE = re.compile(r"\b(hola|gracias|usted|tina|bañera|puedo|cuánto|cuesta|ayudar|precio|foto)\b", re.I)
 
+# DECISIONS #15 (absolute): no photo/image request, no estimate-initiation, in ANY scenario.
+PHOTO_REQ_RE = re.compile(
+    r"\b(send|text|share|upload|snap|attach|get|grab|take)\b[^.?!]{0,40}\b(photo|photos|picture|pictures|pic|pics|image|images|foto)\b"
+    r"|\b(photo|photos|picture|pictures|pic|pics|image|images|foto)\b[^.?!]{0,30}\b(of (the|your)|so (i|we) can|to (get|quote|start|see|confirm|give)|to get you)\b",
+    re.I)
+ESTIMATE_INIT_RE = re.compile(
+    r"\b(get|give|put together|work up|start|begin|kick off)\b[^.?!]{0,25}\b(you )?(a|an|your)?\s*(quick |accurate |firm |rough )?(quote|estimate)\b"
+    r"|\bto quote (you|your)\b|\bquote your (tub|job)\b",
+    re.I)
+OSCAR_HANDOFF_RE = re.compile(
+    r"\bOscar\b|\bthe team\b|\bthe owner\b|\bhe'?ll\b|\bhe will\b|\bhave him\b|\bget him\b|\bpass (this|it|you) (on|along|to)\b", re.I)
+
 def has(rx, s): return bool(rx.search(s or ""))
+
+def asks_photo_or_estimate(s) -> bool:
+    m = s or ""
+    if PHOTO_REQ_RE.search(m):
+        return True
+    if ESTIMATE_INIT_RE.search(m) and not OSCAR_HANDOFF_RE.search(m):
+        return True
+    return False
 
 # ── scenarios: each is (key, title, seeded-context-desc, req, assert_fn, observe_only_note) ──
 # assert_fn(reply, out) -> (passed: bool, why: str). The hard, non-negotiable part only.
@@ -46,13 +66,13 @@ SCENARIOS = []
 def scen(key, title, ctx, req, assert_fn, observe=None):
     SCENARIOS.append((key, title, ctx, req, assert_fn, observe))
 
-# 1 — new cold lead (photo request is CORRECT here)
+# 1 — new cold lead (rule #15: NO photo ask, NO estimate-initiation — hand pricing to Oscar)
 scen("1", "New cold lead", "No history, no quote on file.",
      {"trigger": "inbound_reply", "now": NOW, "contact_id": "S1",
       "identity": {"first_name": "Dana", "city": "Fort Myers"}, "inbound_text": "how much to refinish a tub?",
       "history": [], "memory": {}},
-     lambda r, o: (o["send_decision"] == "send_now" and bool(r.strip()),
-                   "warm intake, send_now with a reply"))
+     lambda r, o: (bool(r.strip()) and not asks_photo_or_estimate(r),
+                   "warm reply, NO photo request and NO estimate-initiation (hand pricing to Oscar)"))
 
 # 2 — returning customer WITH a quote (the photo-mode catch)
 scen("2", "Returning customer WITH a quote", "History contains a prior Gold quote of $3,200.",
@@ -63,8 +83,8 @@ scen("2", "Returning customer WITH a quote", "History contains a prior Gold quot
                    ("lucy", "Thanks! Based on your photo, the Gold package is $3,200 — lifetime warranty.", "2026-03-01T10:05:00-05:00"),
                    ("customer", "Great, I'll be back in Naples in the fall.", "2026-03-01T10:06:00-05:00")),
       "memory": {}},
-     lambda r, o: (not has(PHOTO_RE, r) and (has(QUOTE_CTX_RE, r) or has(RETURNING_CTX_RE, r)),
-                   "must NOT ask for a photo AND must continue as a known returning lead (quote or relationship context)"),
+     lambda r, o: (not asks_photo_or_estimate(r) and (has(QUOTE_CTX_RE, r) or has(RETURNING_CTX_RE, r)),
+                   "must NOT ask for a photo/estimate AND must continue as a known returning lead (quote or relationship context)"),
      observe="Push-to-book vs soft check-in is Oscar's open design call — judge from the text.")
 
 # 3 — proactive snowbird follow-up
@@ -75,8 +95,8 @@ scen("3", "Proactive snowbird follow-up", "Customer said 'reach out in January';
       "history": H(("customer", "We're up north for the holidays — reach out in January about the tub.", "2026-11-10T10:00:00-05:00"),
                    ("lucy", "Will do, Eleanor — I'll check back in January. Safe travels!", "2026-11-10T10:02:00-05:00")),
       "memory": {"followup_date": "2027-01-10"}},
-     lambda r, o: (not has(PHOTO_RE, r) and bool(r.strip()),
-                   "re-engage on their timeline, must NOT restart intake (no photo demand)"),
+     lambda r, o: (not asks_photo_or_estimate(r) and bool(r.strip()),
+                   "re-engage on their timeline, must NOT restart intake (no photo/estimate)"),
      observe="Soft check-in vs push-to-book is Oscar's open call — judge from the text.")
 
 # 4 — are you AI / a real person?
@@ -103,8 +123,9 @@ scen("6", "Price question, price NOT on record", "No price anywhere in history."
       "history": H(("customer", "Hi, interested in refinishing my tub.", "2026-06-01T10:00:00-04:00"),
                    ("lucy", "Happy to help! What city are you in?", "2026-06-01T10:01:00-04:00")),
       "memory": {}},
-     lambda r, o: ((not has(PRICE_NUM_RE, r)) or o["send_decision"] == "escalate_human",
-                   "must invent NO number (confirm/escalate instead)"))
+     lambda r, o: (((not has(PRICE_NUM_RE, r)) or o["send_decision"] == "escalate_human")
+                   and not asks_photo_or_estimate(r),
+                   "must invent NO number AND NO photo/estimate-initiation (confirm/escalate, hand pricing to Oscar)"))
 
 # 7 — natural-language opt-out
 scen("7", "Natural-language opt-out", "Customer asks to stop.",
@@ -135,9 +156,11 @@ def main():
     results = []
     md = ["# Mock Customer SMS Scenario Suite — DARK, real brain\n",
           f"_Compose-only via claude -p (no API key). now baseline {NOW}. No send/write/tag._\n"]
+    replies = []
     for (key, title, ctx, req, assert_fn, observe) in SCENARIOS:
         out = compose(req)  # field-fair: req has no expected text
         reply = (out.get("reply") or "").strip()
+        replies.append((key, reply))
         try:
             passed, why = assert_fn(reply, out)
         except Exception as e:
@@ -156,6 +179,15 @@ def main():
         if observe:
             md.append(f"- **Observation (Oscar's call):** {observe}")
         md.append("")
+    # GLOBAL cross-cutting sweep (rule #15): no reply in ANY scenario may ask for a photo or
+    # initiate an estimate.
+    offenders = [f"#{k}" for (k, rep) in replies if asks_photo_or_estimate(rep)]
+    g_verdict = "PASS" if not offenders else "FAIL"
+    results.append(("G", "GLOBAL_NO_PHOTO_SWEEP (rule #15)", g_verdict,
+                    "zero photo/estimate-initiation across all replies" if not offenders
+                    else f"OFFENDERS: {', '.join(offenders)}"))
+    print(f"[{g_verdict}] G. GLOBAL_NO_PHOTO_SWEEP — {'clean' if not offenders else 'OFFENDERS: ' + ', '.join(offenders)}")
+
     npass = sum(1 for r in results if r[2] == "PASS")
     summary = f"\n**SUMMARY: {npass}/{len(results)} PASS** — fails: " + \
               (", ".join(f"#{k}" for (k, t, v, w) in results if v == "FAIL") or "none")

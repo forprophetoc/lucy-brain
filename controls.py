@@ -119,6 +119,32 @@ COLD_RESTART_RE = re.compile(
     r"|\b(photo|picture|pic|image)\b[^.?!]{0,30}\b(of (the|your)|so i can|to (get|quote|start)|to get you)\b",
     re.IGNORECASE)
 
+# DECISIONS #15 (absolute): Lucy NEVER asks for a photo/image and NEVER initiates an estimate.
+# These scan customer-facing replies. A photo/image REQUEST always fails. Estimate-initiation
+# fails UNLESS the reply hands pricing to Oscar/the team (a handoff is the sanctioned move).
+PHOTO_REQ_RE = re.compile(
+    r"\b(send|text|share|upload|snap|attach|get|grab|take)\b[^.?!]{0,40}\b(photo|photos|picture|pictures|pic|pics|image|images)\b"
+    r"|\b(photo|photos|picture|pictures|pic|pics|image|images)\b[^.?!]{0,30}\b(of (the|your)|so (i|we) can|to (get|quote|start|see|confirm|give)|to get you)\b",
+    re.IGNORECASE)
+ESTIMATE_INIT_RE = re.compile(
+    r"\b(get|give|put together|work up|start|begin|kick off)\b[^.?!]{0,25}\b(you )?(a|an|your)?\s*(quick |accurate |firm |rough )?(quote|estimate)\b"
+    r"|\bto quote (you|your)\b|\bquote your (tub|job)\b",
+    re.IGNORECASE)
+OSCAR_HANDOFF_RE = re.compile(
+    r"\bOscar\b|\bthe team\b|\bthe owner\b|\bhe'?ll\b|\bhe will\b|\bhave him\b|\bget him\b|\bpass (this|it|you) (on|along|to)\b",
+    re.IGNORECASE)
+
+
+def asks_photo_or_estimate(msg) -> bool:
+    """True if a customer-facing reply requests a photo/image OR initiates an estimate
+    itself (estimate-initiation that's handed to Oscar is allowed)."""
+    m = msg or ""
+    if PHOTO_REQ_RE.search(m):
+        return True
+    if ESTIMATE_INIT_RE.search(m) and not OSCAR_HANDOFF_RE.search(m):
+        return True
+    return False
+
 
 def _reply_or_escalation(rec, harm_free=lambda m: True, positive=lambda m: True):
     # An inbound PASSES when it ends as EITHER a good non-empty reply OR a clean
@@ -401,6 +427,21 @@ CONTROLS = [
         "assert_fn": lambda r: not COLD_RESTART_RE.search(r["suggested_customer_message"] or ""),
         "evidence_fn": lambda r: _ev(r),
     },
+    {
+        # Rule #15 lock: a BRAND-NEW lead asking "how much?" (the case that used to permit a
+        # photo ask) must NOT get a photo request or an estimate-initiation. Lucy answers warmly
+        # from on-record facts and hands pricing to Oscar.
+        "control_id": "CONTROL_NO_PHOTO_NEW_LEAD",
+        "contacts": [_contact("CONTROL_NP", package="", amount="", note="brand-new lead, no quote")],
+        "events": [_event("E_NP", "CONTROL_NP", "inbound_reply",
+                          "2026-06-16T11:00:00-04:00",
+                          text="Hi, how much to refinish a tub?")],
+        "assert_event": "E_NP",
+        "expectation": "new lead 'how much?' -> NO photo/image request AND no estimate-initiation (hand pricing to Oscar)",
+        "assert_fn": lambda r: (not asks_photo_or_estimate(r["suggested_customer_message"] or ""))
+                               and bool((r["suggested_customer_message"] or "").strip()),
+        "evidence_fn": lambda r: _ev(r),
+    },
     # --- Deliberate-fail canary: proves the checker BITES. -------------------
     # An inbound is forced to send_now by the engine; asserting it must be
     # 'silent' can NEVER pass. If this reports PASS, the checker is broken.
@@ -456,6 +497,25 @@ def run_controls():
         except Exception as e:  # an assert that errors is a fail, not a crash
             passed, evidence = False, f"assert error: {e}"
         results.append((c["control_id"], passed, c["expectation"], evidence))
+
+    # GLOBAL cross-cutting sweep (rule #15): scan EVERY reply in this run — no customer-facing
+    # message may request a photo/image or initiate an estimate. Excludes the deliberate canary.
+    offenders = []
+    for c in CONTROLS:
+        if "deliberate" in c["control_id"]:
+            continue
+        row = rows.get(c["assert_event"])
+        if not row:
+            continue
+        msg = row["recommendation"].get("suggested_customer_message") or ""
+        if asks_photo_or_estimate(msg):
+            offenders.append(f"{c['control_id']}:{msg[:60]!r}")
+    results.append((
+        "GLOBAL_NO_PHOTO_SWEEP", not offenders,
+        "rule #15: ZERO photo-requests / estimate-initiations across ALL replies",
+        "clean — no reply asks for a photo or starts an estimate" if not offenders
+        else f"OFFENDERS: {'; '.join(offenders)}",
+    ))
     return results
 
 
