@@ -72,9 +72,16 @@ def compose(req: dict) -> dict:
     # governs a proactive draft. The inbound_reply path below stays byte-equivalent.
     trigger = (req.get("trigger") or "inbound_reply").strip()
     is_sweep = trigger in ("due_date_sweep", "proactive")
-    # Stage 5: thread V4's proactive follow-up context ({touch, estimate_viewed, estimate_url,
-    # booking_link}) to the brain as a JSON string on the event. Sweep-only; "" for inbound.
-    followup_json = json.dumps(req.get("followup")) if (is_sweep and req.get("followup")) else ""
+    # Thread V4's proactive follow-up context ({touch, estimate_viewed, estimate_url,
+    # booking_link}, sweep-only) AND the availability openings (Stage 3 — BOTH triggers) to the
+    # brain as a JSON string on the event. build_context surfaces availability as
+    # current_event.availability and keeps the proactive-touch followup object separate.
+    fu: dict = {}
+    if is_sweep and isinstance(req.get("followup"), dict):
+        fu.update(req["followup"])
+    if req.get("availability"):
+        fu["availability"] = req["availability"]
+    followup_json = json.dumps(fu) if fu else ""
     if is_sweep:
         event = {
             "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
@@ -86,6 +93,7 @@ def compose(req: dict) -> dict:
             "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
             "event_type": "inbound_reply", "scheduled_at": _now_iso(req),
             "inbound_text": str(req.get("inbound_text") or ""), "expected_behavior": "",
+            "followup_json": followup_json,
         }
     # Seam 1 — recall: replay the passed history VERBATIM into the brain's transcript
     # (oldest->newest), so prior facts (e.g. a price stated earlier) are recallable.
