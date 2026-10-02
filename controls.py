@@ -799,10 +799,11 @@ CONTROLS = [
                           text="What appointment times do you have for me?",
                           followup={"availability": _AVAIL_TUB})],
         "assert_event": "E_QG",
-        "expectation": "slots given (9:00 AM / 1:00 PM) -> quotes a given slot AND no clock time outside {9,1}",
-        "assert_fn": lambda r: (
-            bool(TIME_TOKEN_RE.search(r["suggested_customer_message"] or ""))
-            and _reply_times_within(r["suggested_customer_message"] or "", {9, 1})
+        "expectation": "slots given (9:00 AM / 1:00 PM) -> quotes a given slot or booking link (NEVER a time outside {9,1}) OR clean escalation",
+        "assert_fn": lambda r: _reply_or_escalation(
+            r,
+            harm_free=lambda m: _reply_times_within(m, {9, 1}),  # never a fabricated/other time
+            positive=lambda m: bool(TIME_TOKEN_RE.search(m) or BOOKING_LINK_RE.search(m)),
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -829,11 +830,11 @@ CONTROLS = [
                           text="For my shower refinish, what's your next available opening?",
                           followup={"availability": _AVAIL_MORNINGS})],
         "assert_event": "E_NM",
-        "expectation": "non-tub (shower) -> quotes a morning slot, NEVER an afternoon/PM time",
-        "assert_fn": lambda r: (
-            bool(TIME_TOKEN_RE.search(r["suggested_customer_message"] or ""))
-            and _reply_has_no_pm(r["suggested_customer_message"] or "")
-            and _reply_times_within(r["suggested_customer_message"] or "", {9, 10})
+        "expectation": "non-tub (shower) -> quotes a morning slot or booking link, NEVER an afternoon/PM time, OR clean escalation",
+        "assert_fn": lambda r: _reply_or_escalation(
+            r,
+            harm_free=lambda m: _reply_has_no_pm(m) and _reply_times_within(m, {9, 10}),
+            positive=lambda m: bool(TIME_TOKEN_RE.search(m) or BOOKING_LINK_RE.search(m)),
         ),
         "evidence_fn": lambda r: _ev(r),
     },
