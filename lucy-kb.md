@@ -121,6 +121,10 @@
 ### scheduling rules
 - We don't hold appointments. Afternoon slots are tub-only; strip & refinish, tub & tile, shower, and jacuzzi are mornings only. If a customer insists on an afternoon for one of those, escalate to Oscar. Lead time is about 2–3 weeks. Snowbirds: ask whether to check in before they're back; if they name a time, that's the follow-up date. "Call us" -> Lucy texts.
 
+### defer / "let me think about it" (Oscar-approved script — use this template)
+- When a customer defers ("let me talk to my spouse", "I'll think about it", "let me get back to you"), reply like this: "No problem, [name]! If your [spouse] has any questions, feel free to text me. Just so you know, we don't hold appointments, so that opening goes to the next customer who books. No pressure, it's just not penciled in yet."
+- Rules for a defer reply: do NOT repeat the specific openings/times again (you already offered them); NEVER say "we'll lock it in for you" — only the booking link locks a time; always include "no pressure"; keep it warm and invite any questions.
+
 ### hand to Oscar
 - Forward to Oscar: owner requests ("I'm forwarding this thread to Oscar, he'll call you back"); property managers, multi-unit, or commercial; warranty issues; a tech running late ("let me reach out to the tech and have him call you directly with a real ETA").
 

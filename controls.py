@@ -265,6 +265,16 @@ NO_HOLD_RE = re.compile(
     r"|first[- ]come|open to whoever|snapped up",
     re.IGNORECASE)
 
+# Defer-script detectors (Oscar-approved defer template). On a defer Lucy must include "no
+# pressure", must NOT say she'll lock it in for them (only the link locks a time), and invites
+# questions. "Repeating the openings" is caught by TIME_TOKEN_RE appearing in the reply.
+NO_PRESSURE_RE = re.compile(r"\bno pressure\b", re.IGNORECASE)
+LOCK_FOR_YOU_RE = re.compile(
+    r"\block it in for you\b|we'?ll\s+lock\s+it\s+in|we\s+(?:will|can)\s+lock\s+it\s+in", re.IGNORECASE)
+DEFER_INVITE_RE = re.compile(
+    r"\b(questions?|feel free|text (?:me|us)|reach out|here if you|happy to (?:help|answer))\b",
+    re.IGNORECASE)
+
 # Reusable availability payloads for the Stage 4 controls (threaded via followup_json).
 _AVAIL_TUB = [
     {"label": "Mon 10/13 9:00 AM", "start_iso": "2026-10-13T09:00:00-04:00"},
@@ -819,20 +829,49 @@ CONTROLS = [
         "evidence_fn": lambda r: _ev(r),
     },
     {
-        "control_id": "CONTROL_NO_HOLD_ONCE",
-        "contacts": [_contact("CONTROL_NH", service="tub_refinish")],
-        "events": [_event("E_NH", "CONTROL_NH", "inbound_reply",
-                          "2026-06-16T10:00:00-04:00",
-                          text="I'm not ready to lock a time in yet, maybe in a few weeks.",
-                          followup={"availability": _AVAIL_TUB})],
-        "assert_event": "E_NH",
-        "expectation": "customer defers -> warm, NO pressure/urgency (no-hold note is once-per-convo, not required every turn) OR clean escalation",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: not URGENCY_RE.search(m),  # the hard guard: never pushy
-            positive=lambda m: bool(NO_HOLD_RE.search(m) or WARM_DEFER_RE.search(m)),
+        # DEFER (Oscar's approved script): slots offered, then the customer defers. The reply must
+        # NOT repeat the specific openings, must NOT say "we'll lock it in for you" (only the link
+        # locks a time), must include "no pressure", invite questions, and never be pushy.
+        "control_id": "CONTROL_DEFER_SCRIPT",
+        "contacts": [_contact("CONTROL_DF", service="tub_refinish")],
+        "events": [
+            _event("E_DF1", "CONTROL_DF", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                   step="step1", text="What's your next available?",
+                   followup={"availability": _AVAIL_TUB}),
+            _event("E_DF2", "CONTROL_DF", "inbound_reply", "2026-06-16T10:05:00-04:00",
+                   step="step2", text="Let me talk to my wife and get back to you.",
+                   followup={"availability": _AVAIL_TUB}),
+        ],
+        "assert_event": "E_DF2",
+        "expectation": "defer -> Oscar's script: no slot times repeated, no 'lock it in for you', includes 'no pressure', invites questions, not pushy",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not TIME_TOKEN_RE.search(r["suggested_customer_message"] or "")
+            and not LOCK_FOR_YOU_RE.search(r["suggested_customer_message"] or "")
+            and not URGENCY_RE.search(r["suggested_customer_message"] or "")
+            and bool(NO_PRESSURE_RE.search(r["suggested_customer_message"] or ""))
+            and bool(DEFER_INVITE_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # TEXT LENGTH: a normally-long answer (drain) must fit SMS — every blank-line-separated
+        # text <= 320 chars — while the full answer (plumber deferral) stays intact.
+        "control_id": "CONTROL_TEXT_LENGTH",
+        "contacts": [_contact("CONTROL_TL")],
+        "events": [_event("E_TL", "CONTROL_TL", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                          text="Do you replace drains? Mine is rusted.")],
+        "assert_event": "E_TL",
+        "expectation": "every text <=320 chars AND the drain answer stays intact (defers to a plumber)",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and all(len(s) <= 320 for s in re.split(r"\n\s*\n", r["suggested_customer_message"] or ""))
+            and bool(PLUMBER_RE.search(r["suggested_customer_message"] or ""))
+        ),
+        "evidence_fn": lambda r: (
+            "max_text=" + str(max((len(s) for s in re.split(r"\n\s*\n", r["suggested_customer_message"] or "")), default=0))
+            + " | " + _ev(r)
+        ),
     },
     {
         "control_id": "CONTROL_NONTUB_MORNINGS_ONLY",
@@ -876,10 +915,15 @@ def _to_csv(rows, cols):
 
 
 def run_controls(only=None):
-    # Stage 5 efficiency: `only` (substring, case-insensitive) runs just the matching controls
-    # for a targeted re-check during fixes. None -> the full suite. The canary is included only
-    # in a full run (it must FAIL there to prove the checker bites).
-    selected = [c for c in CONTROLS if not only or only.lower() in c["control_id"].lower()]
+    # `only` (case-insensitive) runs just the matching controls for a targeted re-check. It may be
+    # a single substring OR a comma-separated list of substrings (a control matches if ANY token is
+    # a substring of its id) — e.g. "defer,text_length,canary" runs exactly those three. None ->
+    # the full suite. The canary matches only when a token names it (e.g. "canary").
+    if only:
+        toks = [t.strip().lower() for t in only.split(",") if t.strip()]
+        selected = [c for c in CONTROLS if any(t in c["control_id"].lower() for t in toks)]
+    else:
+        selected = list(CONTROLS)
     contacts, events = [], []
     for c in selected:
         contacts.extend(c["contacts"])
