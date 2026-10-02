@@ -77,14 +77,16 @@ WARRANTY_COVERAGE_RE = re.compile(
     r"\b(cover(ed|age|s)?|protect(ed|ion)?|full coverage|every package|"
     r"depends on (the )?package|if (our|the) finish fails|peel)\b",
     re.IGNORECASE)
-# A definitive promise that THIS specific claim is covered (must NOT appear when a
-# PAST-job warranty issue is reported — that always forwards to Oscar instead).
+# A definitive promise to resolve THIS specific claim (must NOT appear when a PAST-job warranty
+# issue is reported — that forwards to Oscar instead). NOTE: a conditional restatement of the
+# approved general policy ("if our finish fails, it's covered") is allowed and deliberately NOT
+# matched here — only a concrete commitment to fix/cover THIS claim is the harm.
 COVERAGE_PROMISE_RE = re.compile(
-    r"\b(that'?s|this is|it'?s|you'?re|you are)\s+(definitely\s+|absolutely\s+|fully\s+)?covered\b"
-    r"|we'?ll\s+(cover|fix|redo|repair|re-?do|take care of)\b"
+    r"we'?ll\s+(cover|fix|redo|repair|re-?do|take care of|replace|send someone)\b"
+    r"|we\s+(will|can)\s+(cover|fix|redo|repair|re-?do|take care of|replace)\b"
     r"|covered\s+under\s+(your|the)\s+warranty"
     r"|under\s+(your|the)\s+warranty\b"
-    r"|at\s+no\s+charge\b|free\s+of\s+charge\b",
+    r"|at\s+no\s+charge\b|free\s+of\s+charge\b|no\s+cost\s+to\s+you\b",
     re.IGNORECASE)
 # Signals Lucy will confirm/escalate rather than answer from thin air.
 CONFIRM_RE = re.compile(
