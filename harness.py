@@ -312,10 +312,23 @@ object { touch, estimate_viewed, estimate_url, booking_link } — use it like th
   - touch 3: soft close — "we're here whenever you're ready," no pressure, and stop leaning.
   - READY TO BOOK (the customer signals they want to proceed, any touch or inbound): send
     the booking_link.
-When a customer asks for a SPECIFIC time/date that you cannot confirm is available (you do
-not have the live calendar), or asks anything you cannot answer from the facts on record,
-do NOT invent availability — escalate to Oscar (escalate_oscar=true) so he can confirm the
-slot. Offering the booking_link so they can self-schedule is always fine.
+AVAILABILITY (quote ONLY what you are given):
+`current_event.availability` is a list of concrete, already-confirmed openings for THIS
+customer's service, each {label, start_iso}, pre-filtered and ordered by the booking system
+(for tubs it is the very next opening plus the next one at the other time of day; for every
+other service it is the next mornings only). Rules:
+  - Quote ONLY the slots in that list, using each `label` EXACTLY as written. NEVER invent,
+    reformat, shift, or round a date or time, and NEVER offer a slot that is not in the list.
+  - If `availability` is empty or absent, do NOT state any specific date or time. Offer the
+    booking_link so they can self-schedule, or (if they demand a specific slot you cannot
+    confirm) escalate to Oscar (escalate_oscar=true). Offering the booking_link is always fine.
+  - "What's next available?" -> offer the slots in the list as the next openings, nothing more.
+  - If the customer DEFERS (not ready, "maybe later", circling back): stay warm, invite any
+    questions, and — gently and only ONCE in the whole conversation — note that we don't hold
+    appointments, so an opening goes to the next customer who books; never any pressure.
+  - If the customer PICKS one of the listed slots: thank them for their business and send the
+    booking_link (service already prefilled) so they can lock it in.
+Anything else you cannot answer from the facts on record -> escalate to Oscar rather than guess.
 
 DISENGAGEMENT (terminal — downstream STOPS the follow-up cadence):
 Set the `disengaged` key to:
@@ -441,6 +454,15 @@ def build_context(
     # Get the model-ready brief of the lead state
     lead_state_brief = lead_state.context_brief(now_timestamp)
 
+    # Stage 5: proactive follow-up context from V4 ({touch, estimate_viewed, estimate_url,
+    # booking_link}) threaded as a JSON string on the event. Stage 4: the same channel may
+    # carry an `availability` list of concrete openings [{label, start_iso}] (present on BOTH
+    # inbound and proactive composes). Surface availability as a first-class field and keep
+    # the proactive-touch `followup` object free of it (None for inbound with no touch data).
+    _raw_fu = _parse_followup(event.get("followup_json")) or {}
+    _availability = _raw_fu.get("availability") or []
+    _followup = {k: v for k, v in _raw_fu.items() if k != "availability"} or None
+
     # Add contact details to the brief (flattened)
     context = {
         **lead_state_brief,
@@ -450,9 +472,11 @@ def build_context(
             "inbound_text": event["inbound_text"] if event["inbound_text"] else None,
             "expected_behavior": event["expected_behavior"] if event["expected_behavior"] else None,
             "scheduled_at": event["scheduled_at"], # Keep original for reference
-            # Stage 5: proactive follow-up context from V4 ({touch, estimate_viewed, estimate_url,
-            # booking_link}), threaded as a JSON string on the event. None for inbound events.
-            "followup": _parse_followup(event.get("followup_json")),
+            "followup": _followup,
+            # Stage 4: concrete bookable openings for THIS contact's service, pre-filtered and
+            # labeled by V4 (tubs: next opening + next one at the other time of day; other
+            # services: next mornings). Quote ONLY these, exactly as labeled. [] -> none given.
+            "availability": _availability,
         },
         "contact_details": {
             "contact_id": contact["contact_id"],
