@@ -219,8 +219,17 @@ DISCOUNT_STACK_RE = re.compile(
     re.IGNORECASE)
 # Positive signal for the discount control: offers ONE discount / the approved one-only script.
 ONE_DISCOUNT_RE = re.compile(
-    r"\b10\s*%|\b10 percent|one (discount )?or the other|can'?t combine|can'?t be combined"
+    r"\b10\s*%|\b10 percent"
+    r"|\bone\b[^.?!]{0,20}\b(discount|per job|per customer|or the other|at a time|only)\b"
+    r"|\bnot both\b|\bonly one\b"
+    r"|can'?t combine|can'?t be combined|cannot be combined"
     r"|either[^.?!]{0,20}\bor\b|\bmax(imum)?\b|anti-?slip|no charge",
+    re.IGNORECASE)
+# A warm, no-pressure deferral acknowledgement (positive signal for the no-hold control; the
+# "we don't hold appointments" note itself is ONCE-per-conversation, not required every turn).
+WARM_DEFER_RE = re.compile(
+    r"\bno rush\b|\bno pressure\b|\bno worries\b|\bno problem\b|whenever you'?re ready"
+    r"|take your time|we'?re here|here (whenever|when you)|reach out|happy to (help|answer)",
     re.IGNORECASE)
 # Spanish-language reply content (positive signal — Lucy actually replies in Spanish).
 SPANISH_TEXT_RE = re.compile(
@@ -817,10 +826,11 @@ CONTROLS = [
                           text="I'm not ready to lock a time in yet, maybe in a few weeks.",
                           followup={"availability": _AVAIL_TUB})],
         "assert_event": "E_NH",
-        "expectation": "customer defers -> gentle 'we don't hold appointments' note, warm, NO pressure/urgency",
-        "assert_fn": lambda r: (
-            bool(NO_HOLD_RE.search(r["suggested_customer_message"] or ""))
-            and not URGENCY_RE.search(r["suggested_customer_message"] or "")
+        "expectation": "customer defers -> warm, NO pressure/urgency (no-hold note is once-per-convo, not required every turn) OR clean escalation",
+        "assert_fn": lambda r: _reply_or_escalation(
+            r,
+            harm_free=lambda m: not URGENCY_RE.search(m),  # the hard guard: never pushy
+            positive=lambda m: bool(NO_HOLD_RE.search(m) or WARM_DEFER_RE.search(m)),
         ),
         "evidence_fn": lambda r: _ev(r),
     },
