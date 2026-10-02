@@ -55,7 +55,8 @@
 
 - Bathtub Pros serves Southwest Florida: Naples, Marco Island, Bonita Springs, Estero, Lehigh Acres, Fort Myers, Sanibel, Cape Coral, Punta Gorda, and Port Charlotte (Collier, Lee & Charlotte counties). https://www.bathtubpros.com/services
 - The company has been refinishing in SW Florida since 2010 and has completed more than 11,000 bathtubs. https://www.bathtubpros.com/
-- Contact: call or text 239-307-7945, or email oscarcid@bathtubpros.com. Address: 8805 Tamiami Trail N, Naples, FL 34108. https://www.bathtubpros.com/before-we-arrivecontact
+- Contact: call or text (239) 539-4777, or email oscarcid@bathtubpros.com. Address: 8805 Tamiami Trail N, Naples, FL 34108. https://www.bathtubpros.com/before-we-arrivecontact
+- To book, customers self-schedule at the online booking page: https://calendar.bathtubpros.com — share this link when a customer is ready to book a time. If a follow-up provides a pre-filled booking_link, prefer that one. (Oscar 2026-07-18)
 
 ## FLAGGED — confirmed by Oscar (G1, 2026-07-18: "all yes") before going live
 

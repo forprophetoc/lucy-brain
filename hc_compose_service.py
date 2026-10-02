@@ -24,17 +24,18 @@ facts are recallable; the current inbound is the only scored turn. `memory` is a
 (contract honored) but not replayed.
 """
 import csv
+import hmac
 import io
 import json
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from harness import run_bakeoff
+from harness import run_bakeoff, BRAIN_MODEL
 
 CONTACT_COLS = ["contact_id", "first_name", "last_name", "phone", "city",
                 "service", "package", "estimate_amount", "tags", "persona_note"]
 EVENT_COLS = ["event_id", "contact_id", "arc_step", "event_type",
-              "scheduled_at", "inbound_text", "expected_behavior"]
+              "scheduled_at", "inbound_text", "expected_behavior", "followup_json"]
 
 
 def _csv(rows, cols):
@@ -71,11 +72,14 @@ def compose(req: dict) -> dict:
     # governs a proactive draft. The inbound_reply path below stays byte-equivalent.
     trigger = (req.get("trigger") or "inbound_reply").strip()
     is_sweep = trigger in ("due_date_sweep", "proactive")
+    # Stage 5: thread V4's proactive follow-up context ({touch, estimate_viewed, estimate_url,
+    # booking_link}) to the brain as a JSON string on the event. Sweep-only; "" for inbound.
+    followup_json = json.dumps(req.get("followup")) if (is_sweep and req.get("followup")) else ""
     if is_sweep:
         event = {
             "event_id": "E_COMPOSE", "contact_id": cid, "arc_step": "step1",
             "event_type": "due_date_followup", "scheduled_at": _now_iso(req),
-            "inbound_text": "", "expected_behavior": "",
+            "inbound_text": "", "expected_behavior": "", "followup_json": followup_json,
         }
     else:
         event = {
@@ -103,7 +107,21 @@ def compose(req: dict) -> dict:
     # Seam 2 — scheduling: surface facts.followup_date from the brain when it resolved a
     # stated timeline; omit (empty facts) when the brain emitted none. Inference-only; no send.
     followup_date = (rec.get("followup_date") or "").strip()
-    facts = {"followup_date": followup_date} if followup_date else {}
+    first_name = (rec.get("first_name") or "").strip()
+    scope_raw = (rec.get("scope") or "").strip()
+    scope = scope_raw if scope_raw in ("Tub", "Tub and Tile") else ""  # exact options only; else omit
+    # Stage 5: surface the terminal disengagement signal (V4 STOPS the follow-up cadence on it).
+    disengaged_raw = (rec.get("disengaged") or "").strip()
+    disengaged = disengaged_raw if disengaged_raw in ("opt_out", "not_interested") else ""
+    facts = {}
+    if followup_date:
+        facts["followup_date"] = followup_date
+    if first_name:
+        facts["first_name"] = first_name
+    if scope:
+        facts["scope"] = scope
+    if disengaged:
+        facts["disengaged"] = disengaged
     return {
         "reply": reply,
         "send_decision": "escalate_human" if escalate else "send_now",
@@ -120,19 +138,40 @@ def _err(msg):
             "memory_facts_used": [], "reasoning": "", "error": msg}
 
 
+def _secret_ok(headers) -> bool:
+    """Stage 5 — when HC_COMPOSE_SECRET is set, /compose requires a matching X-HC-Secret
+    (constant-time compare). Unset secret -> open (local/dev default)."""
+    expected = os.environ.get("HC_COMPOSE_SECRET") or ""
+    if not expected:
+        return True
+    got = headers.get("X-HC-Secret") or ""
+    return hmac.compare_digest(got, expected)
+
+
 class Handler(BaseHTTPRequestHandler):
-    def _json(self, obj):
+    def _json(self, obj, status=200):
         body = json.dumps(obj).encode()
-        self.send_response(200)  # contract: errors ride in the body, not the HTTP status
+        self.send_response(status)  # contract: compose errors ride in the body, not the status
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
 
+    def do_GET(self):
+        # Health check for Render — always 200, no auth, no brain call.
+        if self.path.rstrip("/") == "/health":
+            self._json({"ok": True, "model": BRAIN_MODEL})
+            return
+        self.send_response(404)
+        self.end_headers()
+
     def do_POST(self):
         if self.path.rstrip("/") != "/compose":
             self.send_response(404)
             self.end_headers()
+            return
+        if not _secret_ok(self.headers):
+            self._json({"error": "unauthorized"}, status=401)
             return
         try:
             n = int(self.headers.get("Content-Length") or 0)
@@ -146,8 +185,15 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    if os.environ.get("ANTHROPIC_API_KEY"):
-        raise SystemExit("ANTHROPIC_API_KEY set — refusing (subscription-only brain).")
+    backend = (os.environ.get("HC_BACKEND") or "claude").strip()
+    # Conditional refusal (Stage 5): ANTHROPIC_API_KEY is only allowed in api mode. The
+    # subscription brain (default) still refuses it, so a stray key can never meter the sub path.
+    if os.environ.get("ANTHROPIC_API_KEY") and backend != "api":
+        raise SystemExit("ANTHROPIC_API_KEY set but HC_BACKEND != 'api' — refusing (subscription-only brain).")
+    host = os.environ.get("HC_HOST") or "127.0.0.1"
     port = int(os.environ.get("HC_PORT") or "8787")
-    print(f"[HC] /compose on http://127.0.0.1:{port}/compose (brain=claude -p, subscription, no-send)")
-    ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()
+    secret_on = "yes" if os.environ.get("HC_COMPOSE_SECRET") else "no"
+    print(f"[HC] brain model pinned: {BRAIN_MODEL} (backend={backend})")
+    print(f"[HC] /compose on http://{host}:{port}/compose + GET /health (backend={backend}, "
+          f"secret={secret_on}, no-send)")
+    ThreadingHTTPServer((host, port), Handler).serve_forever()

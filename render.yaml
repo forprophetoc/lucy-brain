@@ -1,0 +1,22 @@
+# Render blueprint for Lucy's brain compose service (Stage 5).
+# Build installs Python deps + the Claude Code CLI (render-build.sh); the service binds to
+# Render's $PORT on 0.0.0.0, runs the metered API backend, and requires X-HC-Secret on /compose.
+# Secrets (ANTHROPIC_API_KEY, HC_COMPOSE_SECRET) are set in the Render dashboard, NOT committed.
+services:
+  - type: web
+    name: esticlose-brain
+    runtime: python
+    plan: starter
+    buildCommand: ./render-build.sh
+    # HC_PORT=$PORT so the service binds the port Render assigns; 0.0.0.0 so it is reachable.
+    startCommand: HC_HOST=0.0.0.0 HC_PORT=$PORT python hc_compose_service.py
+    healthCheckPath: /health
+    envVars:
+      - key: HC_BACKEND
+        value: api            # production brain = metered Messages API (OAuth is not headless-safe)
+      - key: BRAIN_MODEL
+        value: claude-sonnet-4-6
+      - key: ANTHROPIC_API_KEY
+        sync: false           # set in dashboard — never commit the key
+      - key: HC_COMPOSE_SECRET
+        sync: false           # set in dashboard — /compose rejects calls without a matching X-HC-Secret

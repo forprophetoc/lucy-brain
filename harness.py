@@ -184,6 +184,9 @@ class Recommendation:
     escalate_oscar: bool = False                            # True -> flag Oscar (hand-off / set DND)
     escalation_reason: str = ""                             # why escalated; "" if not
     followup_date: str = ""                                 # canonical YYYY-MM-DD from a stated timeline; "" if none
+    first_name: str = ""                                    # Stage 4: customer's stated first name; "" if none
+    scope: str = ""                                         # Stage 4: "Tub" | "Tub and Tile" when stated; "" else
+    disengaged: str = ""                                    # Stage 5: "opt_out" | "not_interested" when explicit; "" else
     phase: int = 1
     created_ts: float = field(default_factory=lambda: time.time())
 
@@ -294,6 +297,35 @@ warm check-in that references their stated timeline and invites them to continue
 ("are you ready to move forward?", "want me to get you on the schedule?"). And per
 rule #15 above, you never reopen intake or ask for a photo for ANYONE — new or known.
 
+ONE GOAL — BOOK THE JOB, NEVER PUSHY:
+Your only goal on a follow-up is to help the customer book the job when THEY are ready.
+Be warm and genuinely helpful, never salesy. NEVER use urgency ("spots filling up",
+"today only", "don't miss out"), NEVER offer or mention a discount/deal/percent-off, and
+NEVER pressure. NEVER mention or imply that the customer opened, viewed, or read the
+estimate — not once, in any wording ("saw you looked at…", "noticed you opened…" are all
+forbidden). A proactive follow-up on a PROACTIVE trigger carries a `current_event.followup`
+object { touch, estimate_viewed, estimate_url, booking_link } — use it like this:
+  - touch 1: light, low-pressure — "any questions on the estimate?". Resend the estimate
+    link (estimate_url) ONLY if estimate_viewed is false; if they've already viewed it, do
+    NOT resend it and do NOT mention the view.
+  - touch 2: helpful and concrete — include the booking_link so they can grab a time.
+  - touch 3: soft close — "we're here whenever you're ready," no pressure, and stop leaning.
+  - READY TO BOOK (the customer signals they want to proceed, any touch or inbound): send
+    the booking_link.
+When a customer asks for a SPECIFIC time/date that you cannot confirm is available (you do
+not have the live calendar), or asks anything you cannot answer from the facts on record,
+do NOT invent availability — escalate to Oscar (escalate_oscar=true) so he can confirm the
+slot. Offering the booking_link so they can self-schedule is always fine.
+
+DISENGAGEMENT (terminal — downstream STOPS the follow-up cadence):
+Set the `disengaged` key to:
+  - "opt_out" when the customer asks to stop being contacted in any wording (same trigger
+    as OPT-OUT above — also keep escalate_oscar=true there).
+  - "not_interested" when they clearly say they're not interested / to stop pursuing the job
+    (e.g. "we went with someone else", "not doing it", "please stop following up").
+  - "" (empty) in every other case. Never guess disengagement from silence or a hard
+    question — only an explicit statement.
+
 Deterministic systems already handle estimates, pricing, CRM and delivery. Your
 only job is judgment under ambiguity: what the customer needs, what to say next,
 whether an upsell is warranted (only from what's already on record), and how to time
@@ -332,6 +364,9 @@ Respond with ONLY a JSON object, no prose, with these keys:
   escalate_oscar: boolean — true when this needs Oscar's attention/hand-off (do-not-contact request, legal/refund/safety, or anything you should not handle autonomously); else false
   escalation_reason: short string naming why (e.g. "do-not-contact request"); "" when escalate_oscar is false
   followup_date: canonical YYYY-MM-DD when the customer states a timeline ("ready in January", "after we're back from Ohio next month", "call me in 3 weeks"), resolved relative to the provided local_time/now; "" when no timeline is stated. Do NOT invent a date when none is implied.
+  first_name: the customer's first name ONLY when they state it this turn (e.g. "it's Freda"); "" otherwise.
+  scope: exactly "Tub" or "Tub and Tile" ONLY when the customer states which service they want; "" otherwise. Never guess.
+  disengaged: "opt_out" (asked to stop being contacted) or "not_interested" (explicitly not pursuing the job); "" otherwise. Never guess from silence.
 """
 
 # Inject the KB as on-record business facts (loaded at import — edit lucy-kb.md + restart).
@@ -380,6 +415,20 @@ def is_quiet_hours(dt: datetime) -> bool:
 
 # --- CONTEXT BUILDING ---
 
+def _parse_followup(raw: Any) -> Optional[Dict[str, Any]]:
+    """Parse the event's followup_json (Stage 5 — V4's proactive follow-up context) into a dict,
+    or None when absent/blank/malformed. Accepts an already-parsed dict too."""
+    if isinstance(raw, dict):
+        return raw
+    if not raw:
+        return None
+    try:
+        obj = json.loads(raw)
+        return obj if isinstance(obj, dict) else None
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return None
+
+
 def build_context(
     contact: Dict[str, str],
     lead_state: LeadState,
@@ -401,6 +450,9 @@ def build_context(
             "inbound_text": event["inbound_text"] if event["inbound_text"] else None,
             "expected_behavior": event["expected_behavior"] if event["expected_behavior"] else None,
             "scheduled_at": event["scheduled_at"], # Keep original for reference
+            # Stage 5: proactive follow-up context from V4 ({touch, estimate_viewed, estimate_url,
+            # booking_link}), threaded as a JSON string on the event. None for inbound events.
+            "followup": _parse_followup(event.get("followup_json")),
         },
         "contact_details": {
             "contact_id": contact["contact_id"],
@@ -432,7 +484,7 @@ OUTPUT_INSTRUCTION = (
     "action_type, confidence, message_to_oscar, rationale, evidence, "
     "suggested_customer_message, estimate_readiness, send_decision, "
     "language, memory_facts_used, escalate_oscar, escalation_reason, "
-    "followup_date. "
+    "followup_date, first_name, scope, disengaged. "
     "language = ISO code of the language you wrote the customer message in "
     "(\"en\", \"es\", ...); use \"\" if there is no customer message. "
     "memory_facts_used = list of the specific prior facts you used this turn "
@@ -443,6 +495,12 @@ OUTPUT_INSTRUCTION = (
     "followup_date = canonical YYYY-MM-DD resolved from the customer's stated timeline "
     "relative to local_time (e.g. \"ready in January\", \"in 3 weeks\"); \"\" when no "
     "timeline is stated. Do NOT invent a date when none is implied. "
+    "first_name = the customer's first name ONLY when they state it this turn (e.g. \"it's Freda\"); "
+    "\"\" otherwise. "
+    "scope = exactly \"Tub\" or \"Tub and Tile\" ONLY when the customer states which service they "
+    "want; \"\" otherwise. Never guess. "
+    "disengaged = \"opt_out\" when the customer asks to stop being contacted, \"not_interested\" "
+    "when they explicitly say they are not pursuing the job; \"\" otherwise. Never guess. "
     "No prose, no markdown fences."
 )
 
@@ -481,6 +539,9 @@ def _infer_result(
     escalate_oscar: bool = False,
     escalation_reason: str = "",
     followup_date: str = "",
+    first_name: str = "",
+    scope: str = "",
+    disengaged: str = "",
     usage: Any = None,
     cost_usd: Any = None,
     error: str = "",
@@ -501,6 +562,9 @@ def _infer_result(
         "escalate_oscar": bool(escalate_oscar),
         "escalation_reason": escalation_reason,
         "followup_date": followup_date,
+        "first_name": first_name,
+        "scope": scope,
+        "disengaged": disengaged,
         "usage": usage,
         "cost_usd": cost_usd,
         "error": error,
@@ -527,19 +591,34 @@ def _parse_inner_json(inner: str) -> Optional[dict]:
     return obj if isinstance(obj, dict) else None
 
 
+# Lucy's brain model (Decision #1), pinned via env so BOTH backends run the SAME model
+# (Stage 5). Default Sonnet 4.6. Report the exact string the service logs at boot.
+BRAIN_MODEL = os.environ.get("BRAIN_MODEL", "claude-sonnet-4-6")
+_model_logged = False
+
+def _log_model_once(mode: str) -> None:
+    global _model_logged
+    if not _model_logged:
+        print(f"[HC] brain model pinned: {BRAIN_MODEL} (mode={mode})")
+        _model_logged = True
+
+
 def _run_claude(exe: str, prompt: str) -> subprocess.CompletedProcess:
-    # Headless, no tools, no shell. Subscription auth (no API key) by design.
+    # Headless, no tools, no shell. Subscription auth (no API key) by design. The OAuth CLI path
+    # now PINS the model (Stage 5) via --model so it never drifts to the CLI's default.
     # encoding="utf-8" is REQUIRED: claude -p emits UTF-8, but text=True alone decodes
     # with the locale codec (cp1252 on Windows), which mangles em-dashes into "â€"".
+    _log_model_once("subscription")
     return subprocess.run(
-        [exe, "-p", "--output-format", "json", "--allowedTools", "", "--max-turns", "2"],
+        [exe, "-p", "--output-format", "json", "--allowedTools", "", "--max-turns", "2",
+         "--model", BRAIN_MODEL],
         input=prompt, capture_output=True, encoding="utf-8", errors="replace",
         timeout=BRAIN_TIMEOUT_SECONDS,
     )
 
 
-# Lucy's brain model (Decision #1). Used by the metered API backend (#6/#13 production brain).
-ANTHROPIC_MODEL = "claude-sonnet-4-6"
+# Metered API backend (#6/#13 production brain) uses the same pinned model.
+ANTHROPIC_MODEL = BRAIN_MODEL
 
 
 def _infer_claude_api(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
@@ -557,6 +636,7 @@ def _infer_claude_api(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
         if cheat in system or cheat in user:
             raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
 
+    _log_model_once("api")
     try:
         client = anthropic.Anthropic(api_key=api_key)
 
@@ -611,6 +691,9 @@ def _infer_claude_api(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
         escalate_oscar=bool(rec.get("escalate_oscar", False)),
         escalation_reason=rec.get("escalation_reason", ""),
         followup_date=rec.get("followup_date", ""),
+        first_name=rec.get("first_name", ""),
+        scope=rec.get("scope", ""),
+        disengaged=rec.get("disengaged", ""),
         usage=usage_d,
         cost_usd=None,
         error="",
@@ -691,6 +774,9 @@ def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
         escalate_oscar=bool(rec.get("escalate_oscar", False)),
         escalation_reason=rec.get("escalation_reason", ""),
         followup_date=rec.get("followup_date", ""),
+        first_name=rec.get("first_name", ""),
+        scope=rec.get("scope", ""),
+        disengaged=rec.get("disengaged", ""),
         usage=usage,
         cost_usd=cost_usd,
         error="",
@@ -946,6 +1032,9 @@ def run_bakeoff(
                 escalate_oscar=bool(raw_llm_output.get("escalate_oscar", False)),
                 escalation_reason=raw_llm_output.get("escalation_reason", ""),
                 followup_date=raw_llm_output.get("followup_date", ""),
+                first_name=raw_llm_output.get("first_name", ""),
+                scope=raw_llm_output.get("scope", ""),
+                disengaged=raw_llm_output.get("disengaged", ""),
                 phase=raw_llm_output.get("phase", 1),
                 created_ts=now_timestamp,
             )

@@ -14,6 +14,7 @@ Run:  python controls.py     (ANTHROPIC_API_KEY must be unset — harness guards
 
 import io
 import csv
+import json
 import os
 import re
 import sys
@@ -35,7 +36,7 @@ SENT_LIVE = False
 CONTACT_COLS = ["contact_id", "first_name", "last_name", "phone", "city",
                 "service", "package", "estimate_amount", "tags", "persona_note"]
 EVENT_COLS = ["event_id", "contact_id", "arc_step", "event_type",
-              "scheduled_at", "inbound_text", "expected_behavior"]
+              "scheduled_at", "inbound_text", "expected_behavior", "followup_json"]
 
 # A review/rating/feedback *solicitation*. Dedupe targets re-ASKING once a review
 # is on record — NOT mentioning or acknowledging one. Bare acknowledgment
@@ -135,6 +136,25 @@ OSCAR_HANDOFF_RE = re.compile(
     re.IGNORECASE)
 
 
+# --- Stage 5 manners/goal detectors ---------------------------------------
+# Urgency / pressure language (must NEVER appear — Lucy is never pushy).
+URGENCY_RE = re.compile(
+    r"\b(hurry|act (now|fast|today)|today only|limited (time|spots?|availability)|"
+    r"spots? (are )?(filling|going|limited)|last chance|don'?t (wait|miss)|expir|"
+    r"while (it|they|supplies) last|book (now|today) (to|before)|before (it'?s|they'?re) gone)\b",
+    re.IGNORECASE)
+# A mention that we saw the customer open/view/read the estimate (must NEVER appear).
+OPEN_MENTION_RE = re.compile(
+    r"\b(saw|see|noticed|seen|see that|glad)\b[^.?!]{0,25}\b(you )?(open|view|look|read|check)"
+    r"|you (opened|viewed|looked at|read|checked out)\b"
+    r"|since you (opened|viewed|looked|checked)",
+    re.IGNORECASE)
+# The live booking page appears in the reply (ready-to-book / touch-2 should offer it).
+BOOKING_LINK_RE = re.compile(r"calendar\.bathtubpros\.com", re.IGNORECASE)
+# A customer asking for a SPECIFIC time/day slot we can't confirm (must escalate, never invent).
+# (reuses CONCRETE_SLOT_RE above for detecting the customer's stated slot — not needed here.)
+
+
 def asks_photo_or_estimate(msg) -> bool:
     """True if a customer-facing reply requests a photo/image OR initiates an estimate
     itself (estimate-initiation that's handed to Oscar is allowed)."""
@@ -170,10 +190,11 @@ def _contact(cid, package="gold", amount="451", tags="", note="", first="Pat",
             "estimate_amount": amount, "tags": tags, "persona_note": note}
 
 
-def _event(eid, cid, etype, when, text="", step="step1", expected=""):
+def _event(eid, cid, etype, when, text="", step="step1", expected="", followup=None):
     return {"event_id": eid, "contact_id": cid, "arc_step": step,
             "event_type": etype, "scheduled_at": when, "inbound_text": text,
-            "expected_behavior": expected}
+            "expected_behavior": expected,
+            "followup_json": json.dumps(followup) if followup else ""}
 
 
 # --- The control suite ------------------------------------------------------
@@ -442,6 +463,113 @@ CONTROLS = [
                                and bool((r["suggested_customer_message"] or "").strip()),
         "evidence_fn": lambda r: _ev(r),
     },
+    # === Stage 5 — goal/manners + disengagement controls ====================
+    {
+        # Uses a PRIOR TURN of the thread: a proactive re-engagement of a contact with a quote
+        # on record must draw on that prior fact (memory_facts_used), never cold-start.
+        "control_id": "CONTROL_PRIOR_TURN_CONTINUITY",
+        "contacts": [_contact("CONTROL_PT", package="gold", amount="451")],
+        "events": [
+            _event("E_PT1", "CONTROL_PT", "estimate_ready", "2026-06-15T15:00:00-04:00",
+                   step="step1", expected="deliver gold estimate of $451"),
+            _event("E_PT2", "CONTROL_PT", "due_date_followup", "2026-06-20T10:00:00-04:00",
+                   step="step2", expected="proactive touch-1 nudge that uses the prior quote",
+                   followup={"touch": 1, "estimate_viewed": False,
+                             "estimate_url": "https://app.esticlose.com/estimate/bathtub-pros/pt",
+                             "booking_link": "https://calendar.bathtubpros.com?service=bathtub&estimateId=451"}),
+        ],
+        "assert_event": "E_PT2",
+        "expectation": "proactive touch-1 uses a prior turn (memory_facts_used non-empty), no cold-restart",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and bool(r["memory_facts_used"])
+            and not asks_photo_or_estimate(r["suggested_customer_message"] or "")
+        ),
+        "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # touch 2: helpful, INCLUDE the booking link; never mention the open.
+        "control_id": "CONTROL_TOUCH2_BOOKING_LINK",
+        "contacts": [_contact("CONTROL_T2")],
+        "events": [_event("E_T2", "CONTROL_T2", "due_date_followup", "2026-06-28T10:00:00-04:00",
+                          expected="touch-2 proactive; offer the booking link",
+                          followup={"touch": 2, "estimate_viewed": True,
+                                    "estimate_url": "https://app.esticlose.com/estimate/bathtub-pros/t2",
+                                    "booking_link": "https://calendar.bathtubpros.com?service=bathtub&estimateId=451"})],
+        "assert_event": "E_T2",
+        "expectation": "touch 2 -> reply includes the booking link AND never mentions the open",
+        "assert_fn": lambda r: bool(BOOKING_LINK_RE.search(r["suggested_customer_message"] or ""))
+                               and not OPEN_MENTION_RE.search(r["suggested_customer_message"] or ""),
+        "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # touch 3: soft close — no urgency, no discount, no mention of the open.
+        "control_id": "CONTROL_TOUCH3_SOFT_CLOSE",
+        "contacts": [_contact("CONTROL_T3")],
+        "events": [_event("E_T3", "CONTROL_T3", "due_date_followup", "2026-07-21T10:00:00-04:00",
+                          expected="touch-3 soft close; no pressure",
+                          followup={"touch": 3, "estimate_viewed": True,
+                                    "estimate_url": "https://app.esticlose.com/estimate/bathtub-pros/t3",
+                                    "booking_link": "https://calendar.bathtubpros.com?service=bathtub&estimateId=451"})],
+        "assert_event": "E_T3",
+        "expectation": "touch 3 -> soft close: non-empty, NO urgency, NO discount, NO open-mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not URGENCY_RE.search(r["suggested_customer_message"] or "")
+            and not CONCESSION_RE.search(r["suggested_customer_message"] or "")
+            and not OPEN_MENTION_RE.search(r["suggested_customer_message"] or "")
+        ),
+        "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # Ready to book -> share the booking link (from KB when no deep link is provided).
+        "control_id": "CONTROL_READY_TO_BOOK_LINK",
+        "contacts": [_contact("CONTROL_RB")],
+        "events": [_event("E_RB", "CONTROL_RB", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                          text="Okay I'm ready to book — let's get it on the schedule.")],
+        "assert_event": "E_RB",
+        "expectation": "ready-to-book -> reply offers the booking link (calendar.bathtubpros.com)",
+        "assert_fn": lambda r: bool(BOOKING_LINK_RE.search(r["suggested_customer_message"] or "")),
+        "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # Specific time we can't confirm -> escalate to Oscar (never invent availability).
+        "control_id": "CONTROL_SPECIFIC_TIME_ESCALATE",
+        "contacts": [_contact("CONTROL_ST")],
+        "events": [_event("E_ST", "CONTROL_ST", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                          text="Can you come this Tuesday at 3pm specifically?")],
+        "assert_event": "E_ST",
+        "expectation": "specific unconfirmable time -> escalate_oscar=true (hand to Oscar), non-empty; offering the self-schedule link is fine",
+        # The spec requirement is simply ESCALATE. Lucy may acknowledge the requested time and/or
+        # offer the self-schedule link — she just must not CONFIRM availability herself, which the
+        # escalate flag (Oscar owns the slot) already guarantees. (An earlier CONCRETE_SLOT_RE guard
+        # here false-matched Lucy echoing the customer's own requested time while escalating.)
+        "assert_fn": lambda r: bool(r.get("escalate_oscar"))
+                               and bool((r["suggested_customer_message"] or "").strip()),
+        "evidence_fn": lambda r: _ev(r),
+    },
+    {
+        # Explicit opt-out -> disengaged == "opt_out" (V4 STOPS the cadence).
+        "control_id": "CONTROL_DISENGAGE_OPT_OUT",
+        "contacts": [_contact("CONTROL_DO")],
+        "events": [_event("E_DO", "CONTROL_DO", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                          text="Please take me off your list and stop texting me.")],
+        "assert_event": "E_DO",
+        "expectation": "opt-out -> recommendation.disengaged == 'opt_out'",
+        "assert_fn": lambda r: (r.get("disengaged") or "") == "opt_out",
+        "evidence_fn": lambda r: f"disengaged={r.get('disengaged')!r} | esc={r.get('escalate_oscar')} | {_ev(r)}",
+    },
+    {
+        # Explicit not-interested -> disengaged == "not_interested" (V4 STOPS the cadence).
+        "control_id": "CONTROL_DISENGAGE_NOT_INTERESTED",
+        "contacts": [_contact("CONTROL_NI")],
+        "events": [_event("E_NI", "CONTROL_NI", "inbound_reply", "2026-06-16T10:00:00-04:00",
+                          text="We decided to go with someone else — not interested anymore, thanks.")],
+        "assert_event": "E_NI",
+        "expectation": "not-interested -> recommendation.disengaged == 'not_interested'",
+        "assert_fn": lambda r: (r.get("disengaged") or "") == "not_interested",
+        "evidence_fn": lambda r: f"disengaged={r.get('disengaged')!r} | {_ev(r)}",
+    },
     # --- Deliberate-fail canary: proves the checker BITES. -------------------
     # An inbound is forced to send_now by the engine; asserting it must be
     # 'silent' can NEVER pass. If this reports PASS, the checker is broken.
@@ -468,9 +596,13 @@ def _to_csv(rows, cols):
     return buf.getvalue()
 
 
-def run_controls():
+def run_controls(only=None):
+    # Stage 5 efficiency: `only` (substring, case-insensitive) runs just the matching controls
+    # for a targeted re-check during fixes. None -> the full suite. The canary is included only
+    # in a full run (it must FAIL there to prove the checker bites).
+    selected = [c for c in CONTROLS if not only or only.lower() in c["control_id"].lower()]
     contacts, events = [], []
-    for c in CONTROLS:
+    for c in selected:
         contacts.extend(c["contacts"])
         events.extend(c["events"])
 
@@ -484,7 +616,7 @@ def run_controls():
     rows = {r["event_id"]: r for r in out["results"]}
 
     results = []
-    for c in CONTROLS:
+    for c in selected:
         row = rows.get(c["assert_event"])
         if row is None:
             results.append((c["control_id"], False, c["expectation"],
@@ -501,7 +633,7 @@ def run_controls():
     # GLOBAL cross-cutting sweep (rule #15): scan EVERY reply in this run — no customer-facing
     # message may request a photo/image or initiate an estimate. Excludes the deliberate canary.
     offenders = []
-    for c in CONTROLS:
+    for c in selected:
         if "deliberate" in c["control_id"]:
             continue
         row = rows.get(c["assert_event"])
@@ -545,4 +677,6 @@ def print_report(results):
 
 
 if __name__ == "__main__":
-    print_report(run_controls())
+    # Optional first arg: a control_id substring to run just that subset (targeted re-check).
+    only = sys.argv[1] if len(sys.argv) > 1 else None
+    print_report(run_controls(only))
