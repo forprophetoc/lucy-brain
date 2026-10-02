@@ -196,6 +196,31 @@ class Recommendation:
         d["would_be"] = self.would_be.value
         return d
 
+# --- LUCY KB (bathtubpros.com facts, Oscar-approved G1 2026-07-18) ---
+# Loaded ONCE at import: the update cycle is edit lucy-kb.md + restart the service
+# (documented in the KB header). Missing/empty file -> empty string, service runs KB-less.
+_KB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lucy-kb.md")
+
+def _load_kb() -> str:
+    try:
+        with open(_KB_PATH, encoding="utf-8") as fh:
+            return fh.read().strip()
+    except OSError:
+        return ""
+
+LUCY_KB = _load_kb()
+
+_KB_BLOCK = (
+    "BUSINESS FACTS ON RECORD (lucy-kb.md — the shop's Oscar-approved public facts):\n"
+    "The facts in the section below ARE on record for the business. You MAY state them\n"
+    "plainly for ANY contact when asked (warranty terms, cure/duration times, process,\n"
+    "fumes/safety, services, care instructions, service area). They NEVER override this\n"
+    "contact's own record (a price already quoted to THIS contact beats any generic\n"
+    "figure), and anything NOT in this section or the contact record still falls under\n"
+    "NEVER INVENT FACTS — confirm, never fabricate.\n"
+    "-----\n" + LUCY_KB + "\n-----\n\n"
+)
+
 # --- REAL HERMY PROMPTS (from hermy/hermy/prompts.py) ---
 
 SYSTEM_PROMPT = """\
@@ -247,6 +272,18 @@ not silence: a fact that IS on record for this contact — a price you already q
 them, a date they stated — you SHOULD state plainly and confidently. This rule
 forbids inventing facts, never recalling facts you actually have.
 
+HOLDING REPLY — DRAFT FOR A MISSING FACT, DO NOT ESCALATE:
+If the fact the customer needs IS on record for this contact (in the conversation or
+memory — e.g. a price you already quoted them), state it plainly and draft the reply
+with send_now. If the needed fact is NOT on record, do NOT escalate — draft a one-line
+holding reply and send it: "Let me confirm with Oscar and text you right back."
+(send_decision=send_now, escalate_oscar=false, and do NOT state any specific figure or
+term you don't have). Reserve escalate_oscar=true for ONLY these: a do-not-contact
+request, a legal/refund/safety matter, or an angry customer. A plain missing-fact
+question ("what's my warranty?", "how much for X?", "do you do tile?") is a HOLDING
+REPLY, never an escalation. This supersedes any earlier option to "escalate to Oscar"
+for a missing fact.
+
 CONTINUE THE RELATIONSHIP — NEVER COLD-RESTART (rule #14):
 When the lead already has prior history, a quote/price on record, or a stated
 timeline (anything in the conversation or memory shows you've engaged before),
@@ -296,6 +333,14 @@ Respond with ONLY a JSON object, no prose, with these keys:
   escalation_reason: short string naming why (e.g. "do-not-contact request"); "" when escalate_oscar is false
   followup_date: canonical YYYY-MM-DD when the customer states a timeline ("ready in January", "after we're back from Ohio next month", "call me in 3 weeks"), resolved relative to the provided local_time/now; "" when no timeline is stated. Do NOT invent a date when none is implied.
 """
+
+# Inject the KB as on-record business facts (loaded at import — edit lucy-kb.md + restart).
+if LUCY_KB:
+    SYSTEM_PROMPT = SYSTEM_PROMPT.replace(
+        "\nDeterministic systems already handle estimates",
+        "\n" + _KB_BLOCK + "Deterministic systems already handle estimates",
+        1,
+    )
 
 def build_user_prompt(context_brief: dict) -> str:
     return (
@@ -379,7 +424,8 @@ def build_context(
 
 # --- LUCY ON CLAUDE (backend == 'claude') ---
 
-BRAIN_TIMEOUT_SECONDS = 120
+BRAIN_TIMEOUT_SECONDS = 60  # Stage 5: below hcClient's 90s abort so a slow brain surfaces as a
+# clean brain-side timeout (error in the body) rather than a client-side connection abort.
 
 OUTPUT_INSTRUCTION = (
     "Output ONLY a single JSON object with EXACTLY these keys: "
