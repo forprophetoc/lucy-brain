@@ -182,23 +182,30 @@ BOOKING_LINK_RE = re.compile(r"calendar\.bathtubpros\.com", re.IGNORECASE)
 # (reuses CONCRETE_SLOT_RE above for detecting the customer's stated slot — not needed here.)
 
 # --- Stage 2 playbook detectors (Oscar 2026-10-02) -------------------------
-# Lucy agreeing to do DRAIN work herself (HARD RULE violation — only a plumber touches drains).
+# Lucy agreeing to do DRAIN work HERSELF (HARD RULE violation — only a plumber touches drains).
+# The negative lookahead for "plumber" means the sanctioned explanation ("we can have the plumber
+# remove the drain, then we refinish") never trips this — only a self-commitment with no plumber
+# in between ("we'll swap your drain out") does.
 DRAIN_WORK_RE = re.compile(
-    r"\bwe(?:'?ll| will| can| do)\b[^.?!]{0,40}\b(remove|replace|swap|take out|install|put in|change)\b[^.?!]{0,20}\bdrain\b"
-    r"|\b(remove|replace|swap|install|change)\b[^.?!]{0,20}\bdrain\b[^.?!]{0,20}\bfor you\b"
-    r"|\byes\b[^.?!]{0,30}\bdrain\b",
+    r"\b(?:we|i)(?:'?ll| will| can| do|'d)?\b(?:(?!\bplumber\b)[^.?!]){0,40}"
+    r"\b(?:remove|replace|swap|take out|pull out|install|put in|change)\b"
+    r"(?:(?!\bplumber\b)[^.?!]){0,20}\bdrain\b",
     re.IGNORECASE)
 # Positive signal for the drain control: defers to a plumber / declines drain work / overflow cover.
 PLUMBER_RE = re.compile(
     r"\bplumber\b|\blicensed\b|\bwe (don'?t|do not|can'?t|cannot) (remove|replace|touch|do)\b[^.?!]{0,20}\bdrain"
     r"|\boverflow\b|\bcan'?t (remove|replace|touch)\b[^.?!]{0,15}\bdrain",
     re.IGNORECASE)
-# Out-of-area polite decline (positive signal for the out-of-area service control).
+# Out-of-area polite decline (positive signal for the out-of-area service control). Broad on the
+# decline verb (service/serve/cover/go/make it/come/travel/get) so phrasing variation still counts;
+# an IN-area acceptance ("yes, we cover Naples") carries no negation and never matches.
 OUT_OF_AREA_RE = re.compile(
-    r"\b(don'?t|do not) (service|serve|cover|work in|go (out )?to)\b"
-    r"|\boutside (of )?(our )?(service )?area\b"
-    r"|\bnot in our (service )?area\b"
-    r"|\bbest of luck\b",
+    r"\b(?:don'?t|do not|can'?t|cannot|won'?t|will not|unable to)\s+"
+    r"(?:service|serve|cover|work in|go (?:out )?to|make it (?:out )?to|come (?:out )?to|travel (?:out )?to|get (?:out )?to)\b"
+    r"|\boutside (?:of )?(?:our )?(?:service )?(?:area|coverage|range|zone)\b"
+    r"|\bnot in our (?:service )?area\b"
+    r"|\bbest of luck\b"
+    r"|\b(?:don'?t|do not) (?:make it|get) (?:out )?(?:that far|up there|down there)\b",
     re.IGNORECASE)
 # Stacking/over-granting discounts (must NOT appear — one discount only, never "free").
 DISCOUNT_STACK_RE = re.compile(
