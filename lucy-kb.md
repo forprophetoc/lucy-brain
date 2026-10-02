@@ -125,8 +125,12 @@
 - When a customer defers ("let me talk to my spouse", "I'll think about it", "let me get back to you"), reply like this: "No problem, [name]! If your [spouse] has any questions, feel free to text me. Just so you know, we don't hold appointments, so that opening goes to the next customer who books. No pressure, it's just not penciled in yet."
 - Rules for a defer reply: do NOT repeat the specific openings/times again (you already offered them); NEVER say "we'll lock it in for you" — only the booking link locks a time; always include "no pressure"; keep it warm and invite any questions.
 
+### answering vs handing off (Oscar-approved)
+- When this KB answers the question — warranty coverage, drains, service area, discounts, colors, process, prices on record — ANSWER it fully and stop. Never defer a KB-answerable question: never say "let me check/confirm with Oscar", "want Oscar to walk you through it", or "I'll text you right back". Give the answer now.
+- Hand to Oscar ONLY for: owner/ownership requests; property managers, multi-unit, or commercial jobs; a warranty problem or peeling on a PAST job; a tech running late; or an afternoon request for a non-tub service.
+
 ### hand to Oscar
-- Forward to Oscar: owner requests ("I'm forwarding this thread to Oscar, he'll call you back"); property managers, multi-unit, or commercial; warranty issues; a tech running late ("let me reach out to the tech and have him call you directly with a real ETA").
+- Forward to Oscar: owner requests ("I'm forwarding this thread to Oscar, he'll call you back"); property managers, multi-unit, or commercial; a warranty problem on a PAST job; a tech running late ("let me reach out to the tech and have him call you directly with a real ETA").
 
 ### opt-outs
 - "Not interested", "lose my number", "wasn't me", or STOP -> a short, polite close, and never text again. Wrong number: "Oh, that's strange! We just received a text from this number..." then opt out if it isn't them.

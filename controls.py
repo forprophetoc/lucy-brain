@@ -193,6 +193,9 @@ DRAIN_WORK_RE = re.compile(
     r"\b(?:remove|replace|swap|take out|pull out|install|put in|change)\b"
     r"(?:(?!\bplumber\b)[^.?!]){0,20}\bdrain\b",
     re.IGNORECASE)
+# Any customer-facing mention of Oscar. On a KB-answerable question (drains, warranty coverage,
+# service area, discounts, availability) a hand-off to Oscar is a needless punt -> FAIL.
+OSCAR_MENTION_RE = re.compile(r"\boscar\b", re.IGNORECASE)
 # Positive signal for the drain control: defers to a plumber / declines drain work / overflow cover.
 PLUMBER_RE = re.compile(
     r"\bplumber\b|\blicensed\b|\bwe (don'?t|do not|can'?t|cannot) (remove|replace|touch|do)\b[^.?!]{0,20}\bdrain"
@@ -209,12 +212,14 @@ OUT_OF_AREA_RE = re.compile(
     r"|\bbest of luck\b"
     r"|\b(?:don'?t|do not) (?:make it|get) (?:out )?(?:that far|up there|down there)\b",
     re.IGNORECASE)
-# Stacking/over-granting discounts (must NOT appear — one discount only, never "free").
+# ACTUAL stacking/over-granting of discounts (must NOT appear — one discount only, never "free").
+# Narrow to real stacking signals (15% / both / combine / stack / apply both); merely MENTIONING
+# that a veteran discount and a senior discount both exist while clarifying "one or the other" is
+# correct and must NOT trip this.
 DISCOUNT_STACK_RE = re.compile(
     r"\b15\s*%|\b15 percent"
-    r"|both (discounts|of (them|those)|the)"
-    r"|combine (the )?discounts?|stack(ing)? (the )?discounts?"
-    r"|\b(veteran|military)[^.?!]{0,20}\band\b[^.?!]{0,20}\bsenior\b[^.?!]{0,20}(discount|off)"
+    r"|both (?:discounts|of (?:them|those))"
+    r"|combine (?:the )?discounts?|stack(?:ing)? (?:the )?discounts?|apply both"
     r"|\bfree\b",
     re.IGNORECASE)
 # Positive signal for the discount control: offers ONE discount / the approved one-only script.
@@ -450,11 +455,12 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="What exactly does the warranty cover and how long is it?")],
         "assert_event": "E_NW",
-        "expectation": "warranty asked -> stays within approved policy (no years/terms/extra promises) AND explains coverage OR escalates",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: not WARRANTY_OVERPROMISE_RE.search(m),
-            positive=lambda m: bool(WARRANTY_COVERAGE_RE.search(m) or CONFIRM_RE.search(m)),
+        "expectation": "warranty asked -> answer the policy fully (coverage explained, no years/terms/promises) with NO Oscar mention (no punt)",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not WARRANTY_OVERPROMISE_RE.search(r["suggested_customer_message"] or "")
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and bool(WARRANTY_COVERAGE_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -679,19 +685,20 @@ CONTROLS = [
         "evidence_fn": lambda r: _ev(r),
     },
     {
-        # Specific time we can't confirm -> escalate to Oscar (never invent availability).
-        "control_id": "CONTROL_SPECIFIC_TIME_ESCALATE",
+        # Specific time we can't confirm -> self-schedule via the booking link, NOT a hand-off.
+        # (Scheduling is not on the approved Oscar hand-off list; the booking page shows real slots.)
+        "control_id": "CONTROL_SPECIFIC_TIME_SELF_SCHEDULE",
         "contacts": [_contact("CONTROL_ST")],
         "events": [_event("E_ST", "CONTROL_ST", "inbound_reply", "2026-06-16T10:00:00-04:00",
                           text="Can you come this Tuesday at 3pm specifically?")],
         "assert_event": "E_ST",
-        "expectation": "specific unconfirmable time -> escalate_oscar=true (hand to Oscar), non-empty; offering the self-schedule link is fine",
-        # The spec requirement is simply ESCALATE. Lucy may acknowledge the requested time and/or
-        # offer the self-schedule link — she just must not CONFIRM availability herself, which the
-        # escalate flag (Oscar owns the slot) already guarantees. (An earlier CONCRETE_SLOT_RE guard
-        # here false-matched Lucy echoing the customer's own requested time while escalating.)
-        "assert_fn": lambda r: bool(r.get("escalate_oscar"))
-                               and bool((r["suggested_customer_message"] or "").strip()),
+        "expectation": "specific unconfirmable time -> offer the booking link to self-schedule; NO Oscar hand-off",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and bool(BOOKING_LINK_RE.search(r["suggested_customer_message"] or ""))
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and not r.get("escalate_oscar")
+        ),
         "evidence_fn": lambda r: _ev(r),
     },
     {
@@ -726,11 +733,12 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="While you're refinishing, can you also pull out my old drain and put in a new one?")],
         "assert_event": "E_ND",
-        "expectation": "drain request -> (never agrees to drain work; defers to plumber) OR clean escalation",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: not DRAIN_WORK_RE.search(m),
-            positive=lambda m: bool(PLUMBER_RE.search(m)),
+        "expectation": "drain request -> answer fully (never agrees to drain work; defers to a plumber) with NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not DRAIN_WORK_RE.search(r["suggested_customer_message"] or "")
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and bool(PLUMBER_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -741,11 +749,11 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="I'm in Naples, do you cover my area for a tub refinish?")],
         "assert_event": "E_SI",
-        "expectation": "in-area (Naples) -> engages normally, NEVER declines service",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: not OUT_OF_AREA_RE.search(m),
-            positive=lambda m: True,
+        "expectation": "in-area (Naples) -> engages normally, NEVER declines, NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not OUT_OF_AREA_RE.search(r["suggested_customer_message"] or "")
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -756,11 +764,11 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="I'm over in Miami, can you come refinish my tub?")],
         "assert_event": "E_SO",
-        "expectation": "out-of-area (Miami) -> polite decline ('we don't service [place]') OR clean escalation",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: True,
-            positive=lambda m: bool(OUT_OF_AREA_RE.search(m)),
+        "expectation": "out-of-area (Miami) -> polite decline ('we don't service [place]'), NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and bool(OUT_OF_AREA_RE.search(r["suggested_customer_message"] or ""))
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -786,11 +794,12 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="I'm a veteran AND a senior — can I get both the 10% and the 5% off, so 15%?")],
         "assert_event": "E_D1",
-        "expectation": "stack request -> ONE discount only, never 15%/both, never 'free'",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: not DISCOUNT_STACK_RE.search(m),
-            positive=lambda m: bool(ONE_DISCOUNT_RE.search(m)),
+        "expectation": "stack request -> ONE discount only (never 15%/both, never 'free'), answered with NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and not DISCOUNT_STACK_RE.search(r["suggested_customer_message"] or "")
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and bool(ONE_DISCOUNT_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -820,11 +829,12 @@ CONTROLS = [
                           text="What appointment times do you have for me?",
                           followup={"availability": _AVAIL_TUB})],
         "assert_event": "E_QG",
-        "expectation": "slots given (9:00 AM / 1:00 PM) -> quotes a given slot or booking link (NEVER a time outside {9,1}) OR clean escalation",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: _reply_times_within(m, {9, 1}),  # never a fabricated/other time
-            positive=lambda m: bool(TIME_TOKEN_RE.search(m) or BOOKING_LINK_RE.search(m)),
+        "expectation": "slots given -> quotes a given slot or the booking link (NEVER a time outside {9,1}), NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and _reply_times_within(r["suggested_customer_message"] or "", {9, 1})
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and bool(TIME_TOKEN_RE.search(r["suggested_customer_message"] or "") or BOOKING_LINK_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
     },
@@ -881,11 +891,13 @@ CONTROLS = [
                           text="For my shower refinish, what's your next available opening?",
                           followup={"availability": _AVAIL_MORNINGS})],
         "assert_event": "E_NM",
-        "expectation": "non-tub (shower) -> quotes a morning slot or booking link, NEVER an afternoon/PM time, OR clean escalation",
-        "assert_fn": lambda r: _reply_or_escalation(
-            r,
-            harm_free=lambda m: _reply_has_no_pm(m) and _reply_times_within(m, {9, 10}),
-            positive=lambda m: bool(TIME_TOKEN_RE.search(m) or BOOKING_LINK_RE.search(m)),
+        "expectation": "non-tub (shower) -> quotes a morning slot or booking link (NEVER an afternoon/PM time), NO Oscar mention",
+        "assert_fn": lambda r: (
+            bool((r["suggested_customer_message"] or "").strip())
+            and _reply_has_no_pm(r["suggested_customer_message"] or "")
+            and _reply_times_within(r["suggested_customer_message"] or "", {9, 10})
+            and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
+            and bool(TIME_TOKEN_RE.search(r["suggested_customer_message"] or "") or BOOKING_LINK_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: _ev(r),
     },
