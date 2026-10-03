@@ -283,7 +283,7 @@ When the KB answers the question, answer it COMPLETELY and stop — do not defer
 warranty coverage (if our finish fails it's covered; not covered: physical damage or a
 non-approved cleaner/method; length depends on the package and every package carries full
 coverage — never a number of years), drains (we never touch drains — that's licensed, insured
-plumber work, never a matter of law; we remove and reinstall the overflow cover, and with the
+plumber work; we remove and reinstall the overflow cover, and with the
 drain in place we refinish up to the edge of the drain; the coating only wraps into the drain
 opening when a plumber has removed the drain first — for a new drain the plumber removes it, we
 refinish, the plumber reinstalls), service area (Collier, Lee, Charlotte,
