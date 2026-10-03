@@ -201,6 +201,23 @@ PLUMBER_RE = re.compile(
     r"\bplumber\b|\blicensed\b|\bwe (don'?t|do not|can'?t|cannot) (remove|replace|touch|do)\b[^.?!]{0,20}\bdrain"
     r"|\boverflow\b|\bcan'?t (remove|replace|touch)\b[^.?!]{0,15}\bdrain",
     re.IGNORECASE)
+# A claim that our coating goes INTO / UNDER / inside the drain opening. Only TRUE with the drain
+# removed by a plumber first; with the drain in place we refinish up to its edge. So this claim is
+# a FAIL unless the same reply conditions it on a plumber having removed the drain beforehand.
+COAT_INTO_DRAIN_RE = re.compile(
+    r"\b(coat|coats|coating|refinish|resurface|spray|finish|wrap|wraps|seal|get|gets|go|goes)\b"
+    r"[^.?!]{0,30}\b(into|under|inside|in to|around the inside of)\b[^.?!]{0,25}\bdrain\b",
+    re.IGNORECASE)
+# The sanctioned licensing condition: a plumber removes/pulls/takes the drain out FIRST. Its
+# presence is what makes a coat-into-drain claim legitimate (and matches both orderings).
+PLUMBER_REMOVES_FIRST_RE = re.compile(
+    r"\bplumber\b(?:(?!\bdrain\b)[^.?!]){0,60}\b(remov\w*|pull\w*|take[sn]?\s+(?:it\s+)?out|takes?\s+off|detach\w*|disconnect\w*)\b"
+    r"|\b(remov\w*|pull\w*|take[sn]?\s+(?:it\s+)?out|detach\w*|disconnect\w*)\b(?:(?!\bplumber\b)[^.?!]){0,60}\bplumber\b"
+    r"|\b(once|after|when)\b[^.?!]{0,40}\bdrain\b[^.?!]{0,25}\b(remov\w*|out|off|gone)\b",
+    re.IGNORECASE)
+# A legal-requirement claim about drains — must NEVER appear. Declining drain work is "licensed,
+# insured plumber work", not a matter of law. ("Florida law", "the law", "legally", etc.)
+LAW_CLAIM_RE = re.compile(r"\blaw\b|\blegally\b", re.IGNORECASE)
 # Out-of-area polite decline (positive signal for the out-of-area service control). Broad on the
 # decline verb (service/serve/cover/go/make it/come/travel/get) so phrasing variation still counts;
 # an IN-area acceptance ("yes, we cover Naples") carries no negation and never matches.
@@ -733,12 +750,17 @@ CONTROLS = [
                           "2026-06-16T10:00:00-04:00",
                           text="While you're refinishing, can you also pull out my old drain and put in a new one?")],
         "assert_event": "E_ND",
-        "expectation": "drain request -> answer fully (never agrees to drain work; defers to a plumber) with NO Oscar mention",
+        "expectation": "drain request -> defers to a plumber; NO 'law' claim; a coat-into-drain claim only if conditioned on a plumber removing it first; NO Oscar mention",
         "assert_fn": lambda r: (
             bool((r["suggested_customer_message"] or "").strip())
             and not DRAIN_WORK_RE.search(r["suggested_customer_message"] or "")
             and not OSCAR_MENTION_RE.search(r["suggested_customer_message"] or "")
             and bool(PLUMBER_RE.search(r["suggested_customer_message"] or ""))
+            and not LAW_CLAIM_RE.search(r["suggested_customer_message"] or "")
+            and (
+                not COAT_INTO_DRAIN_RE.search(r["suggested_customer_message"] or "")
+                or bool(PLUMBER_REMOVES_FIRST_RE.search(r["suggested_customer_message"] or ""))
+            )
         ),
         "evidence_fn": lambda r: _ev(r),
     },

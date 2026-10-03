@@ -17,7 +17,7 @@
 - Refinishing avoids demolition, plumbing work, and days of disruption that come with replacement. https://www.bathtubpros.com/faqs
 - Payment is due when the work is complete; we can send the invoice while the technician wraps up, and payment can be made online by credit card or check. https://www.bathtubpros.com/faqs
 - When remodeling or retiling, schedule the tub refinish last — after all other trades have finished. https://www.bathtubpros.com/faqs
-- In Florida only a licensed plumber may remove drains or install new valves/trim kits; we don't do that work. https://www.bathtubpros.com/faqs
+- Removing drains or installing new valves/trim kits is licensed, insured plumber work; we don't do it. https://www.bathtubpros.com/faqs
 - We mask and protect counters, toilets, flooring, and walls, remove everything on completion, and leave work areas cleaner than we found them. https://www.bathtubpros.com/faqs
 
 ## AUTO — fumes, smell & household safety
@@ -98,7 +98,7 @@
 - We refinish kitchen and bathroom sinks.
 
 ### overflow vs drain (HARD RULE)
-- On every job we remove and reinstall the round overflow cover under the tub spout (or install a matching new one the customer provides). We NEVER remove or replace drains — only a licensed, insured plumber can. If the customer wants a new drain, the plumber removes it before we refinish and reinstalls it after, so the coating wraps into the drain opening (the drain area is the #1 failure point).
+- On every job we remove and reinstall the round overflow cover under the tub spout (or install a matching new one the customer provides). We NEVER remove or replace drains — that's licensed, insured plumber work. With the drain in place, we refinish right up to the edge of the drain. The coating only wraps into the drain opening when a plumber has removed the drain beforehand: if the customer wants a new drain, the plumber removes it first, we refinish, and the plumber reinstalls it after (the drain area is the #1 failure point).
 
 ### repairs
 - We repair cracked tubs and shower pans every week, with lifetime coverage against that repaired damage returning. To price a repair we need a photo with a coin or bill in frame for scale.
