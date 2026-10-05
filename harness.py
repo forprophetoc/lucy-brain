@@ -190,6 +190,7 @@ class Recommendation:
     followup_at: str = ""                                   # timed follow-up, ISO 8601 with ET offset; "" if none
     phase: int = 1
     created_ts: float = field(default_factory=lambda: time.time())
+    error: str = ""                                         # inference failure reason (code: detail); "" on success
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -603,6 +604,21 @@ def _redact_tokens(text: str) -> str:
     return text
 
 
+def _log_infer_failure(backend: str, model: str, etype: Any, msg: Any) -> None:
+    # One flushed line per failed model call so it reaches Render's log. Key-free, capped at 300.
+    text = re.sub(r"\s+", " ", _redact_tokens(str(msg))).strip()[:300]
+    print(f"[HC] infer FAILED backend={backend} model={model} type={etype} msg={text}", flush=True)
+
+
+def _error_detail(raw: Dict[str, Any]) -> str:
+    # The error V4 receives in compose()'s "error" field: code + key-free reason; "" on success.
+    err = raw.get("error") or ""
+    if not err:
+        return ""
+    msg = re.sub(r"\s+", " ", _redact_tokens(str(raw.get("message_to_oscar") or ""))).strip()
+    return (f"{err}: {msg}" if msg and msg != err else err)[:300]
+
+
 def _model_facing_context(context: Dict[str, Any]) -> Dict[str, Any]:
     # A copy of the harness context with cheat fields removed (no mutation of the original).
     safe = copy.deepcopy(context)
@@ -690,7 +706,7 @@ def _log_model_once(mode: str) -> None:
     global _model_logged
     if not _model_logged:
         model = DEEPSEEK_MODEL if mode == "deepseek" else BRAIN_MODEL
-        print(f"[HC] brain model pinned: {model} (mode={mode})")
+        print(f"[HC] brain model pinned: {model} (mode={mode})", flush=True)
         _model_logged = True
 
 
@@ -837,6 +853,7 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
     """DeepSeek chat-completions inference. SAME system prompt, user turn, retry and parser as
     _infer_claude_api; transport/HTTP/timeout errors -> error="api_error", unparseable output
     (after the same one retry) -> "bad_json". Best-effort; never throws."""
+    import urllib.error
     import urllib.request
 
     system = SYSTEM_PROMPT
@@ -846,7 +863,7 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
             raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
 
     _log_model_once("deepseek")
-    print(f"[HC] infer backend=deepseek model={DEEPSEEK_MODEL}")
+    print(f"[HC] infer backend=deepseek model={DEEPSEEK_MODEL}", flush=True)
 
     def _call(extra: str = ""):
         body = json.dumps({
@@ -877,6 +894,16 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
     try:
         inner, usage = _call()
     except Exception as e:  # transport / HTTP error / timeout / auth — surface, never crash the loop
+        detail = str(e)
+        if isinstance(e, urllib.error.HTTPError):
+            etype = e.code  # HTTP status; DeepSeek puts the reason in the body
+            try:
+                detail += " " + e.read().decode("utf-8", "replace")
+            except Exception:
+                pass
+        else:
+            etype = type(e).__name__
+        _log_infer_failure("deepseek", DEEPSEEK_MODEL, etype, detail)
         return _infer_result(message_to_oscar=_redact_tokens(str(e)), error="api_error")
 
     rec = _parse_inner_json(inner)
@@ -887,8 +914,12 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
         except Exception:
             rec = None
     if rec is None:
+        _log_infer_failure("deepseek", DEEPSEEK_MODEL, "bad_json", "model did not return valid JSON after one retry")
         return _infer_result(message_to_oscar="model did not return valid JSON", error="bad_json")
-    return _result_from_rec(rec, usage)
+    out = _result_from_rec(rec, usage)
+    if out["error"]:
+        _log_infer_failure("deepseek", DEEPSEEK_MODEL, out["error"], out["message_to_oscar"])
+    return out
 
 
 def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
@@ -991,6 +1022,7 @@ def infer(
     if backend == "deepseek":
         key = os.environ.get("DEEPSEEK_API_KEY")
         if not key:
+            _log_infer_failure("deepseek", DEEPSEEK_MODEL, "no_api_key", "no API key for backend=deepseek")
             return _infer_result(message_to_oscar="no API key for backend=deepseek", error="no_api_key")
         return _infer_deepseek(context, key)
     # Testing engine: Lucy runs on Claude via headless `claude -p` (OAuth subscription).
@@ -1355,6 +1387,10 @@ def run_bakeoff(
 
         # --- INFER (SWAP POINT) ---
         raw_llm_output = infer(context, backend, claude_api_key, gemini_api_key)
+        # deepseek logs its own failures (with HTTP status) at the source; log the rest here, once.
+        if raw_llm_output.get("error") and backend != "deepseek":
+            _log_infer_failure(backend, {"api": ANTHROPIC_MODEL, "claude": BRAIN_MODEL}.get(backend, "-"),
+                               raw_llm_output.get("error"), raw_llm_output.get("message_to_oscar", ""))
         # print(f"DEBUG: Raw LLM Output for event {event['event_id']}: {raw_llm_output}") # Debug print
 
         # Validate and parse LLM output into Recommendation
@@ -1386,6 +1422,7 @@ def run_bakeoff(
                 followup_at=raw_llm_output.get("followup_at", "") or "",
                 phase=raw_llm_output.get("phase", 1),
                 created_ts=now_timestamp,
+                error=_error_detail(raw_llm_output),
             )
         except Exception as e:
             print(f"Error parsing LLM output for event {event['event_id']}: {e}")

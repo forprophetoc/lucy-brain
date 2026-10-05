@@ -538,5 +538,135 @@ class DeepSeekBackend(unittest.TestCase):
         self.assertEqual(out["error"], "no_api_key")
 
 
+def _http_err(code, body):
+    import urllib.error
+    return urllib.error.HTTPError("https://api.deepseek.com/chat/completions", code, "err", {},
+                                  io.BytesIO(body.encode("utf-8")))
+
+
+class FailureLogging(unittest.TestCase):
+    """Fix — every failed DeepSeek call prints exactly one flushed, key-free [HC] infer FAILED line."""
+
+    def _run(self, *effects):
+        calls = []
+
+        def fake_urlopen(req, timeout=None):
+            calls.append(req)
+            eff = effects[min(len(calls), len(effects)) - 1]
+            if isinstance(eff, BaseException):
+                raise eff
+            return _HttpResp(_ds_payload(eff))
+
+        buf = io.StringIO()
+        with mock.patch("urllib.request.urlopen", fake_urlopen), contextlib.redirect_stdout(buf):
+            out = harness._infer_deepseek(CTX, "sk-ds-test")
+        lines = [l for l in buf.getvalue().splitlines() if l.startswith("[HC] infer FAILED")]
+        return out, lines, buf.getvalue()
+
+    def _one(self, lines, out_text, etype):
+        self.assertEqual(len(lines), 1, out_text)
+        self.assertIn("backend=deepseek model=deepseek-v4-pro", lines[0])
+        self.assertIn(f" type={etype} msg=", lines[0])
+        self.assertLessEqual(len(lines[0].split(" msg=", 1)[1]), 300)
+        self.assertNotIn("sk-", out_text)
+
+    def test_timeout(self):
+        out, lines, text = self._run(TimeoutError("timed out"))
+        self._one(lines, text, "TimeoutError")
+        self.assertIn("msg=timed out", lines[0])
+        self.assertEqual(out["error"], "api_error")
+
+    def test_401(self):
+        body = '{"error":{"message":"Authentication Fails, Your api key: sk-ds-test is invalid","type":"authentication_error"}}'
+        out, lines, text = self._run(_http_err(401, body))
+        self._one(lines, text, "401")
+        self.assertIn("authentication_error", lines[0])
+        self.assertEqual(out["error"], "api_error")
+
+    def test_400(self):
+        body = '{"error":{"message":"Model Not Exist","type":"invalid_request_error"}}'
+        out, lines, text = self._run(_http_err(400, body))
+        self._one(lines, text, "400")
+        self.assertIn("Model Not Exist", lines[0])
+
+    def test_malformed_json(self):
+        out, lines, text = self._run("not json", "still not json")
+        self._one(lines, text, "bad_json")
+        self.assertEqual(out["error"], "bad_json")
+
+    def test_success_prints_no_failed_line(self):
+        out, lines, text = self._run(json.dumps(GOOD))
+        self.assertEqual(lines, [])
+        self.assertEqual(out["error"], "")
+
+    def test_long_body_capped_at_300(self):
+        out, lines, text = self._run(_http_err(500, "x " * 1000))
+        self._one(lines, text, "500")
+
+    def test_prints_are_flushed(self):
+        src = open("harness.py", encoding="utf-8").read()
+        self.assertIn('print(f"[HC] infer FAILED backend={backend} model={model} type={etype} msg={text}", flush=True)', src)
+        self.assertIn('print(f"[HC] infer backend=deepseek model={DEEPSEEK_MODEL}", flush=True)', src)
+        boot = open("hc_compose_service.py", encoding="utf-8").read()
+        self.assertEqual(boot.count("flush=True"), 2)
+
+
+class ErrorPassthrough(unittest.TestCase):
+    """Fix — a failed inference reaches V4 in compose()'s "error" field; success is byte-identical."""
+
+    # compose() output at 32bf6c9 (pre-fix) for the mocked success below.
+    GOLDEN_OK = ('{"reply": "You got it!", "send_decision": "send_now", "facts": {}, "language": "en", '
+                 '"memory_facts_used": [], "reasoning": "r", "error": "", '
+                 '"followup_at": "2026-10-05T16:00:00-04:00"}')
+
+    def _compose(self, effect, **req):
+        def fake_urlopen(r, timeout=None):
+            if isinstance(effect, BaseException):
+                raise effect
+            return _HttpResp(_ds_payload(effect))
+
+        buf = io.StringIO()
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "deepseek", "DEEPSEEK_API_KEY": "sk-ds-test"}), \
+                mock.patch("urllib.request.urlopen", fake_urlopen), contextlib.redirect_stdout(buf):
+            os.environ.pop("ANTHROPIC_API_KEY", None)
+            out = compose(_req(**req))
+        return out, buf.getvalue()
+
+    def test_failure_populates_error_and_escalates(self):
+        out, text = self._compose(_http_err(401, '{"error":{"type":"authentication_error"}}'))
+        self.assertEqual(out["send_decision"], "escalate_human")
+        self.assertTrue(out["error"].startswith("api_error: HTTP Error 401"), out["error"])
+        self.assertNotIn("sk-", out["error"] + text)
+        self.assertEqual(text.count("[HC] infer FAILED"), 1)
+
+    def test_sweep_failure_populates_error_and_escalates(self):
+        out, text = self._compose(TimeoutError("timed out"), trigger="due_date_sweep")
+        self.assertEqual(out["send_decision"], "escalate_human")
+        self.assertEqual(out["error"], "api_error: timed out")
+        self.assertEqual(text.count("[HC] infer FAILED"), 1)
+
+    def test_bad_json_error(self):
+        out, _ = self._compose("not json")
+        self.assertEqual(out["error"], "bad_json: model did not return valid JSON")
+        self.assertEqual(out["send_decision"], "escalate_human")
+
+    def test_success_byte_identical_to_before(self):
+        out, text = self._compose(json.dumps(GOOD))
+        self.assertEqual(json.dumps(out), self.GOLDEN_OK)
+        self.assertNotIn("[HC] infer FAILED", text)
+
+    def test_api_backend_failure_logged_once_in_run_bakeoff(self):
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "api"}), \
+                mock.patch("harness.infer", return_value=harness._infer_result(
+                    message_to_oscar="HTTP 529 overloaded", error="api_error")), \
+                contextlib.redirect_stdout(io.StringIO()) as buf:
+            out = compose(_req())
+        lines = [l for l in buf.getvalue().splitlines() if l.startswith("[HC] infer FAILED")]
+        self.assertEqual(len(lines), 1)
+        self.assertIn("backend=api model=claude-sonnet-4-6 type=api_error msg=HTTP 529 overloaded", lines[0])
+        self.assertEqual(out["error"], "api_error: HTTP 529 overloaded")
+        self.assertEqual(out["send_decision"], "escalate_human")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -246,7 +246,7 @@ if __name__ == "__main__":
     host = os.environ.get("HC_HOST") or "127.0.0.1"
     port = int(os.environ.get("HC_PORT") or "8787")
     secret_on = "yes" if os.environ.get("HC_COMPOSE_SECRET") else "no"
-    print(f"[HC] brain model pinned: {_active_model()} (backend={backend})")
+    print(f"[HC] brain model pinned: {_active_model()} (backend={backend})", flush=True)
     print(f"[HC] /compose on http://{host}:{port}/compose + GET /health (backend={backend}, "
-          f"secret={secret_on}, no-send)")
+          f"secret={secret_on}, no-send)", flush=True)
     ThreadingHTTPServer((host, port), Handler).serve_forever()
