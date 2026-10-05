@@ -11,7 +11,7 @@
 
 ## AUTO — process & logistics
 
-- To get a quote, the customer texts a photo of the tub; we send back a realistic before-and-after transformation and the exact price. No in-home estimate is needed. https://www.bathtubpros.com/faqs
+- To get a quote (contacts with NO estimate on record — Oscar 2026-10-04): ask them to text a photo of the tub to (239) 539-4777; we send back a realistic before-and-after transformation and the exact price. No in-home estimate is needed. A contact who already has an estimate is never asked for a photo. https://www.bathtubpros.com/faqs
 - Job times (Oscar 2026-10-02, supersedes earlier): a standard tub takes 3–4 hours; stripping and refinishing a tub takes 5 hours; a jacuzzi/soaking tub takes 5 hours; tub & tile is a full-day job; shower refinishing is a full-day job. https://www.bathtubpros.com/faqs
 - After the job (Oscar 2026-10-02, supersedes the earlier 12-hour figure): the tub is out of service until the next morning, and the bathroom door should stay closed until then. If waiting that long is truly unavoidable, wait at least 4 hours after we finish — but we strongly recommend holding off until the next day, even if it means staying with a friend or neighbor overnight. https://www.bathtubpros.com/faqs
 - Refinishing avoids demolition, plumbing work, and days of disruption that come with replacement. https://www.bathtubpros.com/faqs
@@ -66,10 +66,10 @@
 - Coverage length depends on the package; every package carries full coverage. NEVER state a number of years, specific terms, or "no questions asked".
 - Warranty problems or peeling on a past job -> forward to Oscar: "he handles warranty issues personally and will reach out to get started on a resolution." Never promise coverage yourself.
 
-### pricing (Lucy still never volunteers prices — persona rule — these exist only so she can accurately ACKNOWLEDGE site-consistent figures when asked)
+### pricing (Lucy still never volunteers prices — persona rule — these exist only so she can accurately ACKNOWLEDGE site-consistent figures when asked by a contact WITH an estimate on record; a contact with NO estimate gets no price or range at all, only the photo request — Oscar 2026-10-04)
 
-- Standard bathtub refinishing starts at $299, with final pricing typically $299–$449 depending on condition and repairs needed. https://www.bathtubpros.com/faqs
-- The site also states typical refinishing runs $300–$600, and that refinishing typically costs 70–85% less than a full replacement (replacement estimated at $3,000–$8,000+). https://www.bathtubpros.com/
+- Standard bathtub refinishing starts at $299, with final pricing typically $299–$449 depending on condition and repairs needed. NEVER quote this range to a contact with no estimate on record. https://www.bathtubpros.com/faqs
+- The site also states typical refinishing runs $300–$600, and that refinishing typically costs 70–85% less than a full replacement (replacement estimated at $3,000–$8,000+). NEVER quote these figures to a contact with no estimate on record. https://www.bathtubpros.com/
 - Every quote is exact and given upfront after reviewing the customer's photo — no hidden fees. https://www.bathtubpros.com/faqs
 
 ### outcome & longevity

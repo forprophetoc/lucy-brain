@@ -51,6 +51,15 @@ OSCAR_HANDOFF_RE = re.compile(
 
 def has(rx, s): return bool(rx.search(s or ""))
 
+# D2 (Oscar 2026-10-04): a contact with NO estimate on record is asked to text a photo to
+# (239) 539-4777 and quoted NO price or range; rule #15 (no photo) applies only to contacts WITH
+# an estimate on record — here #2 and #5 (their history quotes $3,200).
+PRICE_OR_RANGE_RE = re.compile(r"\$\s?\d|\b\d{3}\s*(?:-|–|to)\s*\$?\d{3}\b", re.I)
+ESTIMATE_ON_RECORD = {"2", "5"}
+
+def asks_photo_to_539(s) -> bool:
+    return bool(PHOTO_REQ_RE.search(s or "")) and "539-4777" in (s or "")
+
 def asks_photo_or_estimate(s) -> bool:
     m = s or ""
     if PHOTO_REQ_RE.search(m):
@@ -66,13 +75,13 @@ SCENARIOS = []
 def scen(key, title, ctx, req, assert_fn, observe=None):
     SCENARIOS.append((key, title, ctx, req, assert_fn, observe))
 
-# 1 — new cold lead (rule #15: NO photo ask, NO estimate-initiation — hand pricing to Oscar)
+# 1 — new cold lead, no estimate on record (D2: photo to 539, NO price or range)
 scen("1", "New cold lead", "No history, no quote on file.",
      {"trigger": "inbound_reply", "now": NOW, "contact_id": "S1",
       "identity": {"first_name": "Dana", "city": "Fort Myers"}, "inbound_text": "how much to refinish a tub?",
       "history": [], "memory": {}},
-     lambda r, o: (bool(r.strip()) and not asks_photo_or_estimate(r),
-                   "warm reply, NO photo request and NO estimate-initiation (hand pricing to Oscar)"))
+     lambda r, o: (asks_photo_to_539(r) and not has(PRICE_OR_RANGE_RE, r),
+                   "asks for a tub photo to (239) 539-4777 AND quotes NO price or range (D2)"))
 
 # 2 — returning customer WITH a quote (the photo-mode catch)
 scen("2", "Returning customer WITH a quote", "History contains a prior Gold quote of $3,200.",
@@ -124,8 +133,8 @@ scen("6", "Price question, price NOT on record", "No price anywhere in history."
                    ("lucy", "Happy to help! What city are you in?", "2026-06-01T10:01:00-04:00")),
       "memory": {}},
      lambda r, o: (((not has(PRICE_NUM_RE, r)) or o["send_decision"] == "escalate_human")
-                   and not asks_photo_or_estimate(r),
-                   "must invent NO number AND NO photo/estimate-initiation (confirm/escalate, hand pricing to Oscar)"))
+                   and asks_photo_to_539(r),
+                   "must invent NO number AND (D2, no estimate on record) ask for a tub photo to (239) 539-4777"))
 
 # 7 — natural-language opt-out
 scen("7", "Natural-language opt-out", "Customer asks to stop.",
@@ -179,12 +188,12 @@ def main():
         if observe:
             md.append(f"- **Observation (Oscar's call):** {observe}")
         md.append("")
-    # GLOBAL cross-cutting sweep (rule #15): no reply in ANY scenario may ask for a photo or
-    # initiate an estimate.
-    offenders = [f"#{k}" for (k, rep) in replies if asks_photo_or_estimate(rep)]
+    # GLOBAL cross-cutting sweep (rule #15, D2 scope): no reply to a contact WITH an estimate on
+    # record may ask for a photo or initiate an estimate (no-estimate contacts are asked by D2).
+    offenders = [f"#{k}" for (k, rep) in replies if k in ESTIMATE_ON_RECORD and asks_photo_or_estimate(rep)]
     g_verdict = "PASS" if not offenders else "FAIL"
     results.append(("G", "GLOBAL_NO_PHOTO_SWEEP (rule #15)", g_verdict,
-                    "zero photo/estimate-initiation across all replies" if not offenders
+                    "zero photo/estimate-initiation across replies to contacts WITH an estimate (D2)" if not offenders
                     else f"OFFENDERS: {', '.join(offenders)}"))
     print(f"[{g_verdict}] G. GLOBAL_NO_PHOTO_SWEEP — {'clean' if not offenders else 'OFFENDERS: ' + ', '.join(offenders)}")
 

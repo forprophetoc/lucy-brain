@@ -28,9 +28,16 @@ import hmac
 import io
 import json
 import os
+import re
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from harness import run_bakeoff, BRAIN_MODEL
+from harness import run_bakeoff, BRAIN_MODEL, DEEPSEEK_MODEL, NY_TZ
+
+
+def _active_model() -> str:
+    """The model the configured backend actually calls (for the boot line and /health)."""
+    return DEEPSEEK_MODEL if (os.environ.get("HC_BACKEND") or "").strip() == "deepseek" else BRAIN_MODEL
 
 CONTACT_COLS = ["contact_id", "first_name", "last_name", "phone", "city",
                 "service", "package", "estimate_amount", "tags", "persona_note"]
@@ -48,10 +55,42 @@ def _csv(rows, cols):
 
 
 def _now_iso(req):
+    # V4's now_et (ET ISO 8601 with offset) is the clock when present and valid; else `now`.
+    now_et = _iso_with_offset(req.get("now_et"))
+    if now_et:
+        return now_et
     now = (req.get("now") or "").strip()
     if now.endswith("Z"):
         now = now[:-1] + "+00:00"  # harness uses datetime.fromisoformat
     return now or "2026-01-01T12:00:00-05:00"
+
+
+_TIMED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$")
+
+
+def _iso_with_offset(raw) -> str:
+    """The value when it is an ISO 8601 date-time WITH an offset (or Z), else ""."""
+    s = str(raw or "").strip()
+    if not _TIMED_RE.match(s):
+        return ""
+    try:
+        datetime.fromisoformat(s[:-1] + "+00:00" if s.endswith("Z") else s)
+    except ValueError:
+        return ""
+    return s
+
+
+def _followup_at(raw) -> str:
+    """The brain's followup_at as canonical ET ISO 8601 (seconds, offset), or "" when absent.
+    A malformed value is dropped (logged) — the reply is never affected."""
+    if not raw:
+        return ""
+    s = _iso_with_offset(raw)
+    if not s:
+        print(f"[HC] followup_at dropped (malformed): {str(raw)[:80]!r}")
+        return ""
+    dt = datetime.fromisoformat(s[:-1] + "+00:00" if s.endswith("Z") else s)
+    return dt.astimezone(NY_TZ).isoformat(timespec="seconds")
 
 
 def compose(req: dict) -> dict:
@@ -130,7 +169,7 @@ def compose(req: dict) -> dict:
         facts["scope"] = scope
     if disengaged:
         facts["disengaged"] = disengaged
-    return {
+    resp = {
         "reply": reply,
         "send_decision": "escalate_human" if escalate else "send_now",
         "facts": facts,
@@ -139,6 +178,12 @@ def compose(req: dict) -> dict:
         "reasoning": rec.get("rationale") or "",
         "error": rec.get("error") or "",
     }
+    # Timed follow-up (optional): present only when the brain emitted a valid one, so a response
+    # without it is byte-identical to before. V4 validates range and stores it on sends only.
+    followup_at = _followup_at(rec.get("followup_at"))
+    if followup_at:
+        resp["followup_at"] = followup_at
+    return resp
 
 
 def _err(msg):
@@ -168,7 +213,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Health check for Render — always 200, no auth, no brain call.
         if self.path.rstrip("/") == "/health":
-            self._json({"ok": True, "model": BRAIN_MODEL})
+            self._json({"ok": True, "model": _active_model()})
             return
         self.send_response(404)
         self.end_headers()
@@ -201,7 +246,7 @@ if __name__ == "__main__":
     host = os.environ.get("HC_HOST") or "127.0.0.1"
     port = int(os.environ.get("HC_PORT") or "8787")
     secret_on = "yes" if os.environ.get("HC_COMPOSE_SECRET") else "no"
-    print(f"[HC] brain model pinned: {BRAIN_MODEL} (backend={backend})")
+    print(f"[HC] brain model pinned: {_active_model()} (backend={backend})")
     print(f"[HC] /compose on http://{host}:{port}/compose + GET /health (backend={backend}, "
           f"secret={secret_on}, no-send)")
     ThreadingHTTPServer((host, port), Handler).serve_forever()

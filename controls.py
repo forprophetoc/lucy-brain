@@ -223,7 +223,7 @@ LAW_CLAIM_RE = re.compile(r"\blaw\b|\blegally\b", re.IGNORECASE)
 # an IN-area acceptance ("yes, we cover Naples") carries no negation and never matches.
 OUT_OF_AREA_RE = re.compile(
     r"\b(?:don'?t|do not|can'?t|cannot|won'?t|will not|unable to)\s+"
-    r"(?:service|serve|cover|work in|go (?:out )?to|make it (?:out )?to|come (?:out )?to|travel (?:out )?to|get (?:out )?to)\b"
+    r"(?:service|serve|cover|help|work in|go (?:out )?to|make it (?:out )?to|come (?:out )?to|travel (?:out )?to|get (?:out )?to)\b"
     r"|\boutside (?:of )?(?:our )?(?:service )?(?:area|coverage|range|zone)\b"
     r"|\bnot in our (?:service )?area\b"
     r"|\bbest of luck\b"
@@ -308,6 +308,23 @@ _AVAIL_MORNINGS = [
 ]
 
 
+# D2 (Oscar 2026-10-04): a contact with NO estimate on record is asked to text a photo to
+# (239) 539-4777 and is quoted NO price or range. Rule #15 (no photo) applies only to contacts
+# WITH an estimate on record.
+PRICE_OR_RANGE_RE = re.compile(r"\$\s?\d|\b\d{3}\s*(?:-|–|to)\s*\$?\d{3}\b", re.IGNORECASE)
+
+
+def asks_photo_to_539(msg) -> bool:
+    """D2: the reply asks for a tub photo AND names the 539-4777 number."""
+    m = msg or ""
+    return bool(PHOTO_REQ_RE.search(m)) and "539-4777" in m
+
+
+def _has_estimate_on_record(control) -> bool:
+    """D2 scope: a control's contact has an estimate on record when its package or amount is set."""
+    return any((c.get("package") or c.get("estimate_amount")) for c in control.get("contacts", []))
+
+
 def asks_photo_or_estimate(msg) -> bool:
     """True if a customer-facing reply requests a photo/image OR initiates an estimate
     itself (estimate-initiation that's handed to Oscar is allowed)."""
@@ -331,9 +348,10 @@ def _reply_or_escalation(rec, harm_free=lambda m: True, positive=lambda m: True)
     return bool(msg.strip()) and positive(msg)
 
 
-def _ev(rec, n=150):
+def _ev(rec):
+    # Full reply text (reporting only) so a failing control shows exactly what Lucy wrote.
     msg = rec["suggested_customer_message"] or ""
-    return f"esc={rec.get('escalate_oscar')} | msg={msg[:n]!r}"
+    return f"esc={rec.get('escalate_oscar')} | msg={msg!r}"
 
 
 def _contact(cid, package="gold", amount="451", tags="", note="", first="Pat",
@@ -401,7 +419,7 @@ CONTROLS = [
         ),
         "evidence_fn": lambda r: (
             f"memory_facts_used={r['memory_facts_used']} | "
-            f"msg~{(r['suggested_customer_message'] or '')[:50]!r}"
+            f"msg~{(r['suggested_customer_message'] or '')!r}"
         ),
     },
     {
@@ -415,7 +433,7 @@ CONTROLS = [
         "assert_fn": lambda r: r["language"] == "es",
         "evidence_fn": lambda r: (
             f"language={r['language']!r} | "
-            f"msg~{(r['suggested_customer_message'] or '')[:40]!r}"
+            f"msg~{(r['suggested_customer_message'] or '')!r}"
         ),
     },
     {
@@ -462,7 +480,7 @@ CONTROLS = [
         ),
         "evidence_fn": lambda r: (
             f"escalate_oscar={r.get('escalate_oscar')} | reason={r.get('escalation_reason')!r} | "
-            f"msg={(r['suggested_customer_message'] or '')[:140]!r}"
+            f"msg={(r['suggested_customer_message'] or '')!r}"
         ),
     },
     {
@@ -593,7 +611,7 @@ CONTROLS = [
         ),
         "evidence_fn": lambda r: (
             f"esc={r.get('escalate_oscar')} | has_gold={'gold' in (r['suggested_customer_message'] or '').lower()} | "
-            f"msg={(r['suggested_customer_message'] or '')[:180]!r}"
+            f"msg={(r['suggested_customer_message'] or '')!r}"
         ),
     },
     {
@@ -627,9 +645,10 @@ CONTROLS = [
                           "2026-06-16T11:00:00-04:00",
                           text="Hi, how much to refinish a tub?")],
         "assert_event": "E_NP",
-        "expectation": "new lead 'how much?' -> NO photo/image request AND no estimate-initiation (hand pricing to Oscar)",
-        "assert_fn": lambda r: (not asks_photo_or_estimate(r["suggested_customer_message"] or ""))
-                               and bool((r["suggested_customer_message"] or "").strip()),
+        # D2: a no-estimate lead gets the photo-to-539 request and NO price or range.
+        "expectation": "new lead 'how much?' (no estimate) -> asks for a tub photo to (239) 539-4777 AND quotes NO price or range (D2)",
+        "assert_fn": lambda r: asks_photo_to_539(r["suggested_customer_message"] or "")
+                               and not PRICE_OR_RANGE_RE.search(r["suggested_customer_message"] or ""),
         "evidence_fn": lambda r: _ev(r),
     },
     # === Stage 5 — goal/manners + disengagement controls ====================
@@ -838,7 +857,7 @@ CONTROLS = [
             and bool(SPANISH_TEXT_RE.search(r["suggested_customer_message"] or ""))
         ),
         "evidence_fn": lambda r: (
-            f"language={r['language']!r} | msg~{(r['suggested_customer_message'] or '')[:60]!r}"
+            f"language={r['language']!r} | msg~{(r['suggested_customer_message'] or '')!r}"
         ),
     },
 
@@ -987,21 +1006,22 @@ def run_controls(only=None):
             passed, evidence = False, f"assert error: {e}"
         results.append((c["control_id"], passed, c["expectation"], evidence))
 
-    # GLOBAL cross-cutting sweep (rule #15): scan EVERY reply in this run — no customer-facing
-    # message may request a photo/image or initiate an estimate. Excludes the deliberate canary.
+    # GLOBAL cross-cutting sweep (rule #15): scan every reply to a contact WITH an estimate on
+    # record (D2 scope) — none may request a photo/image or initiate an estimate. Excludes the
+    # deliberate canary and no-estimate contacts (D2 asks those for a photo).
     offenders = []
     for c in selected:
-        if "deliberate" in c["control_id"]:
+        if "deliberate" in c["control_id"] or not _has_estimate_on_record(c):
             continue
         row = rows.get(c["assert_event"])
         if not row:
             continue
         msg = row["recommendation"].get("suggested_customer_message") or ""
         if asks_photo_or_estimate(msg):
-            offenders.append(f"{c['control_id']}:{msg[:60]!r}")
+            offenders.append(f"{c['control_id']}:{msg!r}")
     results.append((
         "GLOBAL_NO_PHOTO_SWEEP", not offenders,
-        "rule #15: ZERO photo-requests / estimate-initiations across ALL replies",
+        "rule #15: ZERO photo-requests / estimate-initiations across replies to contacts WITH an estimate (D2)",
         "clean — no reply asks for a photo or starts an estimate" if not offenders
         else f"OFFENDERS: {'; '.join(offenders)}",
     ))

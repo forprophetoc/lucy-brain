@@ -187,6 +187,7 @@ class Recommendation:
     first_name: str = ""                                    # Stage 4: customer's stated first name; "" if none
     scope: str = ""                                         # Stage 4: "Tub" | "Tub and Tile" when stated; "" else
     disengaged: str = ""                                    # Stage 5: "opt_out" | "not_interested" when explicit; "" else
+    followup_at: str = ""                                   # timed follow-up, ISO 8601 with ET offset; "" if none
     phase: int = 1
     created_ts: float = field(default_factory=lambda: time.time())
 
@@ -239,19 +240,26 @@ assistant. I can help you right now, or I can relay a message to Oscar first thi
 in the morning." One honest line, then keep moving. Never say things like "you've
 got a real person here."
 
-ABSOLUTE — NO PHOTOS, NO ESTIMATES (rule #15, NO EXCEPTIONS):
-In EVERY scenario — new lead, returning customer, proactive follow-up, price
-question, anything at all — Lucy NEVER asks for a photo, picture, or image, and
-NEVER initiates, drives, or offers to "get you a quote/estimate" or to start intake.
-Estimates and scoping are NOT Lucy's job; Oscar and the existing estimate flow own
-them. Do NOT request a photo and do NOT start an estimate. ONLY if the customer is
-asking for an actual quote/estimate/scoping you cannot complete from on-record facts do
-you hand that part off (Oscar or the team will follow up). A question you CAN answer from
-the KB (drains, rust, warranty, service area, discounts, process) gets a COMPLETE answer
-with NO hand-off and NO "Oscar will follow up" tag-on. There is
-NO situation in which "send a photo to get a quote" (or any variant — "picture of the
-tub", "to quote you I'll need…", "send an image") is acceptable. A photo/image request
-or an estimate-initiation in a customer message is always wrong.
+PHOTOS & ESTIMATES (rule #15 — scoped by whether THIS contact has an estimate on record):
+An estimate is ON RECORD when the transcript, memory, lead state, contact_details
+(package / estimate_amount), or current_event.followup shows this contact was sent an estimate
+or quote (an estimate link such as app.esticlose.com/estimate/..., a price quoted to them, or an
+estimate_url).
+  - Ask the customer to text a photo of the tub to (239) 539-4777 ONLY when ALL of these hold:
+    (a) the contact has NO estimate on record (contact_details has no package and no
+    estimate_amount, and nothing above shows an estimate or quote); (b) this is an inbound turn
+    (current_event.event_type is inbound_reply) — NEVER on a proactive / follow-up compose; and
+    (c) the customer's message in THIS turn asks about price, a quote, or getting started. Then
+    quote NO price and NO price range (no "$299", no "$299–$449", no "$300–$600"). This is the
+    ONLY case in which Lucy asks for a photo; in every other case, no photo request at all.
+  - Estimate ON record: Lucy NEVER asks for a photo, picture, or image, and NEVER initiates,
+    drives, or offers to "get you a quote/estimate" or to start intake — Oscar and the existing
+    estimate flow own it. Prices come only from this contact's own estimate/quote on record (or
+    an approved KB amount), never a new figure. ONLY if the customer is asking for an actual
+    quote/estimate/scoping you cannot complete from on-record facts do you hand that part off
+    (Oscar or the team will follow up).
+A question you CAN answer from the KB (drains, rust, warranty, service area, discounts, process)
+gets a COMPLETE answer with NO hand-off and NO "Oscar will follow up" tag-on.
 
 OPT-OUT / DO-NOT-CONTACT:
 If a customer asks to stop being contacted in ANY wording (not just the word
@@ -271,8 +279,9 @@ price, number, date, or timeline that is not on record for this specific contact
 even if it is typical for the business or part of the brand. But business facts that ARE in the
 KB (the warranty POLICY, drains, service area, discounts, process) are ON RECORD — answer those
 fully and confidently from the KB; doing so is NOT inventing. Only a CONTACT-SPECIFIC figure you
-lack — e.g. "what's MY exact price?" when you never quoted them — do you withhold: give the
-approved general answer or point to the booking page, and never fabricate a number or term. The
+lack — e.g. "what's MY exact price?" when you never quoted them — do you withhold: with NO estimate
+on record, ask for the tub photo per rule #15 (no price, no range); otherwise point to the booking
+page — and never fabricate a number or term. The
 flip side is recall,
 not silence: a fact that IS on record for this contact — a price you already quoted
 them, a date they stated — you SHOULD state plainly and confidently. This rule
@@ -295,7 +304,8 @@ multi-unit, or commercial job; a warranty problem or peeling on a PAST job; a te
 an afternoon request for a non-tub service — plus the separate safety escalations (a
 do-not-contact/opt-out, or a legal/refund/safety matter). A plain KB question is NEVER an
 escalation and the reply should not name Oscar. For a genuinely contact-specific figure you don't
-have (a price you never quoted them), point them to the booking page or ask what they need —
+have (a price you never quoted them): with NO estimate on record, ask for the tub photo per rule
+#15 (no price, no range); otherwise point them to the booking page or ask what they need —
 without naming Oscar and without fabricating.
 
 CONTINUE THE RELATIONSHIP — NEVER COLD-RESTART (rule #14):
@@ -306,7 +316,8 @@ timeline, or the last thing discussed. Never treat a contact with prior context 
 brand-new lead. Proactive re-engagement (a due follow-up) is ALWAYS a continuation: a
 warm check-in that references their stated timeline and invites them to continue
 ("are you ready to move forward?", "want me to get you on the schedule?"). And per
-rule #15 above, you never reopen intake or ask for a photo for ANYONE — new or known.
+rule #15 above, for a contact with an estimate on record you never reopen intake or ask for a
+photo.
 
 ONE GOAL — BOOK THE JOB, NEVER PUSHY:
 Your only goal on a follow-up is to help the customer book the job when THEY are ready.
@@ -340,6 +351,23 @@ other service it is the next mornings only). Rules:
     appointments, so an opening goes to the next customer who books; never any pressure.
   - If the customer PICKS one of the listed slots: thank them for their business and send the
     booking_link (service already prefilled) so they can lock it in.
+TIMED TEXT FOLLOW-UPS — TEXT vs CALL:
+  - If the customer asks to be contacted at a time or day ("can you reach out at 4?", "text me
+    tomorrow morning", "hit me up next week") and does NOT ask for a phone call or for Oscar/a
+    person: reply briefly, in your voice, confirming you'll TEXT them then (say text, never promise a
+    call). send_decision="send_now", escalate_oscar=false, and set followup_at to that moment in
+    Eastern time, computed from local_time.now_et (ISO 8601 with the ET offset). Vague times:
+    "morning" = 10:00, "afternoon" = 14:00, "evening" = 18:00; a day with no time ("tomorrow", a
+    weekday) = 10:00. "Next week" with no day: either use a weekday next week at 10:00 or ask which
+    day works. Never refuse an early or late time — the scheduler moves it into sending hours. This
+    is a contact request, not a booking: no booking link or openings for it.
+  - If the customer asks for a phone call ("call me", "can you call me at 5", "give me a ring") or
+    asks for Oscar or a real person: escalate_oscar=true (escalation_reason e.g. "call requested" /
+    "asked for Oscar") and followup_at="". Lucy only texts; Oscar handles calls. For an explicit
+    call request this replaces the KB's '"Call us" -> Lucy texts'.
+  - PROACTIVE follow-up where the transcript shows you promised to text the customer at this time:
+    send that text naturally, picking up where you left off; don't re-ask why they wanted it.
+
 If something is genuinely outside everything on record AND not a hand-off item above, ask a
 clarifying question or point to the booking page — never guess, never fabricate, and never
 reflexively punt to Oscar.
@@ -356,11 +384,12 @@ Set the `disengaged` key to:
 Deterministic systems already handle estimates, pricing, CRM and delivery. Your
 only job is judgment under ambiguity: what the customer needs, what to say next,
 whether an upsell is warranted (only from what's already on record), and how to time
-nurture. You do NOT run intake or estimates (rule #15) — Oscar's flow does.
+nurture. Beyond rule #15's photo request to a no-estimate contact, you do NOT run intake or
+estimates — Oscar's flow does.
 
 Refinishing domain knowledge:
-- Estimates and scoping are Oscar's flow, not Lucy's — never solicit a photo or try
-  to scope/quote a job yourself (rule #15); hand pricing/estimates to Oscar.
+- Estimates and scoping are Oscar's flow, not Lucy's — never try to scope/quote a job
+  yourself; the only photo request is rule #15's no-estimate case (text it to (239) 539-4777).
 - Bubbling, peeling, or flaking — especially around the drain or on the floor —
   signals a PRIOR COATING that will likely need a strip job. Flag it.
 - Surrounds/tile in poor or dated condition near a tub are a legitimate upsell —
@@ -374,6 +403,14 @@ Confidence rules:
 - Be honest and conservative. Uncertainty should produce LOW scores.
 - Never inflate confidence to justify an upsell. A missed upsell is cheap; a
   wrong one costs trust.
+
+NEVER WRITE "FREE":
+Never use the word "free" in any form in a customer message — not "free estimate", "free of
+charge", "feel free", "carefree", "iso-free", or any other phrase containing it — even when quoting
+a KB script (e.g. the defer script's "feel free to text me" becomes "just text me"). Rephrase:
+"happy to", "just text me", "anytime"; "no charge" / "no cost" only where the KB already allows it.
+Ready answer — asked whether the estimate is free (any wording): answer in your voice built on
+"No cost to you." (e.g. "No cost to you, Sam! Any questions on it, just text me.") — never "free".
 
 TEXT LENGTH (SMS):
 Keep every text under 320 characters. Most replies are ONE short text. If a complete answer
@@ -401,6 +438,7 @@ Respond with ONLY a JSON object, no prose, with these keys:
   first_name: the customer's first name ONLY when they state it this turn (e.g. "it's Freda"); "" otherwise.
   scope: exactly "Tub" or "Tub and Tile" ONLY when the customer states which service they want; "" otherwise. Never guess.
   disengaged: "opt_out" (asked to stop being contacted) or "not_interested" (explicitly not pursuing the job); "" otherwise. Never guess from silence.
+  followup_at: ISO 8601 date-time with the Eastern offset (e.g. "2026-10-05T16:00:00-04:00"), resolved relative to local_time.now_et, when a timed follow-up text is scheduled; "" otherwise.
 """
 
 # Inject the KB as on-record business facts (loaded at import — edit lucy-kb.md + restart).
@@ -515,6 +553,9 @@ def build_context(
             "iso": now.isoformat(),
             "hour": now.hour,
             "is_quiet_hours": is_quiet_hours(now),
+            # Current Eastern time, ISO 8601 with offset: V4's now_et when sent, else computed
+            # here (`now` is already America/New_York — run_bakeoff localizes it).
+            "now_et": now.isoformat(timespec="seconds"),
         }
     }
     return context
@@ -529,7 +570,7 @@ OUTPUT_INSTRUCTION = (
     "action_type, confidence, message_to_oscar, rationale, evidence, "
     "suggested_customer_message, estimate_readiness, send_decision, "
     "language, memory_facts_used, escalate_oscar, escalation_reason, "
-    "followup_date, first_name, scope, disengaged. "
+    "followup_date, first_name, scope, disengaged, followup_at. "
     "language = ISO code of the language you wrote the customer message in "
     "(\"en\", \"es\", ...); use \"\" if there is no customer message. "
     "memory_facts_used = list of the specific prior facts you used this turn "
@@ -546,6 +587,8 @@ OUTPUT_INSTRUCTION = (
     "want; \"\" otherwise. Never guess. "
     "disengaged = \"opt_out\" when the customer asks to stop being contacted, \"not_interested\" "
     "when they explicitly say they are not pursuing the job; \"\" otherwise. Never guess. "
+    "followup_at = ISO 8601 date-time with the Eastern offset (e.g. \"2026-10-05T16:00:00-04:00\"), "
+    "resolved relative to local_time.now_et, when a timed follow-up text is scheduled; \"\" otherwise. "
     "No prose, no markdown fences."
 )
 
@@ -587,6 +630,7 @@ def _infer_result(
     first_name: str = "",
     scope: str = "",
     disengaged: str = "",
+    followup_at: str = "",
     usage: Any = None,
     cost_usd: Any = None,
     error: str = "",
@@ -610,6 +654,7 @@ def _infer_result(
         "first_name": first_name,
         "scope": scope,
         "disengaged": disengaged,
+        "followup_at": followup_at,
         "usage": usage,
         "cost_usd": cost_usd,
         "error": error,
@@ -644,7 +689,8 @@ _model_logged = False
 def _log_model_once(mode: str) -> None:
     global _model_logged
     if not _model_logged:
-        print(f"[HC] brain model pinned: {BRAIN_MODEL} (mode={mode})")
+        model = DEEPSEEK_MODEL if mode == "deepseek" else BRAIN_MODEL
+        print(f"[HC] brain model pinned: {model} (mode={mode})")
         _model_logged = True
 
 
@@ -739,10 +785,110 @@ def _infer_claude_api(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
         first_name=rec.get("first_name", ""),
         scope=rec.get("scope", ""),
         disengaged=rec.get("disengaged", ""),
+        followup_at=rec.get("followup_at", "") or "",
         usage=usage_d,
         cost_usd=None,
         error="",
     )
+
+
+# DeepSeek backend (HC_BACKEND=deepseek). Per DeepSeek's API docs (api-docs.deepseek.com,
+# 2026-10-04): OpenAI-format base URL https://api.deepseek.com -> POST /chat/completions,
+# `Authorization: Bearer <DEEPSEEK_API_KEY>`, JSON output via response_format json_object (the
+# prompt must contain "json" — OUTPUT_INSTRUCTION does). Model pinned by name: deepseek-v4-pro
+# (DeepSeek-V4-Pro-0813). Thinking mode is ON by default and its compatibility with JSON mode is
+# undocumented, so it is pinned OFF.
+DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro")
+
+
+def _result_from_rec(rec: Dict[str, Any], usage: Any) -> Dict[str, Any]:
+    # Same validation + field mapping as _infer_claude_api (kept identical; a unit test pins
+    # that both backends parse the same model JSON to the same result).
+    try:
+        ActionType(rec.get("action_type"))
+    except ValueError:
+        return _infer_result(message_to_oscar="invalid action_type from model", error="bad_action_type")
+    return _infer_result(
+        action_type=rec.get("action_type"),
+        confidence=rec.get("confidence"),
+        message_to_oscar=rec.get("message_to_oscar", ""),
+        rationale=rec.get("rationale", ""),
+        evidence=rec.get("evidence", []),
+        suggested_customer_message=rec.get("suggested_customer_message"),
+        estimate_readiness=rec.get("estimate_readiness"),
+        send_decision=rec.get("send_decision", "silent"),
+        language=rec.get("language", ""),
+        memory_facts_used=rec.get("memory_facts_used", []),
+        escalate_oscar=bool(rec.get("escalate_oscar", False)),
+        escalation_reason=rec.get("escalation_reason", ""),
+        followup_date=rec.get("followup_date", ""),
+        first_name=rec.get("first_name", ""),
+        scope=rec.get("scope", ""),
+        disengaged=rec.get("disengaged", ""),
+        followup_at=rec.get("followup_at", "") or "",
+        usage=usage,
+        cost_usd=None,
+        error="",
+    )
+
+
+def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
+    """DeepSeek chat-completions inference. SAME system prompt, user turn, retry and parser as
+    _infer_claude_api; transport/HTTP/timeout errors -> error="api_error", unparseable output
+    (after the same one retry) -> "bad_json". Best-effort; never throws."""
+    import urllib.request
+
+    system = SYSTEM_PROMPT
+    user = build_user_prompt(_model_facing_context(context)) + "\n\n" + OUTPUT_INSTRUCTION
+    for cheat in _CHEAT_FIELDS:
+        if cheat in system or cheat in user:
+            raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
+
+    _log_model_once("deepseek")
+    print(f"[HC] infer backend=deepseek model={DEEPSEEK_MODEL}")
+
+    def _call(extra: str = ""):
+        body = json.dumps({
+            "model": DEEPSEEK_MODEL,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user + extra},
+            ],
+            "response_format": {"type": "json_object"},
+            "thinking": {"type": "disabled"},
+            # Deterministic sampling. Effective only in non-thinking mode (DeepSeek docs: temperature
+            # has no effect when thinking is enabled) — thinking is pinned off just above.
+            "temperature": 0,
+            "max_tokens": 2048,
+            "stream": False,
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            DEEPSEEK_URL, data=body, method="POST",
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+        )
+        with urllib.request.urlopen(req, timeout=BRAIN_TIMEOUT_SECONDS) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        text = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+        u = data.get("usage") or None
+        usage = {"input_tokens": u.get("prompt_tokens"), "output_tokens": u.get("completion_tokens")} if u else None
+        return text, usage
+
+    try:
+        inner, usage = _call()
+    except Exception as e:  # transport / HTTP error / timeout / auth — surface, never crash the loop
+        return _infer_result(message_to_oscar=_redact_tokens(str(e)), error="api_error")
+
+    rec = _parse_inner_json(inner)
+    if rec is None:
+        try:
+            inner, usage = _call("\n\nReturn ONLY valid JSON, nothing else.")
+            rec = _parse_inner_json(inner)
+        except Exception:
+            rec = None
+    if rec is None:
+        return _infer_result(message_to_oscar="model did not return valid JSON", error="bad_json")
+    return _result_from_rec(rec, usage)
 
 
 def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
@@ -822,6 +968,7 @@ def _infer_claude(context: Dict[str, Any]) -> Dict[str, Any]:
         first_name=rec.get("first_name", ""),
         scope=rec.get("scope", ""),
         disengaged=rec.get("disengaged", ""),
+        followup_at=rec.get("followup_at", "") or "",
         usage=usage,
         cost_usd=cost_usd,
         error="",
@@ -840,6 +987,12 @@ def infer(
         if not key:
             return _infer_result(message_to_oscar="no API key for backend=api", error="no_api_key")
         return _infer_claude_api(context, key)
+    # Alternate production brain: DeepSeek (HC_BACKEND=deepseek); same prompt/schema/parser.
+    if backend == "deepseek":
+        key = os.environ.get("DEEPSEEK_API_KEY")
+        if not key:
+            return _infer_result(message_to_oscar="no API key for backend=deepseek", error="no_api_key")
+        return _infer_deepseek(context, key)
     # Testing engine: Lucy runs on Claude via headless `claude -p` (OAuth subscription).
     if backend == "claude":
         return _infer_claude(context)
@@ -963,6 +1116,156 @@ def enforce_inbound_timing(
     return recommendation
 
 
+MAX_TEXT_CHARS = 320  # per SMS text; a reply is at most two texts separated by a blank line
+
+
+def _text_too_long(reply: str) -> bool:
+    return any(len(t.strip()) > MAX_TEXT_CHARS for t in re.split(r"\n\s*\n", reply or ""))
+
+
+def enforce_text_cap(
+    recommendation: Recommendation,
+    context: Dict[str, Any],
+    backend: str,
+    claude_api_key: Optional[str] = None,
+    gemini_api_key: Optional[str] = None,
+) -> Recommendation:
+    # Every text <= MAX_TEXT_CHARS, enforced in code. A draft with a longer text gets ONE follow-up
+    # model call (same context + a request for the same reply, shorter, same rules). Still over, or
+    # the retry fails -> the escalate path. Never trims mid-text. Already-escalated or empty drafts
+    # are left alone.
+    msg = (recommendation.suggested_customer_message or "").strip()
+    if (not msg or recommendation.send_decision == ESCALATE_HUMAN or recommendation.escalate_oscar
+            or not _text_too_long(msg)):
+        return recommendation
+    shorter = _revise_reply(
+        context,
+        f"Your draft suggested_customer_message has a text over {MAX_TEXT_CHARS} characters. Return "
+        f"the SAME reply — same meaning, same decision, same rules — with every text under "
+        f"{MAX_TEXT_CHARS} characters (at most two texts separated by a blank line). Draft: {msg}",
+        backend, claude_api_key, gemini_api_key,
+    )
+    if shorter and not _text_too_long(shorter):
+        print(f"[HC] reply over {MAX_TEXT_CHARS} chars -> shortened on retry ({len(msg)} -> {len(shorter)})")
+        recommendation.suggested_customer_message = shorter
+        return recommendation
+    print(f"[HC] reply over {MAX_TEXT_CHARS} chars after one retry -> escalate")
+    return _escalate(recommendation, f"reply over {MAX_TEXT_CHARS} chars after one retry")
+
+
+# Same photo-request pattern the checks use (controls.py / scenario_suite.py PHOTO_REQ_RE, incl.
+# the Spanish "foto" form).
+PHOTO_REQ_RE = re.compile(
+    r"\b(send|text|share|upload|snap|attach|get|grab|take)\b[^.?!]{0,40}\b(photo|photos|picture|pictures|pic|pics|image|images|foto)\b"
+    r"|\b(photo|photos|picture|pictures|pic|pics|image|images|foto)\b[^.?!]{0,30}\b(of (the|your)|so (i|we) can|to (get|quote|start|see|confirm|give)|to get you)\b",
+    re.IGNORECASE)
+
+
+def enforce_no_proactive_photo(
+    recommendation: Recommendation,
+    context: Dict[str, Any],
+    backend: str,
+    is_inbound: bool,
+    claude_api_key: Optional[str] = None,
+    gemini_api_key: Optional[str] = None,
+) -> Recommendation:
+    # D2 in code: a proactive / follow-up compose must never ask for a photo. A draft that does
+    # gets ONE retry (same context + a request for the same reply without any photo request, same
+    # rules); still asking, or the retry fails -> the escalate path. Inbound turns are untouched
+    # (D2 allows the photo ask there for a no-estimate price/quote question).
+    msg = (recommendation.suggested_customer_message or "").strip()
+    if (is_inbound or not msg or recommendation.send_decision == ESCALATE_HUMAN
+            or recommendation.escalate_oscar or not PHOTO_REQ_RE.search(msg)):
+        return recommendation
+    clean = _revise_reply(
+        context,
+        "Your draft suggested_customer_message asks the customer for a photo, which is never allowed "
+        "on a proactive / follow-up message. Return the SAME reply — same meaning, same decision, "
+        f"same rules — with NO request for a photo, picture, or image. Draft: {msg}",
+        backend, claude_api_key, gemini_api_key,
+    )
+    if clean and not PHOTO_REQ_RE.search(clean):
+        print("[HC] proactive photo request -> removed on retry")
+        recommendation.suggested_customer_message = clean
+        return recommendation
+    print("[HC] proactive photo request after one retry -> escalate")
+    return _escalate(recommendation, "proactive photo request after one retry")
+
+
+# D2 inbound scope: an estimate link or a $ price in the thread means an estimate is on record.
+_ESTIMATE_IN_THREAD_RE = re.compile(r"app\.esticlose\.com/estimate/|\$\s?\d", re.IGNORECASE)
+# The customer's message asks about price, a quote, or getting started.
+_PRICE_ASK_RE = re.compile(
+    r"\b(price|prices|pricing|priced|cost|costs|how much|quote|quotes|estimate|charge|rate|rates"
+    r"|get(?:ting)? started|start|precio|cu[aá]nto|cuesta)\b|\$",
+    re.IGNORECASE)
+
+
+def _estimate_on_record(context: Dict[str, Any]) -> bool:
+    cd = context.get("contact_details") or {}
+    if cd.get("package") or cd.get("estimate_amount"):
+        return True
+    fu = (context.get("current_event") or {}).get("followup") or {}
+    if isinstance(fu, dict) and fu.get("estimate_url"):
+        return True
+    return bool(_ESTIMATE_IN_THREAD_RE.search(context.get("transcript") or ""))
+
+
+def enforce_inbound_photo_scope(
+    recommendation: Recommendation,
+    context: Dict[str, Any],
+    backend: str,
+    is_inbound: bool,
+    claude_api_key: Optional[str] = None,
+    gemini_api_key: Optional[str] = None,
+) -> Recommendation:
+    # D2 in code, inbound side: the photo ask is allowed ONLY for a no-estimate contact whose
+    # message asks about price / a quote / getting started. Any other inbound photo ask gets ONE
+    # retry (same reply without the photo request, same rules); still present -> escalate.
+    msg = (recommendation.suggested_customer_message or "").strip()
+    if (not is_inbound or not msg or recommendation.send_decision == ESCALATE_HUMAN
+            or recommendation.escalate_oscar or not PHOTO_REQ_RE.search(msg)):
+        return recommendation
+    inbound = (context.get("current_event") or {}).get("inbound_text") or ""
+    if not _estimate_on_record(context) and _PRICE_ASK_RE.search(inbound):
+        return recommendation  # the one case D2 sanctions
+    clean = _revise_reply(
+        context,
+        "Your draft suggested_customer_message asks the customer for a photo, which is not allowed "
+        "here (the contact has an estimate on record, or did not ask about price, a quote, or getting "
+        f"started). Return the SAME reply — same meaning, same decision, same rules — with NO request "
+        f"for a photo, picture, or image. Draft: {msg}",
+        backend, claude_api_key, gemini_api_key,
+    )
+    if clean and not PHOTO_REQ_RE.search(clean):
+        print("[HC] inbound photo request outside D2 -> removed on retry")
+        recommendation.suggested_customer_message = clean
+        return recommendation
+    print("[HC] inbound photo request outside D2 after one retry -> escalate")
+    return _escalate(recommendation, "photo request outside D2 after one retry")
+
+
+def _revise_reply(context: Dict[str, Any], note: str, backend: str,
+                  claude_api_key: Optional[str] = None, gemini_api_key: Optional[str] = None) -> str:
+    """ONE follow-up model call on the same context plus a revision note. Returns the revised
+    reply, or "" when the call fails."""
+    ctx = copy.deepcopy(context)
+    ctx["revision_request"] = note
+    try:
+        r = infer(ctx, backend, claude_api_key, gemini_api_key)
+    except Exception:
+        return ""
+    return "" if r.get("error") else (r.get("suggested_customer_message") or "").strip()
+
+
+def _escalate(recommendation: Recommendation, reason: str) -> Recommendation:
+    recommendation.send_decision = ESCALATE_HUMAN
+    recommendation.behavior = Behavior.RECOMMEND
+    recommendation.escalate_oscar = True
+    recommendation.escalation_reason = recommendation.escalation_reason or reason
+    return recommendation
+
+
 def _seed_messages_from_history(history: List[Dict[str, Any]], now_ts: float) -> List[Message]:
     # Replay a conversation history (oldest->newest) VERBATIM into LeadState.messages.
     # customer -> sender "customer"; lucy -> sender "shop". Prior turns are seeded as-is;
@@ -1080,6 +1383,7 @@ def run_bakeoff(
                 first_name=raw_llm_output.get("first_name", ""),
                 scope=raw_llm_output.get("scope", ""),
                 disengaged=raw_llm_output.get("disengaged", ""),
+                followup_at=raw_llm_output.get("followup_at", "") or "",
                 phase=raw_llm_output.get("phase", 1),
                 created_ts=now_timestamp,
             )
@@ -1101,6 +1405,14 @@ def run_bakeoff(
         # Deterministic inbound timing override (after parsing, before state update).
         if is_inbound:
             recommendation = enforce_inbound_timing(recommendation, raw_llm_output)
+
+        # Code guards (shared by compose() and the gauntlet), each one retry then escalate:
+        # no photo ask on a proactive compose (D2), then the per-text SMS cap.
+        recommendation = enforce_no_proactive_photo(recommendation, context, backend, is_inbound,
+                                                    claude_api_key, gemini_api_key)
+        recommendation = enforce_inbound_photo_scope(recommendation, context, backend, is_inbound,
+                                                     claude_api_key, gemini_api_key)
+        recommendation = enforce_text_cap(recommendation, context, backend, claude_api_key, gemini_api_key)
 
         # --- DETERMINISTIC STATE UPDATE ---
         updated_lead_state = update_lead_state(
