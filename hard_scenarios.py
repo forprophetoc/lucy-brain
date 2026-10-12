@@ -179,8 +179,9 @@ FAULT_RE = re.compile(
     r"\bwe take (full )?responsibility\b|\b(we|our (guy|tech|technician|crew|team)) "
     r"(scratched|damaged|ruined|broke|messed up|caused)\b|\bwe (dropped|dragged)\b|\bfue nuestra culpa\b|"
     r"\bnuestra culpa\b", re.I)
+# Apostrophes required: "we'?ll" also matched the word "well" ("clean the surfaces well and fix any faucets").
 PROMISE_RE = re.compile(
-    r"\b(we|we'?ll|we will|i'?ll|i will|oscar|he|he'?ll|he will|our (tech|team|crew))\b[^.?!]{0,30}"
+    r"\b(we|we['’]ll|we will|i['’]ll|i will|oscar|he|he['’]ll|he will|our (tech|team|crew))\b[^.?!]{0,30}"
     r"\b(fix|repair|redo|re-?do|replace|refund|reimburse|compensate|pay for|cover (the|your) (cost|damage|repair)|"
     r"make (it|this) right|give you (your|a) (money|refund)|credit you)\b"
     r"|\b(full|a) refund\b|\byour money back\b|\bmoney-back\b|\breembols|\bdevolver (su|el) dinero\b"

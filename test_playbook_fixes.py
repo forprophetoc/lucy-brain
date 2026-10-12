@@ -49,8 +49,8 @@ NEW_LINES = {
         "the coverage by package instead",
     ],
     "g_combo_vs_advertised": [
-        "the advertised $299 starting price is for a standard tub; a one-piece tub/shower combo is a "
-        "different job, so its price is the customer's own estimate.",
+        "the advertised $299 starting price is for most standard tubs; a one-piece tub/shower combo or a shower "
+        "is a different job, priced on the customer's own estimate.",
         "give exactly that explanation (no other reason), and hold their estimate: no discount, no new number.",
     ],
     "h_return_after_quiet": [
@@ -59,9 +59,86 @@ NEW_LINES = {
         "ONE direct booking step: the booking link (https://calendar.bathtubpros.com) or a direct scheduling "
         "question (\"want me to get you on the schedule?\"). Never just \"here when you're ready.\"",
     ],
+    # 2026-10-12 final Spicy exam, Stage 1 a–h (escalation wording differs by variant: see VARIANT_LINES)
+    "a_role": [
+        "- You are not a help desk. You are the person who books the job. The customer texted because they want "
+        "help deciding — the most helpful thing you can do is make the next step obvious and easy. Ending on "
+        "information alone isn't polite, it's leaving them mid-decision.",
+    ],
+    "a_shape": [
+        "- Shape: answer fully and honestly, then end with exactly ONE booking step — the booking link "
+        "(https://calendar.bathtubpros.com) OR \"Want me to get you on the schedule?\" — never both, never twice, "
+        "never \"any questions, just text me\" alone. It must sound optional; never manufacture urgency.",
+        "ANSWER it fully, then add ONE booking step and stop.",
+        "- Touch 1: \"Hi [name]! Just checking in.\"",
+    ],
+    "a_calendar": [
+        "- You can't see the calendar: unless current_event.availability lists openings, never say a day is open "
+        "or \"I can get you in this week.\" Only the link or the scheduling question.",
+    ],
+    "a_read_the_room": [
+        "- Read the room first — NO booking step when: grief or crisis; complaint or service failure",
+        "they said stop or no; angry/confused and unresolved; no estimate on record (the photo-to-539 request IS "
+        "the close); a customer defers (\"let me think\", \"talk to my husband\") — use the defer script, at most "
+        "the no-hold note once; a timed request (\"text me at 4\") — confirm and set followup_at; just booked — "
+        "thank them, nothing more.",
+        "- Exceptions that DO close: a hold request (\"can you hold Tuesday?\") gets the no-hold note once plus the "
+        "link (Example 4); Lucy's own promised follow-up is sent naturally and ends with ONE booking step.",
+    ],
+    "a_examples": [
+        "### closing examples (Oscar 2026-10-12)",
+        "LUCY: Fair question. Gold is built for soaking and holds up to daily use. Silver wears faster with heavy "
+        "use. Just no essential oils or bath bombs in any refinished tub. When you're ready, you can grab a time "
+        "here: https://calendar.bathtubpros.com",
+        "-> Why this works: zero guilt, zero pressure, one frictionless step.",
+        "-> Why this works: no booking step at all. Grief is not a buying state.",
+        "LUCY: We don't hold openings, so it goes to whoever books first. No pressure, but if Tuesday's still open "
+        "you can grab it here: https://calendar.bathtubpros.com",
+    ],
+    "b_discounts": [
+        "- A 10% discount is offered for veterans; seniors get 5% — one or the other, never both.",
+        "- No price match and no other discount of any kind — only veteran 10% or senior 5%.",
+    ],
+    "d_soaking": ["- Soaking: Gold holds up to anything, including daily soaking; Silver wears much faster."],
+    "e_oils": ["- No essential oils or bath bombs in any refinished tub — ours or anyone else's."],
+    "f_platinum": [
+        "It leaves no harmful fumes behind — offer it when a customer raises a health concern (asthma, "
+        "sensitivities). In texts call it Platinum, never \"iso-free\" (no \"free\").",
+    ],
+    "g_colors": [
+        "Kohler Biscuit is a very light tan. Two colors on one job are fine (e.g. a white shower and a Biscuit tub).",
+    ],
+    "h_gold_inclusions": [
+        "Gold and above also include filling nicks, chips and screw holes and replacing the old caulk — never "
+        "promise these on a Silver job.",
+    ],
+}
+
+# Escalation lines: mandatory in regular, discretionary in Spicy (like every other Spicy edit).
+VARIANT_LINES = {
+    "": [
+        "complaint or service failure (acknowledge it and escalate to Oscar)",
+        "say \"Let me get Oscar on that for you,\" then escalate to Oscar.",
+        "hold their price and hand to Oscar: \"Let me get Oscar on that for you.\"",
+    ],
+    "spicy": [
+        "complaint or service failure (acknowledge it; you may escalate to Oscar whenever you judge it's needed)",
+        "say \"Let me get Oscar on that for you.\" You may escalate to Oscar whenever you judge it's needed.",
+        "hold their price and say \"Let me get Oscar on that for you.\" You may escalate to Oscar whenever you "
+        "judge it's needed.",
+    ],
 }
 
 REMOVED = [
+    # a: old "answer and stop", old Touch 1 ending, superseded Muse-only closing block
+    "prices on record — ANSWER it fully and stop.",
+    "Just checking in to see if you have any questions about the process or your estimate.",
+    "ONE means one: either the booking link OR a direct scheduling question",
+    "If they defer, do NOT close for booking that turn.",
+    # b: first responders discount; h: caulk included on every job; c: "$299 ... for a standard tub;"
+    "veterans and first responders",
+    "We remove and replace the caulking (included)",
+    "the advertised $299 starting price is for a standard tub;",
     # c: the dogs-outside KB/FAQ line
     "Pets should be moved outside for the spraying part of the job",
     "cats and dogs lethargic",
@@ -93,6 +170,17 @@ class PlaybookFixes(unittest.TestCase):
                 for line in lines:
                     with self.subTest(variant=variant or "regular", fix=fix, line=line[:50]):
                         self.assertIn(line, system)
+
+    def test_escalation_lines_per_variant(self):
+        for variant, lines in VARIANT_LINES.items():
+            system = _system(variant)
+            for line in lines:
+                with self.subTest(variant=variant or "regular", line=line[:50]):
+                    self.assertIn(line, system)
+        # Spicy never carries the mandatory wording of these lines.
+        spicy = _system("spicy")
+        for line in VARIANT_LINES[""]:
+            self.assertNotIn(line, spicy)
 
     def test_removed_lines_gone_in_both_variants(self):
         for variant in ("", "spicy"):

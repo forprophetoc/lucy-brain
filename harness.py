@@ -643,6 +643,16 @@ SPICY_EDITS = [
     # KB — hand to Oscar
     ("- Forward to Oscar: owner requests",
      "- " + SPICY_MAY_ESCALATE + " For example: owner requests"),
+    # KB — closing (2026-10-12): complaint / service failure
+    ("complaint or service failure (acknowledge it and escalate to Oscar)",
+     "complaint or service failure (acknowledge it; " + SPICY_MAY_ESCALATE[0].lower() + SPICY_MAY_ESCALATE[1:-1] + ")"),
+    # KB — discounts (2026-10-12): price match / lower price. Listed BEFORE the closing price-match edit: its new
+    # text contains that edit's new text, so this order keeps the reversal test byte-exact.
+    ("hold their price and hand to Oscar: \"Let me get Oscar on that for you.\"",
+     "hold their price and say \"Let me get Oscar on that for you.\" " + SPICY_MAY_ESCALATE),
+    # KB — closing (2026-10-12): price match / estimate update / contacting the tech
+    ("say \"Let me get Oscar on that for you,\" then escalate to Oscar.",
+     "say \"Let me get Oscar on that for you.\" " + SPICY_MAY_ESCALATE),
 ]
 SPICY_OUTPUT_EDITS = [
     ("escalate_oscar = boolean true when this needs Oscar (do-not-contact request, "

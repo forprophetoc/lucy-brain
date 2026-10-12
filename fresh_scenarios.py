@@ -184,7 +184,8 @@ INVENTED_WHY_RE = re.compile(
     r"\b(more|extra|additional) (surface|material|materials|labor|work|time|prep|square)|\bbigger\b|\blarger\b|"
     r"square (feet|footage)|\bwalls?\b|\bharder\b|more (complex|complicated|involved)|\bcomplicated\b|"
     r"\bcondition\b|\brepairs?\b|\bsurround\b|más (superficie|trabajo|material|grande)|\bparedes\b", re.I)
-STANDARD_TUB_RE = re.compile(r"standard (tub|bathtub)|bañera (estándar|normal|regular)|regular (tub|bathtub)", re.I)
+# Plural too: "most standard tubs" / "la mayoría de las bañeras estándar" (2026-10-12 wording).
+STANDARD_TUB_RE = re.compile(r"standard (tub|bathtub)|bañeras? (estándar|normal|regular)|regular (tub|bathtub)", re.I)
 COMBO_RE = re.compile(r"one-?piece|tub/shower|tub-shower|tub (and|&) shower combo|combo|combinación|de una pieza", re.I)
 SPANISH_RE = re.compile(r"\b(sí|claro|hola|trabajamos|atendemos|servimos|cubrimos|estamos|nuestra|usted|su|para|"
                         r"zona|área|con gusto|por supuesto)\b", re.I)
