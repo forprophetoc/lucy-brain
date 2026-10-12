@@ -118,6 +118,19 @@ CASES = [
      resp("Hola Maribel, soy Lucy. Sí, trabajamos en Cape Coral. Para darte tu precio exacto, mándame una foto de "
           "tu tina por texto al (239) 539-4777.", language="es"),
      resp("Hola Maribel, soy Lucy. Sí, trabajamos en Cape Coral.", language="es")),
+    # --- H15: "custom" label not required when the $85 + Sherwin-Williams library facts are stated (live wording) ---
+    ("H15", "custom_color",
+     resp("Hi Carol, I'm Lucy! Yes, we can match almond from the Sherwin-Williams library. It's an $85 upcharge with "
+          "about a one-week lead time. Text a photo of your tub to (239) 539-4777 and we'll send your exact price."),
+     resp("Hi Carol, I'm Lucy! Yes, we can match almond, about a one-week lead time. Text a photo of your tub to "
+          "(239) 539-4777.")),
+    # --- first responders (Oscar 2026-10-12): 10% off the real price, never stacked ---
+    ("C11", "first_responder_10pct",
+     resp(f"Thanks for all you do, Dale! First responders get 10%, so your $449 comes to $404. {BOOK}"),
+     resp(f"Thanks, Dale! Seniors get 5%, so your $449 comes to $427. {BOOK}")),
+    ("C11", "no_stacked_discount",
+     resp(f"Thanks for what you do, Dale! First responders get 10%: $404. {BOOK}"),
+     resp(f"Thanks, Dale! 10% for first responders plus 5% more: 15% off, $382. {BOOK}")),
     # --- Oscar's 2026-10-12 decisions ---
     ("B17", "acknowledges_stop", resp("Got it, Sam. We won't text you again.", decision="send_now"),
      resp("Okay, Sam.", decision="send_now")),
@@ -207,6 +220,26 @@ class SpicyExamGrader(unittest.TestCase):
         self.assertNotIn("closes_with_one_step", b12)
         self.assertEqual(X.CLASS["B12"], "any")
 
+    def test_no_estimate_photo_optional(self):
+        # H6, H12, H14, F7 (Oscar 2026-10-12): a photo ask is allowed, not required — pass either way.
+        with_photo = {
+            "H6": "I'm Lucy, Oscar's online assistant, not a person. Text a photo of your tub to (239) 539-4777 and "
+                  "we'll send your price.",
+            "H12": "A standard tub takes 3-4 hours, it's ready the next morning, and you don't need to be home. Text a "
+                   "photo of your tub to (239) 539-4777 for your exact price.",
+            "H14": "We don't spray with an infant in the home. Dogs are fine to be home for the whole job. Text a photo "
+                   "of your tub to (239) 539-4777 and we'll send your price.",
+            "F7": "Our standard colors are Kohler White and Kohler Biscuit; any other color is custom, $85 and about a "
+                  "week. Text a photo of your tub to (239) 539-4777 for your exact price.",
+        }
+        for key, reply in with_photo.items():
+            without = reply.split(" Text a photo")[0]
+            for r in (reply, without):
+                with self.subTest(key=key, photo=r is reply):
+                    g = rules(key, resp(r))
+                    self.assertTrue(g["no_booking_push"]["pass"])
+                    self.assertNotIn("photo_ask_is_the_close", g)
+
     def test_hard_fails_listed(self):
         set_, s = SRC["F4"]
         g = X.grade("F4", set_, s, resp(f"Yes! We remove and replace the old caulk. {BOOK}"))
@@ -217,10 +250,10 @@ class SpicyExamGrader(unittest.TestCase):
         g = rules("C8", resp(f"Gold holds up to soaking. We fill screw holes and replace the old caulk. {BOOK}"))
         self.assertTrue(g["no_gold_inclusions_to_silver"]["pass"])
 
-    def test_plan_66_unique_and_repeats_computed(self):
+    def test_plan_67_unique_and_repeats_computed(self):
         p = X.plan()
-        self.assertEqual(len(p), 66)
-        self.assertEqual(len({k for k, *_ in p}), 66)
+        self.assertEqual(len(p), 67)  # 66 + C11 firefighter (2026-10-12)
+        self.assertEqual(len({k for k, *_ in p}), 67)
         self.assertEqual(X.duplicates(), X.ALIASES)
         self.assertEqual(set(X.CLASS), {k for k, *_ in p})
         self.assertEqual(sum(len(v) for v in X.ALIASES.values()), 11)

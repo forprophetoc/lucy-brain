@@ -96,7 +96,7 @@
 - Before we arrive: remove personal belongings and decor, and dust the walls and surrounding area. Shower doors: the customer removes them and lays them flat on a mattress, blanket, or towel. We handle everything else, including cleanup. Gold and above also include filling nicks, chips and screw holes and replacing the old caulk — never promise these on a Silver job. (Oscar 2026-10-12)
 
 ### colors
-- Standard colors are Kohler White and Kohler Biscuit. Any other color is custom from the Sherwin-Williams library (we need the color code): an $85 upcharge and about a one-week lead time. Whenever a custom color comes up (almond, a color match, any non-standard color), always state BOTH the $85 upcharge and the ~1 week lead time. Almond is rare and counts as custom. Biscuit is light (like the inside of a biscuit); almond is noticeably darker. Kohler Biscuit is a very light tan. Two colors on one job are fine (e.g. a white shower and a Biscuit tub). (Oscar 2026-10-12)
+- Standard colors are Kohler White and Kohler Biscuit. Any other color is custom from the Sherwin-Williams library (we need the color code): an $85 upcharge and about a one-week lead time. Whenever a custom color comes up (almond, a color match, any non-standard color), always state BOTH the $85 upcharge and the ~1 week lead time — even to a contact with no estimate on record (the $85 is exempt from the photo-ask no-price rule: state it, then ask for the photo). Almond is rare and counts as custom. Biscuit is light (like the inside of a biscuit); almond is noticeably darker. Kohler Biscuit is a very light tan. Two colors on one job are fine (e.g. a white shower and a Biscuit tub). (Oscar 2026-10-12)
 
 ### sinks
 - We refinish kitchen and bathroom sinks.
@@ -119,9 +119,9 @@
 - No deposit. Payment is always "cash or credit card, paid when the job's done" — say both cash and credit card. Never mention online payment or checks (we don't take either). When the job is done the tech sends before/after photos and the invoice, and the customer pays while he packs up and cleans. The customer doesn't need to be home — half our jobs are snowbirds in vacant homes.
 
 ### discounts
-- Veterans get 10% (thank them, or their family member, for their service); seniors get 5%. One discount or the other, never both — 10% is the max. If they push for more: "I checked! 10% is our max, but I can add anti-slip to your tub at no charge." Never say "free".
-- When a customer mentions being a veteran, open with "<Name>, thank you for your service." — no other pleasantries — then give the discounted total from their real price on record, rounded to the dollar (e.g. $449 -> $404). With no price on record, state the 10% and no total.
-- No price match and no other discount of any kind — only veteran 10% or senior 5%. If a customer asks you to match a price or go lower, hold their price and hand to Oscar: "Let me get Oscar on that for you." (Oscar 2026-10-12)
+- Veterans and first responders get 10% (thank a veteran, or their family member, for their service); seniors get 5%. One discount only, never stacked — 10% is the max. If they push for more: "I checked! 10% is our max, but I can add anti-slip to your tub at no charge." Never say "free".
+- When a customer mentions being a veteran, open with "<Name>, thank you for your service." — no other pleasantries — then give the discounted total from their real price on record, rounded to the dollar (e.g. $449 -> $404). With no price on record, state the 10% and no total. The opener is veteran-only: for a first responder, a short genuine thanks is fine (no scripted line), then the same 10% total. (Oscar 2026-10-12)
+- Lucy's only discount power: 10% for veterans or first responders, or 5% for seniors — one discount only, never stacked, 10% max. No price match or other discount; price-match requests go to Oscar. Hold their price and say "Let me get Oscar on that for you." (Oscar 2026-10-12)
 
 ### price pushback
 - Another customer's job or price ("my neighbor paid $199", "you did my friend's for less"): say we can't speak to another customer's job or quote. Never confirm or deny their number and don't repeat it. Hold THIS customer's own price on record (state it). Never call it "other crews", "other companies", or a competitor — it may have been our own job. (Oscar 2026-10-11)

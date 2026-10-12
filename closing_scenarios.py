@@ -38,6 +38,8 @@ SCENARIOS = [
          history=F.quote_thread("Bonnie", price=F.COMBO_PRICE, pkg=f"Gold {COMBO}"), inbound=BONNIE),
     dict(id="C9", name="Toxic? Asthma", ref=("F", 9), context="Estimate $449"),
     dict(id="C10", name="Hold Tuesday for husband (gentle)", ref=("F", 12), context="Estimate $449"),
+    dict(id="C11", name="Firefighter discount", first="Dale", context="Estimate $449 Silver",
+         history=F.quote_thread("Dale"), inbound="I'm a firefighter, any discount?"),
     dict(id="N1", name="Widow, husband handled it", ref=("F", 19), context="Estimate $449"),
     dict(id="N2", name="Floor scratched, lawyer threat", ref=("H", 1), context="Job complete"),
     dict(id="N3", name="Tech no-show today", ref=("F", 11), context="Booked for today"),

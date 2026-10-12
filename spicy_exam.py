@@ -56,7 +56,7 @@ CLASS = {
     "F15": "close", "F16": "photo", "F17": "quiet", "F18": "photo", "F19": "quiet", "F20": "close", "F21": "close",
     "F22": "any", "F23": "close",
     # closing (unique ones; the rest are exact repeats, see ALIASES)
-    "C7": "close", "C8": "close", "N4": "quiet",
+    "C7": "close", "C8": "close", "C11": "close", "N4": "quiet",
 }
 # Why a scenario is quiet/any when it might look like a close (shown in the report).
 CLASS_WHY = {
@@ -65,11 +65,11 @@ CLASS_WHY = {
     "B12": "aftercare question — correct answer passes, booking step optional (Oscar 2026-10-12)",
     "B17": "opt-out", "B18": "\"That's a ripoff\" — angry; resolved or not is a judgment call",
     "H1": "complaint", "H2": "warranty problem on a past job", "H3": "refund demand", "H4": "review threat",
-    "H5": "complaint about repeat texts", "H6": "identity question, no estimate (photo ask optional)",
+    "H5": "complaint about repeat texts", "H6": "identity question, no estimate — photo ask allowed, not required (Oscar 2026-10-12)",
     "H7": "wants a human", "H8": "price match — \"Let me get Oscar on that for you\"",
-    "H10": "neighbor's $199 — not an explicit match request; hold price", "H12": "no estimate on record (photo optional)",
-    "H14": "no estimate on record (photo optional)", "H17": "complaint, wants owner", "H20": "property manager — hand to Oscar",
-    "F3": "already booked", "F5": "already booked", "F7": "no estimate on record (photo optional)",
+    "H10": "neighbor's $199 — not an explicit match request; hold price", "H12": "no estimate on record — photo ask allowed, not required (Oscar 2026-10-12)",
+    "H14": "no estimate on record — photo ask allowed, not required (Oscar 2026-10-12)", "H17": "complaint, wants owner", "H20": "property manager — hand to Oscar",
+    "F3": "already booked", "F5": "already booked", "F7": "no estimate on record — photo ask allowed, not required (Oscar 2026-10-12)",
     "F11": "service failure", "F13": "asks to go lower — hold price, hand to Oscar", "F14": "wrong number",
     "F17": "just sent the link — 👍", "F19": "grief", "F22": "\"bait and switch\" — angry; judgment call",
     "N4": "said stop",
@@ -148,6 +148,8 @@ GOLD_INCL_RE = re.compile(
     r"\b(replace|replaces|replacing|redo|redoes|new|remove|removes|removing)\b[^.?!]{0,25}\bcaulk|"
     r"\bcaulk\w*\b[^.?!]{0,30}\b(replaced|included|redone|is part of)\b", re.I)
 GOLD_WORD_RE = re.compile(r"\b(gold|platinum)\b", re.I)
+FIRST_RESPONDER_RE = re.compile(r"first[- ]responder|firefighter|fire ?fighter|firem[ae]n|paramedic|\bemt\b|"
+                                r"police|officer|deputy|sheriff|bombero|polic[ií]a", re.I)
 INFANT_RE = re.compile(r"infant|newborn|\bbaby\b|month[- ]old", re.I)
 # Baseline photo-ask pattern + informal Spanish ("mándame / mándanos / envíame una foto"), which it missed.
 PHOTO_REQ_RE = re.compile(B.PHOTO_REQ_RE.pattern + r"|\b(m[aá]nd[ae]|env[ií][ae])(me|nos)\b[^.?!]{0,30}\bfotos?\b",
@@ -265,6 +267,17 @@ def correct_checks(key: str, set_: str, s: dict, resp: dict) -> dict:
     if key == "C7":
         c["no_intake_restart"] = (not PHOTO_REQ_RE.search(r), "")
         c["no_guilt"] = (not F.GUILT_RE.search(r), f"{F.GUILT_RE.search(r).group(0)!r}" if F.GUILT_RE.search(r) else "")
+    if key == "H15" and "custom_color" in c:  # the facts ($85 + Sherwin-Williams library) carry it without the label
+        c["custom_color"] = (_has(r"custom", r) or (_has(r"\$\s?85\b", r) and _has(r"sherwin|color library|color code", r)),
+                             "")
+    if FIRST_RESPONDER_RE.search(s["inbound"]):  # Oscar 2026-10-12: first responders get 10%, never stacked
+        on_record = sorted(H.prices_in(" ".join(h["text"] for h in s["history"])))
+        want = f"${H.round_dollar(on_record[0] * Decimal('0.90'))}" if on_record else ""
+        c["first_responder_10pct"] = ((_has(r"\b10\s?%|10 percent|ten percent", r) or bool(want and want in r.replace(" ", "")))
+                                      and (not want or want in r.replace(" ", "")), f"expected {want or '10%'}")
+        stacked_total = [f"${H.round_dollar(p * Decimal(f))}" for p in on_record for f in ("0.85", "0.95")]
+        c["no_stacked_discount"] = (not _has(r"\b15\s?%", r) and not any(t in r.replace(" ", "") for t in stacked_total),
+                                    "")
     if key == "C8":
         c["answers_soak"] = (_has(r"soak|hold up|holds up|durab|last|wear", r), "")
         c["not_defensive"] = (not F.DEFENSIVE_RE.search(r),

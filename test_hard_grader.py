@@ -40,8 +40,8 @@ class PromptAssembly(unittest.TestCase):
                 p = _assembled(variant)
                 self.assertIn('open with "<Name>, thank you for your service." — no other pleasantries', p)
                 self.assertIn("rounded to the dollar (e.g. $449 -> $404)", p)
-                self.assertIn("One discount or the other, never both — 10% is the max.", p)
-                self.assertIn("unless\nthe customer raises a veteran/senior discount", p)
+                self.assertIn("One discount only, never stacked — 10% is the max.", p)
+                self.assertIn("unless\nthe customer raises a veteran/first-responder/senior discount", p)
 
     def test_intro_rule_in_both_variants_old_wording_gone(self):
         for variant in ("", "spicy"):

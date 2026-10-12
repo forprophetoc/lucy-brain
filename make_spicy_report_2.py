@@ -101,6 +101,68 @@ def totals(rows):
     }
 
 
+AMEND2_STAGE1 = [
+    ("a", "rule #15: \"…quote NO price and NO price range (…). Not when they say stop / wrong number / not "
+          "interested.\"",
+     "same + \"EXCEPTION to the no-price clause: when the customer asks about a custom color (almond, a color match, "
+     "any non-standard color), state the $85 upcharge and the ~1 week lead time, then the photo ask.\" KB colors line "
+     "also gets \"— even to a contact with no estimate on record (the $85 is exempt from the photo-ask no-price rule: "
+     "state it, then ask for the photo)\""),
+    ("b", "PLAYBOOK discounts: \"No price match and no other discount of any kind — only veteran 10% or senior 5%. If "
+          "a customer asks you to match a price or go lower, hold their price and hand to Oscar: 'Let me get Oscar on "
+          "that for you.'\"",
+     "\"Lucy's only discount power: 10% for veterans or first responders, or 5% for seniors — one discount only, never "
+     "stacked, 10% max. No price match or other discount; price-match requests go to Oscar. Hold their price and say "
+     "'Let me get Oscar on that for you.'\" (Spicy: \"…for a price-match request, you may escalate to Oscar whenever "
+     "you judge it's needed.\")"),
+    ("b (consistency)", "\"Veterans get 10% (thank them, or their family member, for their service); seniors get 5%. "
+                        "One discount or the other, never both — 10% is the max.\" · system prompt \"discounts "
+                        "(veterans 10% OR seniors 5%, one not both)\" · \"veteran/senior discount\"",
+     "\"Veterans and first responders get 10% (thank a veteran, or their family member, for their service); seniors "
+     "get 5%. One discount only, never stacked — 10% is the max.\" · \"discounts (veterans or first responders 10% OR "
+     "seniors 5%, one not both)\" · \"veteran/first-responder/senior discount\". The restored FLAGGED line (\"A 10% "
+     "discount is offered for veterans and first responders.\") is unchanged and now agrees."),
+    ("c", "veteran opener line (\"open with '<Name>, thank you for your service.'…\")",
+     "unchanged + \"The opener is veteran-only: for a first responder, a short genuine thanks is fine (no scripted "
+     "line), then the same 10% total.\""),
+]
+
+
+def amendment2(P):
+    path = os.path.join(X.RESULTS_DIR, "spicy_amend3.json")
+    if not os.path.exists(path):
+        return []
+    rows = load(path)["rows"]
+    by = by_key(rows)
+    names = {k: s["name"] for k, _, s, _ in P}
+    inbound = {k: s["inbound"] for k, _, s, _ in P}
+    L = ["", "---", "", "## Amendment 2 — Oscar's three calls ($85, discounts line, first responders)", "",
+         "_Spicy (regular mirrored: same KB; the Spicy edit only changes the price-match routing wording). "
+         f"Stage 3: H15, H9 and new C11 \"I'm a firefighter, any discount?\" ($449 estimate), ×3 Spicy._", "",
+         f"**Result: {sum(r['grade']['all_pass'] for r in rows)}/{len(rows)}** (re-graded). Raw 8/9: H15 run 1 stated "
+         "the $85, the ~1 week and the photo ask but never used the word \"custom\"; the H15 label check now passes on "
+         "\"custom\" OR the $85 + Sherwin-Williams library facts (pinned in test_spicy_exam_grader). Oscar can overrule "
+         "that relaxation — it's the only reason this is 9/9 and not 8/9.", "",
+         "### Stage 1 — prompt / KB (old -> new)", "", "| Item | Old | New |", "|---|---|---|"]
+    L += [f"| {i} | {o} | {n} |" for i, o, n in AMEND2_STAGE1]
+    L += ["", "### Stage 2 — grader", "",
+          "- H6, H12, H14, F7 (no estimate): photo ask allowed, not required — already passed either way (the quiet "
+          "check only flags a booking link or scheduling question); now pinned in test_no_estimate_photo_optional.",
+          "- New: a first responder (firefighter, police, paramedic, EMT, deputy, sheriff…) gets 10% off their real "
+          "price on record ($449 -> $404); a 15% or 5%-based total fails (first_responder_10pct, no_stacked_discount).",
+          "- New scenario C11 Firefighter discount (close class). Plan is now 67 scenarios.",
+          "- H15 custom_color: label OR facts (see above).", "",
+          "### Stage 3 — full replies", ""]
+    for key in ("H15", "H9", "C11"):
+        v = by.get(key, [])
+        L += [f"#### {key} {names.get(key, '')}", f"**Customer:** {inbound.get(key, '')}", "",
+              f"**{sum(r['grade']['all_pass'] for r in v)}/{len(v)} pass**"]
+        for r in v:
+            L += run_lines(r)
+        L.append("")
+    return L
+
+
 def main():
     first = committed("spicy_final")["rows"]            # grades as reported in SPICY_FINAL_REPORT
     before = load(os.path.join(X.RESULTS_DIR, "spicy_final.json"))["rows"]   # same replies, Stage 2 grader
@@ -170,6 +232,7 @@ def main():
           "- **No-estimate scenarios graded quiet.** H6 (person or robot), H12 (three-part question), H14 (baby + "
           "dogs) and F7 (colors) have no estimate on record and are graded quiet (photo optional). Under the widened "
           "rule #15 a photo ask there would be correct too; they were 3/3 and were not rerun or reclassed.", ""]
+    L += amendment2(P)
     with open(OUT, "w", encoding="utf-8") as fh:
         fh.write("\n".join(L))
     print(f"written: {OUT}")

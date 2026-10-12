@@ -1,0 +1,1422 @@
+{
+  "label": "spicy_amend3",
+  "backend": "muse",
+  "variant": "spicy",
+  "now_et": "2026-10-12T14:10:00-04:00",
+  "reps": 3,
+  "rows": [
+    {
+      "key": "H9",
+      "set": "hard",
+      "name": "Veteran + senior stack",
+      "rep": 1,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's one discount only, 10% max, so your $449 comes to $404. When you're ready, you can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "Discounts are one only, 10% max, veteran opener then discounted total from on-record $449",
+        "error": ""
+      },
+      "latency_s": 5.23,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [174]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "veteran_opener": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_404": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: \"When you're ready, you can grab a time here: https://calendar.bathtubp\"",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    },
+    {
+      "key": "H9",
+      "set": "hard",
+      "name": "Veteran + senior stack",
+      "rep": 2,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's one discount per job, so 10% is our max, making your Silver $404.\n\nWhen you're ready, you can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "KB allows one discount only 10% max, veteran opener required with discounted total from on-record price",
+        "error": ""
+      },
+      "latency_s": 5.61,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [106, 77]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "veteran_opener": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_404": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: \"When you're ready, you can grab a time here: https://calendar.bathtubp\"",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    },
+    {
+      "key": "H9",
+      "set": "hard",
+      "name": "Veteran + senior stack",
+      "rep": 3,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's one discount only, so 10% is our max. That brings your Silver to $404.\n\nWhen you're ready, you can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "KB allows one discount only 10% max, veteran opener required and discounted total from on-record $449 is $404",
+        "error": ""
+      },
+      "latency_s": 8.96,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [111, 77]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "veteran_opener": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_404": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: \"When you're ready, you can grab a time here: https://calendar.bathtubp\"",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    },
+    {
+      "key": "H15",
+      "set": "hard",
+      "name": "Almond toilet match (first touch)",
+      "rep": 1,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Hi Carol, I'm Lucy! Yes, we can match almond from the Sherwin-Williams library. It's an $85 upcharge with about a one-week lead time. Text a photo of your tub to (239) 539-4777 and we'll send your exact price and transformation.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Custom color question with no estimate requires $85 upcharge + lead time then photo ask",
+        "error": ""
+      },
+      "latency_s": 2.84,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [228]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "custom_color": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_85": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "0 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_booking_push": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          },
+          "photo_ask_is_the_close": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "photo"
+      },
+      "log": []
+    },
+    {
+      "key": "H15",
+      "set": "hard",
+      "name": "Almond toilet match (first touch)",
+      "rep": 2,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Hi Carol, it's Lucy! Yes, we can match your almond toilet from the Sherwin-Williams library. Custom colors are an $85 upcharge and about a one-week lead time. To get your exact price, just text a photo of your tub to (239) 539-4777.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Custom color question with no estimate requires $85 upcharge + lead time then photo ask with no price",
+        "error": ""
+      },
+      "latency_s": 4.65,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [232]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "custom_color": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_85": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "0 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_booking_push": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          },
+          "photo_ask_is_the_close": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "photo"
+      },
+      "log": []
+    },
+    {
+      "key": "H15",
+      "set": "hard",
+      "name": "Almond toilet match (first touch)",
+      "rep": 3,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Hi Carol, it's Lucy! Yes, we can match almond - it's custom, so $85 extra and about a week lead time. Text a photo of your tub to (239) 539-4777 and we'll send your exact price.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Custom color inbound with no estimate requires $85 upcharge + lead time disclosure then photo ask",
+        "error": ""
+      },
+      "latency_s": 3.27,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [177]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "custom_color": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "states_85": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "0 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_booking_push": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          },
+          "photo_ask_is_the_close": {
+            "pass": true,
+            "note": "",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "photo"
+      },
+      "log": []
+    },
+    {
+      "key": "C11",
+      "set": "closing",
+      "name": "Firefighter discount",
+      "rep": 1,
+      "inbound": "I'm a firefighter, any discount?",
+      "response": {
+        "reply": "Thanks for what you do, Dale! Yes - 10% for first responders, so your Silver at $449 comes to $404. Want me to get you on the schedule?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "First responder gets 10% per KB, applied to on-record $449 estimate with one booking close.",
+        "error": ""
+      },
+      "latency_s": 5.31,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [135]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "first_responder_10pct": {
+            "pass": true,
+            "note": "expected $404",
+            "kind": "correct"
+          },
+          "no_stacked_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: 'Want me to get you on the schedule?'",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    },
+    {
+      "key": "C11",
+      "set": "closing",
+      "name": "Firefighter discount",
+      "rep": 2,
+      "inbound": "I'm a firefighter, any discount?",
+      "response": {
+        "reply": "Thanks for what you do, Dale! Yes, first responders get 10% off, so your Silver would be $404. Want me to get you on the schedule?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "Firefighter qualifies for 10% first-responder discount off on-record $449 estimate.",
+        "error": ""
+      },
+      "latency_s": 5.84,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [130]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "first_responder_10pct": {
+            "pass": true,
+            "note": "expected $404",
+            "kind": "correct"
+          },
+          "no_stacked_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: 'Want me to get you on the schedule?'",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    },
+    {
+      "key": "C11",
+      "set": "closing",
+      "name": "Firefighter discount",
+      "rep": 3,
+      "inbound": "I'm a firefighter, any discount?",
+      "response": {
+        "reply": "Thanks for what you do, Dale! Yes — 10% for first responders, so your Silver at $449 comes to $404. You can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "Firefighter qualifies for 10% first-responder discount off the $449 Silver estimate on record.",
+        "error": ""
+      },
+      "latency_s": 5.35,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [158]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "one_booking_step_max": {
+            "pass": true,
+            "note": "1 booking steps",
+            "kind": "correct"
+          },
+          "no_urgency": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "first_responder_10pct": {
+            "pass": true,
+            "note": "expected $404",
+            "kind": "correct"
+          },
+          "no_stacked_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "correct"
+          },
+          "closes_with_one_step": {
+            "pass": true,
+            "note": "decision=send_now; last: 'You can grab a time here: https://calendar.bathtubpros.com'",
+            "kind": "closing"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": [],
+        "closing_class": "close"
+      },
+      "log": []
+    }
+  ]
+}

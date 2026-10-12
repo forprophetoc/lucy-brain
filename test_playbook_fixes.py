@@ -34,7 +34,7 @@ NEW_LINES = {
     ],
     "d_custom_color": [
         "Whenever a custom color comes up (almond, a color match, any non-standard color), always state BOTH "
-        "the $85 upcharge and the ~1 week lead time.",
+        "the $85 upcharge and the ~1 week lead time",
         "Sherwin-Williams Master Color Chip catalog: an $85 upcharge and about a one-week lead time.",
     ],
     "e_payment": [
@@ -98,7 +98,20 @@ NEW_LINES = {
     "b_discounts": [
         # d (2026-10-12 amendment): the FLAGGED line restored exactly as it was before the exam edit.
         "- A 10% discount is offered for veterans and first responders. https://www.bathtubpros.com/",
-        "- No price match and no other discount of any kind — only veteran 10% or senior 5%.",
+        # 2026-10-12 (Oscar): one discount line that agrees with the restored first-responders line.
+        "- Lucy's only discount power: 10% for veterans or first responders, or 5% for seniors — one discount only, "
+        "never stacked, 10% max.",
+        "- Veterans and first responders get 10% (thank a veteran, or their family member, for their service); "
+        "seniors get 5%. One discount only, never stacked — 10% is the max.",
+        "The opener is veteran-only: for a first responder, a short genuine thanks is fine (no scripted line), then "
+        "the same 10% total.",
+        "discounts (veterans or first responders\n10% OR seniors 5%, one not both)",
+    ],
+    "custom_color_85_exempt": [
+        "EXCEPTION to the no-price clause: when the customer\n    asks about a custom color (almond, a color match, "
+        "any non-standard color), state the $85\n    upcharge and the ~1 week lead time, then the photo ask.",
+        "even to a contact with no estimate on record (the $85 is exempt from the photo-ask no-price rule: state it, "
+        "then ask for the photo)",
     ],
     "d_soaking": ["- Soaking: Gold holds up to anything, including daily soaking; Silver wears much faster."],
     "e_oils": ["- No essential oils or bath bombs in any refinished tub — ours or anyone else's."],
@@ -132,12 +145,12 @@ VARIANT_LINES = {
     "": [
         "complaint or service failure (acknowledge it and escalate to Oscar)",
         "say \"Let me get Oscar on that for you,\" then escalate to Oscar.",
-        "hold their price and hand to Oscar: \"Let me get Oscar on that for you.\"",
+        "No price match or other discount; price-match requests go to Oscar.",
     ],
     "spicy": [
         "complaint or service failure (acknowledge it; you may escalate to Oscar whenever you judge it's needed)",
         "say \"Let me get Oscar on that for you.\" You may escalate to Oscar whenever you judge it's needed.",
-        "hold their price and say \"Let me get Oscar on that for you.\" You may escalate to Oscar whenever you "
+        "No price match or other discount; for a price-match request, you may escalate to Oscar whenever you "
         "judge it's needed.",
     ],
 }
@@ -150,6 +163,8 @@ REMOVED = [
     "If they defer, do NOT close for booking that turn.",
     # b: first responders discount; h: caulk included on every job; c: "$299 ... for a standard tub;"
     "seniors get 5% — one or the other, never both. (Oscar 2026-10-12: no other discounts.)",
+    "No price match and no other discount of any kind — only veteran 10% or senior 5%.",
+    "One discount or the other, never both — 10% is the max.",
     "the customer's message in THIS turn asks about price, a quote, or getting started",
     "We remove and replace the caulking (included)",
     "the advertised $299 starting price is for a standard tub;",
