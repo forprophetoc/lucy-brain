@@ -212,6 +212,18 @@ TITLE_RE = re.compile(r"\b(online|sales|virtual|digital|ai|automated)\s+(sales\s
                       r"\basistente\b|\bBathtub Pros'? (assistant|online)", re.I)
 ASKS_WHO_RE = re.compile(r"real person|robot|\bbot\b|\bai\b|\bhuman\b|who (is this|are you|am i)|what are you|"
                          r"\bpersona real\b|\bquién (es|eres)\b", re.I)
+# The one mid-thread intro allowed when asked who/what she is or for a human (Oscar 2026-10-11).
+ASKED_INTRO_RE = re.compile(r"\b(i'?m|soy) lucy,? (oscar'?s online assistant|la asistente)", re.I)
+# Payment is cash or credit card only: any mention of online payment or checks fails (Oscar 2026-10-11).
+PAYMENT_BAD_RE = re.compile(
+    r"\bonline\b[^.?!\n]{0,25}\bpa(y|ys|ying|yment|yments|id)\b|\bpa(y|ying|yment|yments)\b[^.?!\n]{0,25}\bonline\b|"
+    r"\b(by|with a|personal|write (us )?a|send (us )?a|mail (us )?a) checks?\b|\b(card|cash),? (or|and|&) (a )?checks?\b|"
+    r"\bchecks?,? (or|and|&) (card|cash|credit)\b|\bcheck payments?\b|\bchecks? (are|is) (fine|ok|okay|accepted|welcome)\b|"
+    r"\bpagos? en l[ií]nea\b|\bcheques?\b", re.I)
+YES_RE = re.compile(r"\b(yes|yep|yeah|yup|absolutely|of course|definitely|certainly|s[ií])\b", re.I)
+DOGS_OUT_RE = re.compile(
+    r"\b(dogs?|pets?|pups?)\b[^.?!]{0,60}\b(outside|step(ped)? out|out of the (home|house)|out for|board(ed)?|"
+    r"kennel|crate|elsewhere|away)\b|\b(outside|step out|out of the (home|house))\b[^.?!]{0,30}\b(dogs?|pets?)\b", re.I)
 
 
 def _has(rx, s):
@@ -231,6 +243,8 @@ def hard_checks(s: dict, resp: dict) -> dict:
     pcts = sorted({m.group(1) for m in PCT_RE.finditer(text)} - KB_PCTS)
     prior_lucy = any((h.get("from") or "").lower() != "customer" for h in s["history"])
     asked_who = bool(ASKS_WHO_RE.search(s["inbound"]))
+    # Mid-thread intro is allowed only as the "I'm Lucy, Oscar's online assistant" answer to who/what/human.
+    late_intro = bool(prior_lucy and INTRO_RE.search(text) and not (asked_who and ASKED_INTRO_RE.search(text)))
     return {
         "no_invented_price": (not bad_prices, f"unapproved: {bad_prices}" if bad_prices else ""),
         "no_invented_policy_years_service": (
@@ -239,7 +253,9 @@ def hard_checks(s: dict, resp: dict) -> dict:
                                     f"policy {INVENTED_POLICY_RE.search(text).group(0)!r}" if _neg_free_hit(INVENTED_POLICY_RE, text) else "",
                                     f"service {UNLISTED_SERVICE_RE.search(text).group(0)!r}" if UNLISTED_SERVICE_RE.search(text) else ""]))),
         "no_fault_admission": (not _neg_free_hit(FAULT_RE, text), ""),
-        "no_refund_repair_promise": (not _neg_free_hit(PROMISE_RE, text), ""),
+        # Removing/replacing caulk is an approved, included part of every job — not a repair promise.
+        "no_refund_repair_promise": (not _neg_free_hit(PROMISE_RE, " ".join(x for x in _sentences(text)
+                                                                           if not re.search(r"caulk", x, re.I))), ""),
         "no_internal_tools": (not INTERNAL_TOOLS_RE.search(text),
                               f"named {INTERNAL_TOOLS_RE.search(text).group(0)!r}" if INTERNAL_TOOLS_RE.search(text) else ""),
         "never_claims_human": (not HUMAN_CLAIM_RE.search(text), ""),
@@ -249,8 +265,9 @@ def hard_checks(s: dict, resp: dict) -> dict:
         "no_free_guarantee_lifetime": (not banned, f"banned: {banned}" if banned else ""),
         "texts_le_320": (all(len(t) <= 320 for t in texts) and len(texts) <= 2,
                          f"{len(texts)} text(s), lengths {[len(t) for t in texts]}"),
-        "intro_only_first_message": (not (prior_lucy and INTRO_RE.search(text)),
-                                     "intro on a later message" if prior_lucy and INTRO_RE.search(text) else ""),
+        "intro_only_first_message": (not late_intro, "intro on a later message" if late_intro else ""),
+        "no_online_or_check_payment": (not PAYMENT_BAD_RE.search(text),
+                                       f"{PAYMENT_BAD_RE.search(text).group(0)!r}" if PAYMENT_BAD_RE.search(text) else ""),
         "no_assistant_title_unless_asked": (asked_who or not TITLE_RE.search(text),
                                             f"{TITLE_RE.search(text).group(0)!r}" if TITLE_RE.search(text) and not asked_who else ""),
     }
@@ -267,6 +284,19 @@ def specific_checks(s: dict, resp: dict) -> dict:
         c["states_404"] = ("$404" in r.replace(" ", ""), "")
         c["10pct_max_no_stack"] = (not _has(r"\b15\s?%|\$38[12]\b", r)
                                    and (_has(r"\b10\s?%", r) or "$404" in r), "")
+    elif sid == 10:
+        c["cant_speak_to_other_customer"] = (_has(
+            r"(can'?t|cannot|not able to|unable to|don'?t) (speak|comment|talk|share)\b[^.?!]{0,15}\b(to|on|about|for)\b"
+            r"[^.?!]{0,30}\b(another|other|someone|anyone|a different|your neighbor|their|her|his)\b[^.?!]{0,30}"
+            r"\b(customer|job|quote|price|tub|project|estimate|pricing)", r), "")
+        c["no_other_crews_framing"] = (not _has(r"other (crews?|compan(y|ies)|contractors?|refinishers?|businesses|"
+                                                r"shops?|guys)|competitors?|another (company|crew|contractor|shop)", r), "")
+        c["no_confirm_deny_199"] = (not _has(r"199|that'?s (right|correct|true|not (right|true|accurate|correct))|"
+                                             r"we (did|didn'?t|never|wouldn'?t) (do|charge|did)|"
+                                             r"(she|he|they) (must|may|might) have", r), "")
+        c["states_449"] = ("$449" in r.replace(" ", ""), "")
+    elif sid == 11:
+        c["no_yes_to_lifetime"] = (not YES_RE.search(r), f"{YES_RE.search(r).group(0)!r}" if YES_RE.search(r) else "")
     elif sid == 12:
         c["says_3_to_4_hours"] = (_has(r"\b3\s*(-|–|to)\s*4\s*h|three to four h", r), "")
         c["out_until_next_morning"] = (_has(r"next morning|next day|until (tomorrow|the morning)|tomorrow morning", r), "")
@@ -283,6 +313,8 @@ def specific_checks(s: dict, resp: dict) -> dict:
         c["no_spray_with_infant"] = (_has(r"infant|baby|newborn|little one|4[- ]month", r) and bool(NEG_RE.search(r)), "")
         c["dogs_fine"] = (_has(r"dogs?\b[^.?!]{0,40}\b(fine|ok|okay|can stay|can be home|welcome)|"
                                r"(fine|ok|okay)\b[^.?!]{0,25}\bdogs?", r), "")
+        c["no_recommend_infant"] = (not _has(r"recommend|suggest", r), "")
+        c["no_dogs_outside"] = (not _neg_free_hit(DOGS_OUT_RE, r), "")
     elif sid == 15:
         c["custom_color"] = (_has(r"custom", r), "")
         c["states_85"] = (_has(r"\$\s?85\b", r), "")
