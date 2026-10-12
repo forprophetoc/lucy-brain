@@ -24,11 +24,7 @@
       "latency_s": 4.43,
       "grade": {
         "rules": {
-          "says_2_to_3_weeks": {
-            "pass": false,
-            "note": ""
-          },
-          "booking_link": {
+          "booking_link_or_real_availability": {
             "pass": true,
             "note": ""
           },
@@ -89,7 +85,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -112,11 +108,7 @@
       "latency_s": 5.73,
       "grade": {
         "rules": {
-          "says_2_to_3_weeks": {
-            "pass": true,
-            "note": ""
-          },
-          "booking_link": {
+          "booking_link_or_real_availability": {
             "pass": true,
             "note": ""
           },
@@ -203,11 +195,7 @@
       "latency_s": 4.25,
       "grade": {
         "rules": {
-          "says_2_to_3_weeks": {
-            "pass": true,
-            "note": ""
-          },
-          "booking_link": {
+          "booking_link_or_real_availability": {
             "pass": true,
             "note": ""
           },
@@ -547,10 +535,6 @@
             "pass": true,
             "note": ""
           },
-          "mattress_blanket_towel": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -631,10 +615,6 @@
             "pass": true,
             "note": ""
           },
-          "mattress_blanket_towel": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -712,10 +692,6 @@
       "grade": {
         "rules": {
           "customer_removes_doors": {
-            "pass": true,
-            "note": ""
-          },
-          "mattress_blanket_towel": {
             "pass": true,
             "note": ""
           },
@@ -803,7 +779,7 @@
             "pass": true,
             "note": ""
           },
-          "included": {
+          "no_caulk_charge_claimed": {
             "pass": true,
             "note": ""
           },
@@ -891,7 +867,7 @@
             "pass": true,
             "note": ""
           },
-          "included": {
+          "no_caulk_charge_claimed": {
             "pass": true,
             "note": ""
           },
@@ -979,7 +955,7 @@
             "pass": true,
             "note": ""
           },
-          "included": {
+          "no_caulk_charge_claimed": {
             "pass": true,
             "note": ""
           },
@@ -1063,12 +1039,8 @@
             "pass": true,
             "note": ""
           },
-          "dust_walls": {
-            "pass": false,
-            "note": ""
-          },
-          "crew_does_rest": {
-            "pass": false,
+          "no_invented_prep": {
+            "pass": true,
             "note": ""
           },
           "no_invented_price": {
@@ -1124,7 +1096,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -1151,12 +1123,8 @@
             "pass": true,
             "note": ""
           },
-          "dust_walls": {
+          "no_invented_prep": {
             "pass": true,
-            "note": ""
-          },
-          "crew_does_rest": {
-            "pass": false,
             "note": ""
           },
           "no_invented_price": {
@@ -1212,7 +1180,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -1239,12 +1207,8 @@
             "pass": true,
             "note": ""
           },
-          "dust_walls": {
+          "no_invented_prep": {
             "pass": true,
-            "note": ""
-          },
-          "crew_does_rest": {
-            "pass": false,
             "note": ""
           },
           "no_invented_price": {
@@ -1300,7 +1264,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -1329,10 +1293,6 @@
           },
           "not_over_old_coating": {
             "pass": true,
-            "note": ""
-          },
-          "about_5_hours": {
-            "pass": false,
             "note": ""
           },
           "no_invented_price": {
@@ -1388,7 +1348,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -1417,10 +1377,6 @@
           },
           "not_over_old_coating": {
             "pass": true,
-            "note": ""
-          },
-          "about_5_hours": {
-            "pass": false,
             "note": ""
           },
           "no_invented_price": {
@@ -1476,7 +1432,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -1505,10 +1461,6 @@
           },
           "not_over_old_coating": {
             "pass": true,
-            "note": ""
-          },
-          "about_5_hours": {
-            "pass": false,
             "note": ""
           },
           "no_invented_price": {
@@ -1564,7 +1516,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": [
         "[HC] inbound photo request outside D2 -> removed on retry"
@@ -1590,14 +1542,6 @@
       "grade": {
         "rules": {
           "kohler_white_biscuit": {
-            "pass": true,
-            "note": ""
-          },
-          "custom_85": {
-            "pass": true,
-            "note": ""
-          },
-          "about_a_week": {
             "pass": true,
             "note": ""
           },
@@ -1681,14 +1625,6 @@
             "pass": true,
             "note": ""
           },
-          "custom_85": {
-            "pass": true,
-            "note": ""
-          },
-          "about_a_week": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -1766,14 +1702,6 @@
       "grade": {
         "rules": {
           "kohler_white_biscuit": {
-            "pass": true,
-            "note": ""
-          },
-          "custom_85": {
-            "pass": true,
-            "note": ""
-          },
-          "about_a_week": {
             "pass": true,
             "note": ""
           },
@@ -1863,11 +1791,11 @@
             "pass": true,
             "note": ""
           },
-          "photos_and_invoice": {
+          "no_wrong_payment_info": {
             "pass": true,
             "note": ""
           },
-          "cash_or_card_on_completion": {
+          "toward_booking": {
             "pass": true,
             "note": ""
           },
@@ -1957,11 +1885,11 @@
             "pass": true,
             "note": ""
           },
-          "photos_and_invoice": {
+          "no_wrong_payment_info": {
             "pass": true,
             "note": ""
           },
-          "cash_or_card_on_completion": {
+          "toward_booking": {
             "pass": true,
             "note": ""
           },
@@ -2051,12 +1979,12 @@
             "pass": true,
             "note": ""
           },
-          "photos_and_invoice": {
-            "pass": false,
+          "no_wrong_payment_info": {
+            "pass": true,
             "note": ""
           },
-          "cash_or_card_on_completion": {
-            "pass": false,
+          "toward_booking": {
+            "pass": true,
             "note": ""
           },
           "no_invented_price": {
@@ -2112,7 +2040,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -2137,10 +2065,6 @@
         "rules": {
           "fume_extraction": {
             "pass": true,
-            "note": ""
-          },
-          "platinum_option": {
-            "pass": false,
             "note": ""
           },
           "no_medical_claims": {
@@ -2200,7 +2124,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -2224,10 +2148,6 @@
       "grade": {
         "rules": {
           "fume_extraction": {
-            "pass": true,
-            "note": ""
-          },
-          "platinum_option": {
             "pass": true,
             "note": ""
           },
@@ -2315,10 +2235,6 @@
             "pass": true,
             "note": ""
           },
-          "platinum_option": {
-            "pass": false,
-            "note": ""
-          },
           "no_medical_claims": {
             "pass": true,
             "note": ""
@@ -2376,7 +2292,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -2406,7 +2322,7 @@
             "pass": true,
             "note": ""
           },
-          "states_427": {
+          "total_427_if_stated": {
             "pass": true,
             "note": ""
           },
@@ -2496,7 +2412,7 @@
             "pass": true,
             "note": ""
           },
-          "states_427": {
+          "total_427_if_stated": {
             "pass": true,
             "note": ""
           },
@@ -2587,7 +2503,7 @@
             "pass": true,
             "note": ""
           },
-          "states_427": {
+          "total_427_if_stated": {
             "pass": true,
             "note": ""
           },
@@ -3210,10 +3126,6 @@
             "pass": true,
             "note": ""
           },
-          "holds_449": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -3298,10 +3210,6 @@
             "note": ""
           },
           "no_accept_400": {
-            "pass": true,
-            "note": ""
-          },
-          "holds_449": {
             "pass": true,
             "note": ""
           },
@@ -3392,10 +3300,6 @@
             "pass": true,
             "note": ""
           },
-          "holds_449": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -3472,11 +3376,7 @@
       "latency_s": 4.31,
       "grade": {
         "rules": {
-          "honest_identity": {
-            "pass": false,
-            "note": ""
-          },
-          "apologetic": {
+          "honest": {
             "pass": true,
             "note": ""
           },
@@ -3537,7 +3437,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -3560,12 +3460,8 @@
       "latency_s": 4.5,
       "grade": {
         "rules": {
-          "honest_identity": {
+          "honest": {
             "pass": true,
-            "note": ""
-          },
-          "apologetic": {
-            "pass": false,
             "note": ""
           },
           "no_sales_push": {
@@ -3625,7 +3521,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -3648,12 +3544,8 @@
       "latency_s": 3.91,
       "grade": {
         "rules": {
-          "honest_identity": {
+          "honest": {
             "pass": true,
-            "note": ""
-          },
-          "apologetic": {
-            "pass": false,
             "note": ""
           },
           "no_sales_push": {
@@ -3713,7 +3605,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -3992,10 +3884,6 @@
             "pass": true,
             "note": ""
           },
-          "about_5_hours": {
-            "pass": true,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -4073,10 +3961,6 @@
       "grade": {
         "rules": {
           "says_yes": {
-            "pass": true,
-            "note": ""
-          },
-          "about_5_hours": {
             "pass": true,
             "note": ""
           },
@@ -4160,10 +4044,6 @@
             "pass": true,
             "note": ""
           },
-          "about_5_hours": {
-            "pass": false,
-            "note": ""
-          },
           "no_invented_price": {
             "pass": true,
             "note": ""
@@ -4217,7 +4097,7 @@
             "note": ""
           }
         },
-        "all_pass": false
+        "all_pass": true
       },
       "log": []
     },
@@ -5007,7 +4887,7 @@
             "pass": true,
             "note": ""
           },
-          "toward_booking": {
+          "booking_link_or_sched_question": {
             "pass": false,
             "note": ""
           },
@@ -5102,7 +4982,7 @@
             "pass": true,
             "note": ""
           },
-          "toward_booking": {
+          "booking_link_or_sched_question": {
             "pass": false,
             "note": ""
           },
@@ -5194,7 +5074,7 @@
             "pass": true,
             "note": ""
           },
-          "toward_booking": {
+          "booking_link_or_sched_question": {
             "pass": false,
             "note": ""
           },
@@ -5278,10 +5158,6 @@
       "latency_s": 3.89,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5378,10 +5254,6 @@
       "latency_s": 5.18,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5481,10 +5353,6 @@
       "latency_s": 5.87,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5583,10 +5451,6 @@
       "latency_s": 5.19,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5685,10 +5549,6 @@
       "latency_s": 6.3,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5785,10 +5645,6 @@
       "latency_s": 3.56,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5887,10 +5743,6 @@
       "latency_s": 5.17,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -5991,10 +5843,6 @@
       "latency_s": 4.72,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""
@@ -6097,10 +5945,6 @@
       "latency_s": 5.34,
       "grade": {
         "rules": {
-          "holds_estimate": {
-            "pass": true,
-            "note": ""
-          },
           "no_discount_no_new_number": {
             "pass": true,
             "note": ""

@@ -53,6 +53,12 @@ NEW_LINES = {
         "different job, so its price is the customer's own estimate.",
         "give exactly that explanation (no other reason), and hold their estimate: no discount, no new number.",
     ],
+    "h_return_after_quiet": [
+        "When a customer comes back after going quiet (\"sorry, been busy\", \"still interested\", any reply after "
+        "unanswered follow-ups), reply warm and short — no guilt, never mention the texts they missed — then take "
+        "ONE direct booking step: the booking link (https://calendar.bathtubpros.com) or a direct scheduling "
+        "question (\"want me to get you on the schedule?\"). Never just \"here when you're ready.\"",
+    ],
 }
 
 REMOVED = [

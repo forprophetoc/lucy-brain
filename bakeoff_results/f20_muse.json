@@ -1,0 +1,291 @@
+{
+  "label": "f20_muse",
+  "backend": "muse",
+  "variant": "",
+  "now_et": "2026-10-12T14:10:00-04:00",
+  "reps": 3,
+  "rows": [
+    {
+      "set": "fresh",
+      "scenario": 20,
+      "key": "F20",
+      "name": "Back after 3 follow-ups",
+      "rep": 1,
+      "inbound": "sorry, been crazy busy",
+      "response": {
+        "reply": "No problem, Trish! Want me to get you on the schedule? You can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=Silver",
+          "price=449"
+        ],
+        "reasoning": "Customer returned after quiet, continue warmly and take one direct booking step per playbook",
+        "error": ""
+      },
+      "latency_s": 5.74,
+      "grade": {
+        "rules": {
+          "warm": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guilt": {
+            "pass": true,
+            "note": ""
+          },
+          "booking_link_or_sched_question": {
+            "pass": true,
+            "note": ""
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [113]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "set": "fresh",
+      "scenario": 20,
+      "key": "F20",
+      "name": "Back after 3 follow-ups",
+      "rep": 2,
+      "inbound": "sorry, been crazy busy",
+      "response": {
+        "reply": "No problem, Trish! Want me to get you on the schedule? You can pick a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=Silver",
+          "price=449"
+        ],
+        "reasoning": "Comeback after quiet gets warm short reply with one direct booking step per playbook",
+        "error": ""
+      },
+      "latency_s": 6.1,
+      "grade": {
+        "rules": {
+          "warm": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guilt": {
+            "pass": true,
+            "note": ""
+          },
+          "booking_link_or_sched_question": {
+            "pass": true,
+            "note": ""
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [113]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "set": "fresh",
+      "scenario": 20,
+      "key": "F20",
+      "name": "Back after 3 follow-ups",
+      "rep": 3,
+      "inbound": "sorry, been crazy busy",
+      "response": {
+        "reply": "No worries at all, Trish! Want me to get you on the schedule? You can pick a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer returned after quiet, playbook requires warm short reply with one booking step.",
+        "error": ""
+      },
+      "latency_s": 6.72,
+      "grade": {
+        "rules": {
+          "warm": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guilt": {
+            "pass": true,
+            "note": ""
+          },
+          "booking_link_or_sched_question": {
+            "pass": true,
+            "note": ""
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [120]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    }
+  ]
+}

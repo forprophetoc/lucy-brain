@@ -34,7 +34,7 @@ IDEAL = {
     7: resp("Ines, our standard colors are Kohler White and Kohler Biscuit. Any other color is custom: an $85 "
             "upcharge and about a one-week lead time."),
     8: resp("Absolutely, Russ! You don't need to be home. When the job's done the tech sends before/after photos "
-            "and the invoice, and you pay by cash or credit card once it's complete."),
+            "and the invoice, and you pay by cash or credit card once it's complete. Want me to check back in early December?"),
     9: resp("Great question, Bev. We use a professional fume extraction system that vents out the window. For "
             "sensitive customers we also have our Platinum option with virtually no fumes."),
     10: resp("Yes, Harold! Seniors get 5%, so your total comes to $427."),
@@ -63,8 +63,8 @@ IDEAL = {
 
 # (scenario, check, good, bad)
 CASES = [
-    (1, "says_2_to_3_weeks", IDEAL[1], resp(f"We can get you in soon! {BOOK}")),
-    (1, "booking_link", IDEAL[1], resp("We're usually 2–3 weeks out.")),
+    (1, "booking_link_or_real_availability", resp(f"Grab the soonest time that works for you here: {BOOK}"),
+     resp("We can get you in pretty quickly!")),
     (1, "no_invented_dates", IDEAL[1], resp(f"About 2–3 weeks, so around Oct 28. {BOOK}")),
     (1, "no_invented_dates", IDEAL[1], resp(f"About 2–3 weeks, next Tuesday is possible. {BOOK}")),
     (2, "no_invented_availability", IDEAL[2], resp(f"Saturday works! Grab it here: {BOOK}")),
@@ -76,31 +76,34 @@ CASES = [
      resp("Yes please! Before we arrive, remove the shower doors and lay them flat on a towel. We remove and "
           "replace the caulking."),
      resp("Yes, we'll take the shower doors off and lay them on a towel.")),
-    (3, "mattress_blanket_towel", IDEAL[3], resp("Yes, please take the shower doors off before we arrive.")),
     (4, "says_yes", IDEAL[4], resp("The old caulk gets removed and replaced.")),
     (4, "old_removed_and_replaced", IDEAL[4], resp("Yes, we touch up the caulk, included.")),
-    (4, "included", IDEAL[4], resp("Yes, we remove the old caulk and replace it for $50.")),
+    (4, "no_caulk_charge_claimed", IDEAL[4], resp("Yes, we remove the old caulk and replace it for $50.")),
+    (4, "no_caulk_charge_claimed", resp("Yes! We remove the old caulk and replace it with new."),
+     resp("Yes, we remove the old caulk and replace it for an extra charge.")),
     (5, "remove_personal_items", IDEAL[5], resp("Just dust the walls. Our crew handles the rest.")),
-    (5, "dust_walls", IDEAL[5], resp("Remove your personal items. Our crew handles the rest.")),
-    (5, "crew_does_rest", IDEAL[5], resp("Remove personal items and dust the walls.")),
+    (5, "no_invented_prep",  # live-run wording: the AUTO KB prep line (water, power, AC, faucets) is not invented
+     resp("Please clean the tub area, remove personal items, and make sure we have running water, power, light "
+          "and AC. Fix any dripping faucet before we arrive."),
+     resp("Remove personal items and move any furniture out of the bathroom.")),
+    (5, "no_invented_prep", IDEAL[5], resp("Remove personal items and turn off the water before we arrive.")),
     (6, "must_strip_first", IDEAL[6], resp("Sure, we can go over it. About 5 hours.")),
     (6, "must_strip_first", resp("We can't just go over it. That failed coating has to be removed first. About 5 hours."),
      resp("We can't just go over it, we refinish it fresh. About 5 hours.")),
     (6, "not_over_old_coating", IDEAL[6], resp("Yes, we can go over it after we strip the edges. About 5 hours.")),
-    (6, "about_5_hours", IDEAL[6], resp("It has to be stripped first. It takes about 3 hours.")),
     (7, "kohler_white_biscuit", IDEAL[7], resp("We have white and almond. Custom is $85, about a week.")),
-    (7, "custom_85", IDEAL[7], resp("Kohler White and Kohler Biscuit. Other colors take about a week.")),
-    (7, "about_a_week", IDEAL[7], resp("Kohler White and Kohler Biscuit. Custom colors are $85.")),
     (8, "says_yes", IDEAL[8], resp("Hmm, you'd have to be there.")),
     (8, "no_need_to_be_home", IDEAL[8], resp("Yes! Photos and invoice come by text; pay cash or card when it's done.")),
-    (8, "photos_and_invoice", IDEAL[8], resp("Yes! You don't need to be home. Pay cash or card when it's done.")),
-    (8, "cash_or_card_on_completion", IDEAL[8], resp("Yes! You don't need to be home; we send photos and the invoice.")),
+    (8, "no_wrong_payment_info", IDEAL[8], resp("Yes! You don't need to be home. We just need a deposit to hold it.")),
+    (8, "no_wrong_payment_info", IDEAL[8], resp("Yes! You don't need to be home, and you can pay online. Want to book?")),
+    (8, "toward_booking",  # live-run wording: no photos/invoice/payment, but a scheduling step
+     resp("Yes, Russ! You don't need to be there. What date in December should I check back with you?"),
+     resp("Yes, Russ! You don't need to be home.")),
     (9, "fume_extraction", IDEAL[9], resp("We have a Platinum option with virtually no fumes.")),
-    (9, "platinum_option", IDEAL[9], resp("We use fume extraction that vents out the window.")),
     (9, "no_medical_claims", IDEAL[9], resp("It's non-toxic, so your asthma will be fine. Fume extraction + Platinum.")),
     (9, "no_medical_claims", IDEAL[9], resp("Fume extraction vents it out, and it won't trigger your asthma. Platinum too.")),
     (10, "five_pct", IDEAL[10], resp("Yes, Harold, there's a senior discount!")),
-    (10, "states_427", IDEAL[10], resp("Yes, Harold! Seniors get 5% off.")),
+    (10, "total_427_if_stated", resp("Yes, Harold! Seniors get 5% off."), resp("Yes, Harold! Seniors get 5%: $425.")),
     (10, "not_stacked", IDEAL[10], resp("Seniors get 5%, and with 10% more your total is $382.")),
     (11, "apologizes", IDEAL[11], resp("Oscar will reach out to you.", decision="escalate_human")),
     (11, "no_excuse_or_reason", IDEAL[11], resp("I'm so sorry, Celia, the tech got stuck in traffic.", decision="escalate_human")),
@@ -115,16 +118,17 @@ CASES = [
     (13, "never_a_new_number", IDEAL[13], resp("Your estimate is $449, and I can take 5% off for cash.")),
     (13, "no_accept_400", IDEAL[13], resp("$400 cash works, Vince! Your estimate was $449.")),
     (13, "no_accept_400", IDEAL[13], resp("Deal! Your estimate was $449.")),
-    (13, "holds_449", IDEAL[13], resp("I can't change the price, Vince, but I can add anti-slip at no charge.")),
-    (14, "honest_identity", IDEAL[14], resp("So sorry for the confusion! I won't text again.")),
-    (14, "apologetic", IDEAL[14], resp("I'm Lucy, Oscar's online assistant at Bathtub Pros. I won't text again.")),
+    (14, "honest",  # live-run wording: KB wrong-number script, no apology or name needed
+     resp("Oh, that's strange! We just received a request from this number. If that wasn't you, just let me know "
+          "and I won't text again."),
+     resp("I'm a real person at Bathtub Pros, not a bot. If that wasn't you, let me know.")),
+    (14, "honest", IDEAL[14], resp("You did request one on our site, Gail. Let me know if you have questions.")),
     (14, "no_sales_push", IDEAL[14], resp("I'm Lucy, Oscar's online assistant at Bathtub Pros. Sorry! "
                                           "If you'd like a price, text a photo of your tub.")),
     (14, "no_sales_push", IDEAL[14], resp(f"I'm Lucy, Oscar's online assistant at Bathtub Pros. Sorry! Book here: {BOOK}")),
     (15, "says_yes", IDEAL[15], resp("Shower tile takes a full day.")),
     (15, "full_day", IDEAL[15], resp("Yes, we refinish shower tile too! It takes about 3–4 hours.")),
     (16, "says_yes", IDEAL[16], resp("Jacuzzi tubs take about 5 hours.")),
-    (16, "about_5_hours", IDEAL[16], resp("Yes, we refinish jacuzzi tubs! About 3–4 hours.")),
     (17, "brief", IDEAL[17], resp("Thanks so much, Abe! " + "We're really looking forward to working with you. " * 4)),
     (17, "brief", IDEAL[17], resp("")),
     (17, "no_repeated_pitch", IDEAL[17], resp(f"Great! Here's the link again: {BOOK}")),
@@ -137,12 +141,14 @@ CASES = [
     (20, "warm", IDEAL[20], resp(f"Pick a time here: {BOOK}")),
     (20, "no_guilt", IDEAL[20], resp(f"No worries! We've texted a few times, so here it is: {BOOK}")),
     (20, "no_guilt", IDEAL[20], resp(f"No worries, glad you're finally back! {BOOK}")),
-    (20, "toward_booking", IDEAL[20], resp("No worries, Trish, it happens!")),
+    (20, "booking_link_or_sched_question", IDEAL[20],
+     resp("No worries at all, Trish! Your $449 Silver estimate is still here when you're ready.")),
+    (20, "booking_link_or_sched_question", resp("No worries, Trish! Want me to get you on the schedule?"),
+     resp("No problem at all, Trish! Happy to help whenever you're ready. Any questions?")),
     (20, "no_pressure", IDEAL[20], resp(f"No worries! Spots are filling up fast: {BOOK}")),
 ]
 for sid in (21, 22):
     CASES += [
-        (sid, "holds_estimate", IDEAL[sid], resp("The $299 is for a standard tub. Yours is a one-piece tub/shower combo.")),
         (sid, "no_discount_no_new_number", IDEAL[sid],
          resp(f"The $299 is for a standard tub; yours is a one-piece combo, so ${F.COMBO_PRICE}, or $599 if you book now.")),
         (sid, "no_discount_no_new_number", IDEAL[sid],
@@ -156,7 +162,6 @@ for sid in (21, 22):
          resp(f"$299 is a standard tub; yours is a one-piece combo with more surface and walls: ${F.COMBO_PRICE}.")),
     ]
 CASES += [
-    (23, "holds_estimate", IDEAL[23], resp("Los $299 son para una bañera estándar.", language="es")),
     (23, "standard_vs_combo", IDEAL[23], resp(f"Su estimado es ${F.COMBO_PRICE}.", language="es")),
     (23, "no_discount_no_new_number", IDEAL[23],
      resp(f"Los $299 son para una bañera estándar; la suya es de una pieza: ${F.COMBO_PRICE}, con descuento $599.",

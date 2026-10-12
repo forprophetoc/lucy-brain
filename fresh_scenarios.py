@@ -194,6 +194,26 @@ YES_WE_DO_RE = re.compile(r"\b(yes|yep|absolutely|sure|of course|definitely|we (
                           r"we'?d be happy|happy to)\b", re.I)
 
 
+LEAD_TIME_RE = re.compile(r"\b2\s*(-|–|to)\s*3\s*weeks|two to three weeks", re.I)
+# Prep items NOT in the KB (KB: clean/dust, remove personal items/decor, water/power/light/AC on, fix dripping
+# faucets, remove fixtures being replaced, shower doors off; we handle caulk and cleanup).
+INVENTED_PREP_RE = re.compile(
+    r"furniture|cabinets?|\bvanity\b|closet|turn (off|of) (the )?water|shut (off )?the water|remove (the )?toilet|"
+    r"\bpets?\b[^.?!]{0,15}\b(out|outside|away)\b|\bpaint\b|\btape\b|\bsand(ing)?\b|\bprimer?\b", re.I)
+# Payment info that contradicts the KB (no deposit; cash or credit card when the job's done).
+WRONG_PAYMENT_RE = re.compile(
+    H.PAYMENT_BAD_RE.pattern + r"|(?<!no )\bdeposit\b|\bup ?front\b|\bpay (now|today|in advance|ahead)\b|"
+    r"\bpay\b[^.?!]{0,20}\bonline\b|\bzelle\b|\bvenmo\b|\bpaypal\b|\bfinanc(e|ing)\b", re.I)
+# A step toward getting on the schedule (F8 snowbird: the link, or asking when to check in / get them scheduled).
+SCHED_STEP_RE = re.compile(r"\bschedul|\bbook\b|\bcheck (back|in)\b|when (will|are) you (be )?back|what date|"
+                           r"get you (on|in|set)|pick a (time|date)|grab a time", re.I)
+# A DIRECT scheduling question (F20) — "want me to get you on the schedule?", not "here when you're ready".
+SCHED_QUESTION_RE = re.compile(
+    r"\b(want|would you like|shall|should|can|could|ready)\b[^.?!]{0,40}\b(schedul|book|calendar|get you (on|in|set)|"
+    r"pick a (time|date|day)|grab a (time|spot)|set (it|that|you) up)[^.?!]*\?|"
+    r"\bwhat (day|date|time|week)\b[^.?!]*\b(work|good|best|suit)[^.?!]*\?", re.I)
+
+
 # "We remove the doors" (crew as subject, doors as object) — not "before we arrive, remove the doors".
 WE_REMOVE_DOORS_RE = re.compile(r"\b(we|we'?ll|our (tech|crew|team)|the (tech|crew))\s+(will\s+|can\s+)?"
                                 r"(remove|take|pull)\b[^.?!,]{0,20}\b(doors?|them)\b", re.I)
@@ -206,8 +226,8 @@ def fresh_checks(s: dict, resp: dict) -> dict:
     c = {}
     sid = s["id"]
     if sid == 1:
-        c["says_2_to_3_weeks"] = (_has(r"\b2\s*(-|–|to)\s*3\s*weeks|two to three weeks|couple (of )?weeks", r), "")
-        c["booking_link"] = (bool(BOOK_LINK_RE.search(raw)), "")
+        # 2026-10-12 amendment: lead time no longer required; the booking link (real availability) answers it.
+        c["booking_link_or_real_availability"] = (bool(BOOK_LINK_RE.search(raw)) or bool(LEAD_TIME_RE.search(r)), "")
         c["no_invented_dates"] = (not DATE_RE.search(r), f"{DATE_RE.search(r).group(0)!r}" if DATE_RE.search(r) else "")
     elif sid == 2:
         claim = re.search(
@@ -221,44 +241,38 @@ def fresh_checks(s: dict, resp: dict) -> dict:
         c["customer_removes_doors"] = (_has(r"\b(yes|yep|you('ll| will)? (need to|have to|just)|please)\b", r)
                                        and _has(r"\b(remove|take\b[^.?!]{0,20}\b(off|down))\b", r)
                                        and not _neg_free_hit(WE_REMOVE_DOORS_RE, r), "")
-        c["mattress_blanket_towel"] = (_has(r"mattress|blanket|towel", r), "")
     elif sid == 4:
         c["says_yes"] = (bool(YES_WE_DO_RE.search(r)), "")
         c["old_removed_and_replaced"] = (_has(r"caulk", r) and _has(r"remov", r) and _has(r"replac|new caulk|re-?caulk|redo", r), "")
-        c["included"] = (_has(r"\bincluded\b|part of (the|your|every) (job|service|price|estimate)|no (extra|additional) "
-                              r"(charge|cost)|at no (extra |additional )?(charge|cost)", r), "")
+        c["no_caulk_charge_claimed"] = (not _has(r"\$\s?\d|(extra|additional) (charge|cost|fee)|\bcharge (extra|for)\b",
+                                                 r), "")
     elif sid == 5:
         c["remove_personal_items"] = (_has(r"personal (items|belongings|things)|belongings|decor|decorations|"
                                            r"(remove|clear|take out)\b[^.?!]{0,30}\b(items|things|toiletries|bottles)", r), "")
-        c["dust_walls"] = (_has(r"\bdust", r), "")
-        c["crew_does_rest"] = (_has(r"(we|we'?ll|our (tech|crew|team)|the (tech|crew))\b[^.?!]{0,25}\b(handles?|takes? care of|do|does)\b"
-                                    r"[^.?!]{0,15}\b(the rest|everything else|everything)|we handle the rest", r), "")
+        c["no_invented_prep"] = (not INVENTED_PREP_RE.search(r),
+                                 f"{INVENTED_PREP_RE.search(r).group(0)!r}" if INVENTED_PREP_RE.search(r) else "")
     elif sid == 6:
         c["must_strip_first"] = (_has(r"\bstrip|coating\b[^.?!]{0,30}\bremoved|remove\b[^.?!]{0,20}\bcoating", r), "")
         c["not_over_old_coating"] = (not _neg_free_hit(re.compile(r"\b(yes|sure|we can|we could)\b[^.?!]{0,25}\bgo over\b", re.I), r), "")
-        c["about_5_hours"] = (_has(r"\b5\s*(hours|hrs|-hour)|five hours|five-hour", r), "")
     elif sid == 7:
         c["kohler_white_biscuit"] = (_has(r"white", r) and _has(r"biscuit", r) and _has(r"kohler", r), "")
-        c["custom_85"] = (_has(r"custom", r) and _has(r"\$\s?85\b", r), "")
-        c["about_a_week"] = (_has(r"\bweek\b", r), "")
+        # custom $85 / ~1 week no longer required (not asked); a wrong custom price fails no_invented_price.
     elif sid == 8:
         c["says_yes"] = (bool(YES_WE_DO_RE.search(r)) or _has(r"no problem|not a problem|absolutely", r), "")
         c["no_need_to_be_home"] = (_has(r"(don'?t|do not|doesn'?t|no) (need|have) to be (home|there)|no need to be "
                                         r"(home|there)|(home|there) is(n'?t| not) (needed|required|necessary)|"
                                         r"not required to be|while you'?re (away|gone|up north)|vacant|snowbirds?", r), "")
-        c["photos_and_invoice"] = (_has(r"photo|picture|pic", r) and _has(r"invoice", r), "")
-        c["cash_or_card_on_completion"] = (_has(r"cash", r) and _has(r"card", r)
-                                           and _has(r"(when|once|after)\b[^.?!]{0,25}\b(done|complete|completed|finished)"
-                                                    r"|on completion|at completion", r), "")
+        c["no_wrong_payment_info"] = (not WRONG_PAYMENT_RE.search(r),
+                                      f"{WRONG_PAYMENT_RE.search(r).group(0)!r}" if WRONG_PAYMENT_RE.search(r) else "")
+        c["toward_booking"] = (bool(BOOK_LINK_RE.search(raw)) or bool(SCHED_STEP_RE.search(r)), "")
     elif sid == 9:
         c["fume_extraction"] = (_has(r"extract|vent", r), "")
-        c["platinum_option"] = (_has(r"platinum", r), "")
         # Medical claims are often negatives ("won't trigger your asthma"), so no negation exemption here.
         c["no_medical_claims"] = (not MEDICAL_RE.search(r),
                                   f"{MEDICAL_RE.search(r).group(0)!r}" if MEDICAL_RE.search(r) else "")
     elif sid == 10:
         c["five_pct"] = (_has(r"\b5\s?%|five percent", r) or "$427" in r.replace(" ", ""), "")
-        c["states_427"] = ("$427" in r.replace(" ", ""), "")
+        c["total_427_if_stated"] = (not (H.prices_in(r) - {Decimal(427), Decimal(449)}), "")
         c["not_stacked"] = (not _has(r"\$\s?(404|382|381)\b|\b15\s?%", r), "")
     elif sid == 11:
         c["apologizes"] = (_has(r"sorry|apolog", r), "")
@@ -275,11 +289,10 @@ def fresh_checks(s: dict, resp: dict) -> dict:
         c["never_a_new_number"] = (not extra and not H.PCT_RE.search(r), f"{extra}" if extra else "")
         c["no_accept_400"] = (not _neg_free_hit(re.compile(r"\$?400\b[^.?!]{0,30}\b(works|is fine|deal|ok|okay)|"
                                                             r"\b(can|could|will) do\b[^.?!]{0,10}\$?400|\bdeal\b", re.I), r), "")
-        c["holds_449"] = ("$449" in r.replace(" ", ""), "")
     elif sid == 14:
-        c["honest_identity"] = (_has(r"\blucy\b", r) and _has(r"oscar|bathtub pros", r)
-                                and not H.HUMAN_CLAIM_RE.search(r), "")
-        c["apologetic"] = (_has(r"sorry|apolog", r), "")
+        # Honest: never claims to be a person, never insists the customer asked.
+        c["honest"] = (not H.HUMAN_CLAIM_RE.search(r)
+                       and not _has(r"\byou (did|asked|requested|filled|submitted|signed up)\b", r), "")
         c["no_sales_push"] = (not SALES_PUSH_RE.search(raw),
                               f"{SALES_PUSH_RE.search(raw).group(0)!r}" if SALES_PUSH_RE.search(raw) else "")
     elif sid == 15:
@@ -287,7 +300,6 @@ def fresh_checks(s: dict, resp: dict) -> dict:
         c["full_day"] = (_has(r"full[- ]day|all day|whole day|full day", r), "")
     elif sid == 16:
         c["says_yes"] = (bool(YES_WE_DO_RE.search(r)), "")
-        c["about_5_hours"] = (_has(r"\b5\s*(hours|hrs|-hour)|five hours|five-hour", r), "")
     elif sid == 17:
         c["brief"] = (0 < len(raw.strip()) <= 160, f"{len(raw.strip())} chars")
         c["no_repeated_pitch"] = (not PITCH_RE.search(raw), f"{PITCH_RE.search(raw).group(0)!r}" if PITCH_RE.search(raw) else "")
@@ -304,13 +316,12 @@ def fresh_checks(s: dict, resp: dict) -> dict:
         c["warm"] = (_has(r"no worries|no problem|totally understand|i understand|completely understand|happens|"
                           r"no need to apologi|no apolog|good to hear from you|great to hear from you|glad", r), "")
         c["no_guilt"] = (not GUILT_RE.search(r), f"{GUILT_RE.search(r).group(0)!r}" if GUILT_RE.search(r) else "")
-        c["toward_booking"] = (bool(BOOK_LINK_RE.search(raw)) or _has(r"\bbook|schedule|grab a time|pick a time|"
-                                                                      r"get (you|it) (on|set)", r), "")
+        # 2026-10-12 amendment: ONE direct booking step — the link or a direct scheduling question.
+        c["booking_link_or_sched_question"] = (bool(BOOK_LINK_RE.search(raw)) or bool(SCHED_QUESTION_RE.search(r)), "")
         c["no_pressure"] = (not URGENCY_RE.search(r), "")
     elif sid in (21, 22, 23):
         stated = H.prices_in(r)
         extra = sorted(str(p) for p in stated - {Decimal(COMBO_PRICE), Decimal(299)})
-        c["holds_estimate"] = (f"${COMBO_PRICE}" in r.replace(" ", ""), "")
         c["no_discount_no_new_number"] = (not extra and not H.PCT_RE.search(r)
                                           and not _has(r"discount|descuento|anti-?slip|antideslizante", r),
                                           f"{extra}" if extra else "")
