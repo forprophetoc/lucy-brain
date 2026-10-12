@@ -253,7 +253,9 @@ def fresh_checks(s: dict, resp: dict) -> dict:
         c["no_invented_prep"] = (not INVENTED_PREP_RE.search(r),
                                  f"{INVENTED_PREP_RE.search(r).group(0)!r}" if INVENTED_PREP_RE.search(r) else "")
     elif sid == 6:
-        c["must_strip_first"] = (_has(r"\bstrip|coating\b[^.?!]{0,30}\bremoved|remove\b[^.?!]{0,20}\bcoating", r), "")
+        # "that old coating has to come off first" is the strip step too (2026-10-12 rerun wording).
+        c["must_strip_first"] = (_has(r"\bstrip|coating\b[^.?!]{0,30}\b(removed|(come|comes|coming|taken) off)|"
+                                      r"remove\b[^.?!]{0,20}\bcoating", r), "")
         c["not_over_old_coating"] = (not _neg_free_hit(re.compile(r"\b(yes|sure|we can|we could)\b[^.?!]{0,25}\bgo over\b", re.I), r), "")
     elif sid == 7:
         c["kohler_white_biscuit"] = (_has(r"white", r) and _has(r"biscuit", r) and _has(r"kohler", r), "")

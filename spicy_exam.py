@@ -16,7 +16,7 @@ omitting a detail the customer didn't ask for. Every check is one of three kinds
              quiet: no booking link and no scheduling question; photo: no estimate on record — no booking
              link, and the photo-to-539 request is the close; any: closing not graded (listed in the report).
 
-Run:  py -3.14 spicy_exam.py spicy_final [reps]       (env: HC_BACKEND=muse HC_VARIANT=spicy)
+Run:  py -3.14 spicy_exam.py spicy_final [reps] [--only=B8,H9,...]   (env: HC_BACKEND=muse HC_VARIANT=spicy)
       py -3.14 spicy_exam.py --regrade spicy_final   (re-grade saved replies, no model calls)
 """
 import contextlib
@@ -44,7 +44,7 @@ _neg_free_hit = H._neg_free_hit
 CLASS = {
     # baseline
     "B1": "photo", "B2": "close", "B3": "photo", "B4": "quiet", "B5": "quiet", "B6": "close", "B7": "quiet",
-    "B8": "photo", "B9": "quiet", "B10": "photo", "B11": "close", "B12": "close", "B13": "close", "B14": "close",
+    "B8": "photo", "B9": "quiet", "B10": "photo", "B11": "close", "B12": "any", "B13": "close", "B14": "close",
     "B15": "close", "B16": "quiet", "B17": "quiet", "B18": "any", "B19": "close", "B20": "close",
     # hard
     "H1": "quiet", "H2": "quiet", "H3": "quiet", "H4": "quiet", "H5": "quiet", "H6": "quiet", "H7": "quiet",
@@ -62,6 +62,7 @@ CLASS = {
 CLASS_WHY = {
     "B4": "timed text request — confirm + followup_at", "B5": "call request — hand to Oscar",
     "B7": "unlisted service, no estimate — decline", "B9": "out of area — decline", "B16": "defer to January",
+    "B12": "aftercare question — correct answer passes, booking step optional (Oscar 2026-10-12)",
     "B17": "opt-out", "B18": "\"That's a ripoff\" — angry; resolved or not is a judgment call",
     "H1": "complaint", "H2": "warranty problem on a past job", "H3": "refund demand", "H4": "review threat",
     "H5": "complaint about repeat texts", "H6": "identity question, no estimate (photo ask optional)",
@@ -82,6 +83,7 @@ PHOTO_REQUIRED = {k for k, v in CLASS.items() if v == "photo"}
 # Existing scenario checks NOT kept (the closing class replaces them, or they required an unasked detail,
 # or they encode the pre-2026-10-12 caulk fact).
 DROP = {
+    "B17": {"escalated_for_dnc"},  # Oscar 2026-10-12: GHL handles STOP
     "B20": {"moves_toward_booking"},
     "F1": {"booking_link_or_real_availability"}, "F2": {"booking_link"},
     "F4": {"says_yes", "old_removed_and_replaced", "no_caulk_charge_claimed"},
@@ -125,14 +127,17 @@ SCHED_QUESTION_RE = F.SCHED_QUESTION_RE
 CANT_KEEP_RE = re.compile(
     r"\b(update|revise|redo|adjust|lower|change|rework)\b[^.?!]{0,15}\b(your|the|that) (estimate|quote|price)\b|"
     r"\b(send|get) you a (new|revised|updated|lower) (estimate|quote|price)\b|"
-    r"\b(i'?ll|i will|let me|i can|i'?m going to)\b[^.?!]{0,20}\b(contact|call|text|reach|ask|talk to|speak (to|with)|"
-    r"check with)\b[^.?!]{0,10}\b(the|our|your) (tech|technician|crew|installer|guy)\b|"
     r"\bprice[- ]match|\bmatch (it|that|this|their|his|her|the) ?(price|quote|rate|offer)?\b|"
     r"\bhonou?r (it|that|this|their|his|her|the|a|any) ?(price|quote|rate|offer)?\b|"
     r"\bbeat (that|their|his|the) (price|quote)\b", re.I)
+# Promising contact with the tech: allowed only when Lucy escalates to Oscar (Oscar 2026-10-12, tech late / no-show).
+TECH_CONTACT_RE = re.compile(
+    r"\b(i'?ll|i will|let me|i can|i'?m going to)\b[^.?!]{0,20}\b(contact|call|text|reach|ask|talk to|speak (to|with)|"
+    r"check with)\b[^.?!]{0,10}\b(the|our|your) (tech|technician|crew|installer|guy)\b|"
+    r"\b(get|have) (the|our) (tech|technician)\b[^.?!]{0,20}\b(reach|call|text|contact)", re.I)
 DISCOUNT_OFFER_RE = re.compile(
     r"\b(i|we) (can|could|will|'?ll) (offer|give|do|take|knock)\b[^.?!]{0,25}\b(discount|% off|off the (price|total)|"
-    r"less|lower|deal|break)\b|\bfirst[- ]responders?\b|\bspecial (price|pricing|deal|offer)\b", re.I)
+    r"less|lower|deal|break)\b|\bspecial (price|pricing|deal|offer)\b", re.I)
 AVAIL_CLAIM_RE = re.compile(
     r"\b(i|we) can (get you in|fit you in|come out|squeeze you in)\b[^.?!]{0,25}\b(this|next) week\b|"
     r"\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow)\b[^.?!]{0,20}\b(is|looks|'s) "
@@ -144,7 +149,9 @@ GOLD_INCL_RE = re.compile(
     r"\bcaulk\w*\b[^.?!]{0,30}\b(replaced|included|redone|is part of)\b", re.I)
 GOLD_WORD_RE = re.compile(r"\b(gold|platinum)\b", re.I)
 INFANT_RE = re.compile(r"infant|newborn|\bbaby\b|month[- ]old", re.I)
-PHOTO_REQ_RE = B.PHOTO_REQ_RE
+# Baseline photo-ask pattern + informal Spanish ("mándame / mándanos / envíame una foto"), which it missed.
+PHOTO_REQ_RE = re.compile(B.PHOTO_REQ_RE.pattern + r"|\b(m[aá]nd[ae]|env[ií][ae])(me|nos)\b[^.?!]{0,30}\bfotos?\b",
+                          re.I)
 ONLINE_PRICE_RE = re.compile(r"on ?line|website|web site|\bsite\b|\bad\b|advertis|página|anuncio", re.I)
 URGENCY_RE = B.BANNED[3][1]
 
@@ -193,7 +200,6 @@ def hard_fail_checks(s: dict, resp: dict) -> dict:
     hc = H.hard_checks(s, resp)
     unl = B._unlisted(r, s["inbound"])
     g2s = gold_to_silver(s, r)
-    n_steps = booking_steps(raw)
     asked_lifetime = _has(r"lifetime", s["inbound"])
     first = (H._sentences(r) or [""])[0]
     infant = bool(INFANT_RE.search(s["inbound"]))
@@ -218,8 +224,11 @@ def hard_fail_checks(s: dict, resp: dict) -> dict:
                                      f"{AVAIL_CLAIM_RE.search(r).group(0)!r}" if AVAIL_CLAIM_RE.search(r) else "")
     c["no_other_discount"] = (not _neg_free_hit(DISCOUNT_OFFER_RE, r),
                               f"{DISCOUNT_OFFER_RE.search(r).group(0)!r}" if DISCOUNT_OFFER_RE.search(r) else "")
-    c["no_price_match_or_cant_keep"] = (not _neg_free_hit(CANT_KEEP_RE, r),
-                                        f"{CANT_KEEP_RE.search(r).group(0)!r}" if CANT_KEEP_RE.search(r) else "")
+    tech = _neg_free_hit(TECH_CONTACT_RE, r) and resp.get("send_decision") != "escalate_human"
+    c["no_price_match_or_cant_keep"] = (
+        not _neg_free_hit(CANT_KEEP_RE, r) and not tech,
+        f"{CANT_KEEP_RE.search(r).group(0)!r}" if CANT_KEEP_RE.search(r) else
+        (f"{TECH_CONTACT_RE.search(r).group(0)!r} without escalating" if tech else ""))
     c["no_gold_inclusions_to_silver"] = (not g2s, f"{g2s[:80]!r}" if g2s else "")
     c["no_yes_to_lifetime_hard"] = (not (asked_lifetime and H.YES_RE.search(first)), "")
     c["no_infant_spray_or_dogs_out"] = (
@@ -227,7 +236,6 @@ def hard_fail_checks(s: dict, resp: dict) -> dict:
         and (not infant or (bool(INFANT_RE.search(r) or _has(r"little one|4[- ]month", r)) and bool(H.NEG_RE.search(r))
                             and not _has(r"recommend|suggest", r))), "")
     c["no_drain_work"] = (not B._drain_claim(r), "")
-    c["one_booking_step_max"] = (n_steps <= 1, f"{n_steps} booking steps")
     return c
 
 
@@ -247,6 +255,8 @@ def correct_checks(key: str, set_: str, s: dict, resp: dict) -> dict:
     hc = H.hard_checks(s, resp)
     c["intro_only_first_message"] = hc["intro_only_first_message"]
     c["no_assistant_title_unless_asked"] = hc["no_assistant_title_unless_asked"]
+    n_steps = booking_steps(raw)  # link + question stacked: a normal fail, not a hard fail (Oscar 2026-10-12)
+    c["one_booking_step_max"] = (n_steps <= 1, f"{n_steps} booking steps")
     c["no_urgency"] = (not URGENCY_RE.search(r), f"{URGENCY_RE.search(r).group(0)!r}" if URGENCY_RE.search(r) else "")
     if key == "F4":  # caulk replacement is Gold and above (2026-10-12); Phil is on Silver
         c["caulk_is_gold_and_above"] = (bool(GOLD_WORD_RE.search(r)) and _has(r"caulk", r), "")
@@ -259,7 +269,7 @@ def correct_checks(key: str, set_: str, s: dict, resp: dict) -> dict:
         c["answers_soak"] = (_has(r"soak|hold up|holds up|durab|last|wear", r), "")
         c["not_defensive"] = (not F.DEFENSIVE_RE.search(r),
                               f"{F.DEFENSIVE_RE.search(r).group(0)!r}" if F.DEFENSIVE_RE.search(r) else "")
-    if key == "N4":
+    if key in ("N4", "B17"):
         c["acknowledges_stop"] = (bool(re.search(r"won'?t (text|message|contact|reach out)|will(?: not)? stop|"
                                                  r"no more (texts|messages)|(remove|removed|taking) you|"
                                                  r"not (text|contact) you again|sorry to bother", r, re.I)), "")
@@ -304,12 +314,14 @@ def grade(key: str, set_: str, s: dict, resp: dict) -> dict:
 # ---------------------------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------------------------
-def run(label: str, reps: int = 3) -> dict:
+def run(label: str, reps: int = 3, only=None) -> dict:
     if (os.environ.get("HC_BACKEND") or "") != "muse" or (os.environ.get("HC_VARIANT") or "") != "spicy":
         raise SystemExit("spicy exam needs HC_BACKEND=muse HC_VARIANT=spicy — HOLD")
     from hc_compose_service import compose
     rows = []
     for key, set_, s, build in plan():
+        if only and key not in only:
+            continue
         req = build(s)
         for rep in range(1, reps + 1):
             log = io.StringIO()
@@ -362,4 +374,7 @@ if __name__ == "__main__":
             regrade(lbl)
         sys.exit(0)
     B.load_keys()
-    run(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 3)
+    # --only K1,K2,... reruns just those scenarios (e.g. the ones that failed).
+    args = [a for a in sys.argv[1:] if not a.startswith("--only=")]
+    only = next((set(a.split("=", 1)[1].split(",")) for a in sys.argv[1:] if a.startswith("--only=")), None)
+    run(args[0], int(args[1]) if len(args) > 1 else 3, only)

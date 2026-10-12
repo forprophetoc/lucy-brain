@@ -169,7 +169,10 @@ class PlaybookRules(unittest.TestCase):
         self.assertIn("PHOTOS & ESTIMATES (rule #15 — scoped by whether THIS contact has an estimate on record):", p)
         self.assertIn("Ask the customer to text a photo of the tub to (239) 539-4777 ONLY when ALL of these hold:", p)
         self.assertIn("NEVER on a proactive / follow-up compose", p)
-        self.assertIn("the customer's message in THIS turn asks about price, a quote, or getting started", p)
+        # Widened 2026-10-12 (Oscar): any sign of interest from a no-estimate contact; the photo ask IS the close.
+        self.assertIn("(c) the customer shows interest in THIS turn", p)
+        self.assertIn("the photo ask IS the close (no booking link)", p)
+        self.assertNotIn("the customer's message in THIS turn asks about price, a quote, or getting started", p)
         self.assertIn("contact_details has no package and no\n    estimate_amount", p)
         self.assertIn('quote NO price and NO price range (no "$299", no "$299–$449", no "$300–$600")', p)
         self.assertIn("Estimate ON record: Lucy NEVER asks for a photo", p)
@@ -326,7 +329,7 @@ class ProactivePhotoGuard(unittest.TestCase):
 
 class InboundPhotoScopeGuard(unittest.TestCase):
     """D2 in code, inbound side — harness.run_bakeoff: a photo ask on an inbound turn is allowed
-    only for a no-estimate contact asking about price/quote/getting started; otherwise one retry,
+    for a no-estimate contact showing interest (not stop / wrong number); otherwise one retry,
     else escalate. Driven through compose(), model mocked."""
 
     PHOTO = "Yes! Just text a photo of your tub to (239) 539-4777 and we'll send your exact price."
@@ -371,10 +374,18 @@ class InboundPhotoScopeGuard(unittest.TestCase):
         self.assertEqual(resp["send_decision"], "escalate_human")
         self.assertIn("after one retry -> escalate", log)
 
-    def test_no_estimate_non_price_question_photo_ask_is_retried(self):
-        resp, calls, _ = self._run("Do you cover Naples?", [], self.PHOTO, self.CLEAN)
-        self.assertEqual(len(calls), 2)
-        self.assertEqual(resp["reply"], self.CLEAN)
+    def test_no_estimate_interest_photo_ask_untouched(self):
+        # Widened 2026-10-12: any interest from a no-estimate contact, not only price/quote/getting started.
+        for q in ("Do you cover Naples?", "What services do you offer?", "Do you need a deposit?"):
+            resp, calls, _ = self._run(q, [], self.PHOTO)
+            self.assertEqual(len(calls), 1, q)
+            self.assertEqual(resp["reply"], self.PHOTO, q)
+
+    def test_no_estimate_no_interest_photo_ask_is_retried(self):
+        for q in ("Stop texting me", "Wrong number", "Not interested, thanks"):
+            resp, calls, _ = self._run(q, [], self.PHOTO, self.CLEAN)
+            self.assertEqual(len(calls), 2, q)
+            self.assertEqual(resp["reply"], self.CLEAN, q)
 
     def test_no_estimate_price_question_photo_ask_untouched(self):
         for q in ("how much to refinish a tub?", "what's the total price for my tub?", "how do I get started?"):

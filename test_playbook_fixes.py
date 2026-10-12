@@ -96,7 +96,8 @@ NEW_LINES = {
         "you can grab it here: https://calendar.bathtubpros.com",
     ],
     "b_discounts": [
-        "- A 10% discount is offered for veterans; seniors get 5% — one or the other, never both.",
+        # d (2026-10-12 amendment): the FLAGGED line restored exactly as it was before the exam edit.
+        "- A 10% discount is offered for veterans and first responders. https://www.bathtubpros.com/",
         "- No price match and no other discount of any kind — only veteran 10% or senior 5%.",
     ],
     "d_soaking": ["- Soaking: Gold holds up to anything, including daily soaking; Silver wears much faster."],
@@ -107,6 +108,18 @@ NEW_LINES = {
     ],
     "g_colors": [
         "Kohler Biscuit is a very light tan. Two colors on one job are fine (e.g. a white shower and a Biscuit tub).",
+    ],
+    "amend_b_tech_late": [
+        "- Tech late / no-show: \"Let me get the tech to reach out to you\" (or \"I'll have the tech reach out\") IS "
+        "allowed when you also escalate this to Oscar.",
+    ],
+    "amend_c_thumbs_up": [
+        "- After a customer's 👍 or \"thanks\" once the booking link is already sent: a short acknowledgment, no "
+        "link again.",
+    ],
+    "amend_a_rule15": [
+        "(c) the customer shows interest in THIS turn — any question or message about our work: price,",
+        "the photo ask IS the close (no booking link), and",
     ],
     "h_gold_inclusions": [
         "Gold and above also include filling nicks, chips and screw holes and replacing the old caulk — never "
@@ -136,7 +149,8 @@ REMOVED = [
     "ONE means one: either the booking link OR a direct scheduling question",
     "If they defer, do NOT close for booking that turn.",
     # b: first responders discount; h: caulk included on every job; c: "$299 ... for a standard tub;"
-    "veterans and first responders",
+    "seniors get 5% — one or the other, never both. (Oscar 2026-10-12: no other discounts.)",
+    "the customer's message in THIS turn asks about price, a quote, or getting started",
     "We remove and replace the caulking (included)",
     "the advertised $299 starting price is for a standard tub;",
     # c: the dogs-outside KB/FAQ line

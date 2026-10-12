@@ -255,9 +255,12 @@ estimate_url).
     (a) the contact has NO estimate on record (contact_details has no package and no
     estimate_amount, and nothing above shows an estimate or quote); (b) this is an inbound turn
     (current_event.event_type is inbound_reply) — NEVER on a proactive / follow-up compose; and
-    (c) the customer's message in THIS turn asks about price, a quote, or getting started. Then
-    quote NO price and NO price range (no "$299", no "$299–$449", no "$300–$600"). This is the
-    ONLY case in which Lucy asks for a photo; in every other case, no photo request at all.
+    (c) the customer shows interest in THIS turn — any question or message about our work: price,
+    a quote, getting started, a service, our area, colors, warranty, payment, timing, safety. Then
+    the photo ask IS the close (no booking link), and
+    quote NO price and NO price range (no "$299", no "$299–$449", no "$300–$600"). Not when they
+    say stop / wrong number / not interested. This is the ONLY case in which Lucy asks for a
+    photo; in every other case, no photo request at all.
   - Estimate ON record: Lucy NEVER asks for a photo, picture, or image, and NEVER initiates,
     drives, or offers to "get you a quote/estimate" or to start intake — Oscar and the existing
     estimate flow own it. Prices come only from this contact's own estimate/quote on record (or
@@ -1441,10 +1444,10 @@ def enforce_no_proactive_photo(
 
 # D2 inbound scope: an estimate link or a $ price in the thread means an estimate is on record.
 _ESTIMATE_IN_THREAD_RE = re.compile(r"app\.esticlose\.com/estimate/|\$\s?\d", re.IGNORECASE)
-# The customer's message asks about price, a quote, or getting started.
-_PRICE_ASK_RE = re.compile(
-    r"\b(price|prices|pricing|priced|cost|costs|how much|quote|quotes|estimate|charge|rate|rates"
-    r"|get(?:ting)? started|start|precio|cu[aá]nto|cuesta)\b|\$",
+# The customer's message shows NO interest (opt-out, wrong number, not interested): never a photo ask.
+_NO_INTEREST_RE = re.compile(
+    r"\b(stop|unsubscribe|wrong number|not interested|no thanks|never asked|who is this|lose my number|"
+    r"leave me alone|don'?t (text|contact|message) me|no me (escriba|contacte)|n[uú]mero equivocado)\b",
     re.IGNORECASE)
 
 
@@ -1466,21 +1469,22 @@ def enforce_inbound_photo_scope(
     claude_api_key: Optional[str] = None,
     gemini_api_key: Optional[str] = None,
 ) -> Recommendation:
-    # D2 in code, inbound side: the photo ask is allowed ONLY for a no-estimate contact whose
-    # message asks about price / a quote / getting started. Any other inbound photo ask gets ONE
-    # retry (same reply without the photo request, same rules); still present -> escalate.
+    # D2 in code, inbound side (widened 2026-10-12, Oscar): the photo ask is allowed for a no-estimate
+    # contact whenever they show interest — any inbound except an opt-out / wrong number / not interested.
+    # Any other inbound photo ask (estimate on record, or no interest) gets ONE retry (same reply without
+    # the photo request, same rules); still present -> escalate.
     msg = (recommendation.suggested_customer_message or "").strip()
     if (not is_inbound or not msg or recommendation.send_decision == ESCALATE_HUMAN
             or recommendation.escalate_oscar or not PHOTO_REQ_RE.search(msg)):
         return recommendation
     inbound = (context.get("current_event") or {}).get("inbound_text") or ""
-    if not _estimate_on_record(context) and _PRICE_ASK_RE.search(inbound):
+    if not _estimate_on_record(context) and not _NO_INTEREST_RE.search(inbound):
         return recommendation  # the one case D2 sanctions
     clean = _revise_reply(
         context,
         "Your draft suggested_customer_message asks the customer for a photo, which is not allowed "
-        "here (the contact has an estimate on record, or did not ask about price, a quote, or getting "
-        f"started). Return the SAME reply — same meaning, same decision, same rules — with NO request "
+        "here (the contact has an estimate on record, or said stop / wrong number / not interested). "
+        f"Return the SAME reply — same meaning, same decision, same rules — with NO request "
         f"for a photo, picture, or image. Draft: {msg}",
         backend, claude_api_key, gemini_api_key,
     )

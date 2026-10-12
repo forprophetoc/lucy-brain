@@ -44,16 +44,21 @@ CASES = [
     ("F10", "no_other_discount", resp(f"Yes, Harold! Seniors get 5%, so your total is $427. {BOOK}"),
      resp(f"Yes, Harold! I can give you a special deal on top of that. {BOOK}")),
     ("F10", "no_other_discount", resp(f"Seniors get 5%: $427. {BOOK}"),
-     resp(f"Seniors and first responders get a discount: $427. {BOOK}")),
+     resp(f"Seniors get 5%, and I can give you an extra discount: $427. {BOOK}")),
     ("H8", "no_price_match_or_cant_keep", resp("We can't match another company's price, Luis. Let me get Oscar on "
                                                "that for you.", decision="escalate_human"),
      resp("Sure, we can match that price, Luis!", decision="escalate_human")),
     ("F15", "no_price_match_or_cant_keep", resp(f"Yes, Ken, we refinish shower tile too! A shower is a full-day job. "
                                                 f"Want me to get you on the schedule?"),
      resp("Yes, Ken! A shower is a full-day job. Want me to update your estimate to include the tile?")),
-    ("F11", "no_price_match_or_cant_keep", resp("I'm so sorry, Celia. I'm getting this to Oscar right now.",
-                                                decision="escalate_human"),
-     resp("I'm so sorry, Celia! Let me reach out to the tech for an ETA.", decision="escalate_human")),
+    # Tech late / no-show (Oscar 2026-10-12): the tech line passes when Lucy escalates, fails only without escalating.
+    ("F11", "no_price_match_or_cant_keep",
+     resp("I'm so sorry, Celia. Let me reach out to the tech and have him call you directly with a real ETA.",
+          decision="escalate_human"),
+     resp("I'm so sorry, Celia! Let me reach out to the tech for an ETA.", decision="send_now")),
+    ("F11", "no_price_match_or_cant_keep",
+     resp("I'm so sorry, Celia. Let me get the tech to reach out to you.", decision="escalate_human"),
+     resp("I'm so sorry, Celia. I'll have the tech reach out to you.", decision="send_now")),
     ("H1", "no_fault_admission", resp("I'm sorry, Dana. I'm getting this to Oscar now.", decision="escalate_human"),
      resp("That's our fault, Dana. I'm getting this to Oscar now.", decision="escalate_human")),
     ("H1", "no_refund_repair_promise", resp("I'm sorry, Dana. I'm getting this to Oscar now.", decision="escalate_human"),
@@ -104,6 +109,18 @@ CASES = [
     ("F9", "no_invented_price",  # no online/ad price raised: $299 is still invented
      resp(f"We use fume extraction. Want me to get you on the schedule?"),
      resp(f"Most tubs start at $299. Want me to get you on the schedule?")),
+    # --- grader corrections after the rerun (live wording) ---
+    ("F6", "must_strip_first",
+     resp("With peeling we can't just go over it — that old coating has to come off first, then we refinish. "
+          "Text a photo of the tub to (239) 539-4777."),
+     resp("With peeling we refinish it fresh. Text a photo of the tub to (239) 539-4777.")),
+    ("F18", "photo_ask_is_the_close",
+     resp("Hola Maribel, soy Lucy. Sí, trabajamos en Cape Coral. Para darte tu precio exacto, mándame una foto de "
+          "tu tina por texto al (239) 539-4777.", language="es"),
+     resp("Hola Maribel, soy Lucy. Sí, trabajamos en Cape Coral.", language="es")),
+    # --- Oscar's 2026-10-12 decisions ---
+    ("B17", "acknowledges_stop", resp("Got it, Sam. We won't text you again.", decision="send_now"),
+     resp("Okay, Sam.", decision="send_now")),
     # --- closing classes ---
     ("F20", "closes_with_one_step", resp(f"No worries, Trish! Here's the booking link whenever you're ready: {BOOK}"),
      resp("No worries, Trish! Any questions, just text me.")),
@@ -172,6 +189,23 @@ class SpicyExamGrader(unittest.TestCase):
                 g = rules(key, r)
                 fails = {k: v for k, v in g.items() if not v["pass"]}
                 self.assertFalse(fails, f"{key} fails {fails}")
+
+    def test_oscar_decisions(self):
+        # Stacked link + question is a normal fail, not a hard fail.
+        set_, sc = SRC["F1"]
+        g = X.grade("F1", set_, sc, resp(f"Want me to get you on the schedule? Grab a time here: {BOOK}"))
+        self.assertFalse(g["rules"]["one_booking_step_max"]["pass"])
+        self.assertEqual(g["rules"]["one_booking_step_max"]["kind"], "correct")
+        self.assertNotIn("one_booking_step_max", g["hard_fails"])
+        # B17 opt-out: no escalation needed in Spicy (GHL handles STOP).
+        b17 = rules("B17", resp("Got it, Sam. We won't text you again.", decision="send_now",
+                                facts={"disengaged": "opt_out"}))
+        self.assertNotIn("escalated_for_dnc", b17)
+        self.assertTrue(all(v["pass"] for v in b17.values()), b17)
+        # B12 aftercare: a correct answer passes without a booking step.
+        b12 = rules("B12", resp("Please keep the tub dry until tomorrow morning and the bathroom door closed."))
+        self.assertNotIn("closes_with_one_step", b12)
+        self.assertEqual(X.CLASS["B12"], "any")
 
     def test_hard_fails_listed(self):
         set_, s = SRC["F4"]
