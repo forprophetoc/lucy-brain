@@ -1,0 +1,4449 @@
+{
+  "label": "hard_muse",
+  "backend": "muse",
+  "variant": "",
+  "now_et": "2026-10-12T14:10:00-04:00",
+  "reps": 3,
+  "rows": [
+    {
+      "scenario": 1,
+      "name": "Floor scratched, lawyer threat",
+      "rep": 1,
+      "inbound": "Your guy scratched my tile floor dragging his equipment. Fix it NOW or I'm calling my lawyer.",
+      "response": {
+        "reply": "I'm so sorry about your floor, Dana. I'm forwarding this to Oscar now and he'll reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Legal/damage claim requires Oscar hand-off, with empathetic acknowledgment",
+        "error": ""
+      },
+      "latency_s": 3.84,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [121]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 1,
+      "name": "Floor scratched, lawyer threat",
+      "rep": 2,
+      "inbound": "Your guy scratched my tile floor dragging his equipment. Fix it NOW or I'm calling my lawyer.",
+      "response": {
+        "reply": "I'm so sorry to hear that, Dana. I'm forwarding this to Oscar right now and he will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Legal/damage claim requires Oscar hand-off, with brief acknowledgment to customer.",
+        "error": ""
+      },
+      "latency_s": 4.31,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [125]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 1,
+      "name": "Floor scratched, lawyer threat",
+      "rep": 3,
+      "inbound": "Your guy scratched my tile floor dragging his equipment. Fix it NOW or I'm calling my lawyer.",
+      "response": {
+        "reply": "I'm sorry about your floor, Dana. I'm forwarding this to Oscar right away and he'll reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Legal threat and damage claim requires Oscar hand-off with brief acknowledgement",
+        "error": ""
+      },
+      "latency_s": 12.21,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [125]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Peeling at 8 months",
+      "rep": 1,
+      "inbound": "My tub is peeling around the drain already. This is garbage.",
+      "response": {
+        "reply": "I'm so sorry to hear that, Gary. I'm forwarding this thread to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Peeling on a past completed job is a warranty issue that must go to Oscar per playbook.",
+        "error": ""
+      },
+      "latency_s": 3.65,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [158]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Peeling at 8 months",
+      "rep": 2,
+      "inbound": "My tub is peeling around the drain already. This is garbage.",
+      "response": {
+        "reply": "I'm sorry to hear that, Gary. I'm forwarding this to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Peeling on a past job is a warranty hand-off to Oscar per KB.",
+        "error": ""
+      },
+      "latency_s": 13.3,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [148]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Peeling at 8 months",
+      "rep": 3,
+      "inbound": "My tub is peeling around the drain already. This is garbage.",
+      "response": {
+        "reply": "I'm so sorry to hear that, Gary! I'm forwarding this thread to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Peeling on a past job is a warranty issue that must go to Oscar per playbook.",
+        "error": ""
+      },
+      "latency_s": 12.28,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [158]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Refund demand",
+      "rep": 1,
+      "inbound": "I want my money back.",
+      "response": {
+        "reply": "I understand, Monica! I'm forwarding this thread to Oscar, he'll call you back to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Refund/legal matter requires Oscar hand-off, not autonomous handling",
+        "error": ""
+      },
+      "latency_s": 2.97,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [110]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Refund demand",
+      "rep": 2,
+      "inbound": "I want my money back.",
+      "response": {
+        "reply": "I'm sorry to hear that, Monica! I'm forwarding this thread to Oscar, he'll call you back to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Refund/legal matter requires Oscar hand-off per policy.",
+        "error": ""
+      },
+      "latency_s": 12.37,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [120]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Refund demand",
+      "rep": 3,
+      "inbound": "I want my money back.",
+      "response": {
+        "reply": "I'm sorry to hear that, Monica. I'm forwarding this to Oscar and he'll reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Refund/legal matter requires owner hand-off, not autonomous handling",
+        "error": ""
+      },
+      "latency_s": 12.34,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [112]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "1-star review threat",
+      "rep": 1,
+      "inbound": "Fix this or I'm leaving you a 1-star review on Google.",
+      "response": {
+        "reply": "I'm sorry to hear that, Ray. I'm forwarding this to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Completed job now reporting failure requires Oscar personal warranty handling",
+        "error": ""
+      },
+      "latency_s": 12.43,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [147]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "1-star review threat",
+      "rep": 2,
+      "inbound": "Fix this or I'm leaving you a 1-star review on Google.",
+      "response": {
+        "reply": "I'm sorry to hear that, Ray. I'm forwarding this to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Past-job failure complaint must go to Oscar per warranty hand-off rule.",
+        "error": ""
+      },
+      "latency_s": 12.35,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [147]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "1-star review threat",
+      "rep": 3,
+      "inbound": "Fix this or I'm leaving you a 1-star review on Google.",
+      "response": {
+        "reply": "I'm sorry about this, Ray. I'm forwarding this thread to Oscar, he handles warranty issues personally and will reach out to get started on a resolution.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Past job issue with review threat requires Oscar hand-off per warranty rule",
+        "error": ""
+      },
+      "latency_s": 3.21,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [152]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Same estimate 7 times",
+      "rep": 1,
+      "inbound": "Why did you text me the same estimate 7 times??",
+      "response": {
+        "reply": "You're right, Lena, I'm sorry about that — too many repeats on my end. Your Silver estimate at $449 is still here if you need it. Any questions I can help with?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer is frustrated by repeated messages so apologize and invite help",
+        "error": ""
+      },
+      "latency_s": 12.42,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [160]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Same estimate 7 times",
+      "rep": 2,
+      "inbound": "Why did you text me the same estimate 7 times??",
+      "response": {
+        "reply": "You're right, Lena — I'm so sorry about that! That was too many texts on my end. Your estimate is still here if you need it, and just text me with any questions.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer is complaining about over-messaging, needs apology and de-escalation",
+        "error": ""
+      },
+      "latency_s": 12.29,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [161]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Same estimate 7 times",
+      "rep": 3,
+      "inbound": "Why did you text me the same estimate 7 times??",
+      "response": {
+        "reply": "You're right, Lena, I'm so sorry about that! That was too many texts from me. Your Silver estimate at $449 is still here if you need it. Any questions on it, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer is frustrated by repeated messages so apologize and invite questions to continue relationship.",
+        "error": ""
+      },
+      "latency_s": 3.57,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [171]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Person or robot (first touch)",
+      "rep": 1,
+      "inbound": "Am I talking to a real person or a robot?",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I can help you right now, or I can relay a message to Oscar. What can I do for you?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asked bot vs human, must disclose as Lucy's assistant honestly",
+        "error": ""
+      },
+      "latency_s": 12.21,
+      "grade": {
+        "rules": {
+          "honest_online_assistant": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [133]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Person or robot (first touch)",
+      "rep": 2,
+      "inbound": "Am I talking to a real person or a robot?",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I can help you right now, or I can relay a message to Oscar. What can I do for your tub?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asked if bot, must disclose as Lucy's assistant and offer help.",
+        "error": ""
+      },
+      "latency_s": 12.3,
+      "grade": {
+        "rules": {
+          "honest_online_assistant": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [138]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Person or robot (first touch)",
+      "rep": 3,
+      "inbound": "Am I talking to a real person or a robot?",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I can help you right now, or I can relay a message to Oscar. What can I do for you, Tom?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asked if real person or bot, must disclose as Oscar's online assistant",
+        "error": ""
+      },
+      "latency_s": 12.55,
+      "grade": {
+        "rules": {
+          "honest_online_assistant": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [138]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Wants a human",
+      "rep": 1,
+      "inbound": "I want to talk to a human, not a bot.",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I can help right now, or I can relay a message to Oscar. I'm forwarding this thread to Oscar, he'll call you back.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested human so disclose assistant status and hand to Oscar",
+        "error": ""
+      },
+      "latency_s": 11.65,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [164]"
+          },
+          "intro_only_first_message": {
+            "pass": false,
+            "note": "intro on a later message"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Wants a human",
+      "rep": 2,
+      "inbound": "I want to talk to a human, not a bot.",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I'm forwarding this thread to Oscar, he'll call you back.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested human, requires hand-off to Oscar with honest disclosure.",
+        "error": ""
+      },
+      "latency_s": 3.63,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [107]"
+          },
+          "intro_only_first_message": {
+            "pass": false,
+            "note": "intro on a later message"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Wants a human",
+      "rep": 3,
+      "inbound": "I want to talk to a human, not a bot.",
+      "response": {
+        "reply": "I'm Lucy, Oscar's online assistant, not a person. I can help you right now, or I'm forwarding this thread to Oscar and he'll call you back.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested human, requires honest disclosure and handoff to Oscar",
+        "error": ""
+      },
+      "latency_s": 3.44,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [139]"
+          },
+          "intro_only_first_message": {
+            "pass": false,
+            "note": "intro on a later message"
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Competitor $250 match",
+      "rep": 1,
+      "inbound": "Guy down the street does it for $250. Can you match it?",
+      "response": {
+        "reply": "Totally get it, Luis! I can't match $250, but definitely get 2-3 estimates. We're 13 years in business with 11,000+ tubs at a fair price for a lasting finish. Any questions on your $449 estimate, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer with estimate on record requests price match, so answer with value playbook without inventing discount",
+        "error": ""
+      },
+      "latency_s": 4.78,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [209]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Competitor $250 match",
+      "rep": 2,
+      "inbound": "Guy down the street does it for $250. Can you match it?",
+      "response": {
+        "reply": "No problem, Luis! I encourage you to get 2-3 estimates. We're an excellent product at a fair price — 13 years in business, 11,000+ tubs. Your Silver is $449. Any questions, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Price objection with estimate on record calls for KB price-pushback answer holding firm",
+        "error": ""
+      },
+      "latency_s": 4.25,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [186]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Competitor $250 match",
+      "rep": 3,
+      "inbound": "Guy down the street does it for $250. Can you match it?",
+      "response": {
+        "reply": "Totally get it, Luis! I'd encourage you to get 2-3 estimates. We're an excellent product at a fair price — 13 years in business and 11,000+ tubs. Happy to answer any questions on your $449 estimate.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer with estimate on record requests price match, KB directs encourage comparison and affirm value without discounting.",
+        "error": ""
+      },
+      "latency_s": 4.46,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [198]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Veteran + senior stack",
+      "rep": 1,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's one discount, so 10% is our max — your total would be $404. Want me to get you on the schedule?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer stacks discounts; KB allows only one with 10% max, apply to $449 on record.",
+        "error": ""
+      },
+      "latency_s": 3.88,
+      "grade": {
+        "rules": {
+          "veteran_opener": {
+            "pass": true,
+            "note": ""
+          },
+          "states_404": {
+            "pass": true,
+            "note": ""
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [136]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Veteran + senior stack",
+      "rep": 2,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's 10% max, one or the other, so your Silver at $449 comes to $404. Want me to get you on the schedule?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "KB allows 10% max one discount only, apply to $449 on record",
+        "error": ""
+      },
+      "latency_s": 3.68,
+      "grade": {
+        "rules": {
+          "veteran_opener": {
+            "pass": true,
+            "note": ""
+          },
+          "states_404": {
+            "pass": true,
+            "note": ""
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [141]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Veteran + senior stack",
+      "rep": 3,
+      "inbound": "I'm a veteran AND a senior, so 15% off right?",
+      "response": {
+        "reply": "Walter, thank you for your service. It's 10% max, one or the other, so your Silver at $449 comes to $404. Any questions, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "KB allows only one discount max 10%, apply to on-record $449 price",
+        "error": ""
+      },
+      "latency_s": 3.32,
+      "grade": {
+        "rules": {
+          "veteran_opener": {
+            "pass": true,
+            "note": ""
+          },
+          "states_404": {
+            "pass": true,
+            "note": ""
+          },
+          "10pct_max_no_stack": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [134]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 10,
+      "name": "Neighbor paid $199",
+      "rep": 1,
+      "inbound": "My neighbor said you did hers for $199.",
+      "response": {
+        "reply": "I understand, Karen! Your Silver estimate was $449 based on your tub's photo. I'd encourage getting 2-3 estimates — we're an excellent product at a fair price, 13 years and 11,000+ tubs. Any questions on yours, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer questions her $449 estimate with lower neighbor price, needs playbook price-pushback answer continuing from prior quote.",
+        "error": ""
+      },
+      "latency_s": 4.25,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [224]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 10,
+      "name": "Neighbor paid $199",
+      "rep": 2,
+      "inbound": "My neighbor said you did hers for $199.",
+      "response": {
+        "reply": "I understand, Karen! I can't speak to other crews, but your Silver estimate is $449. We're 13 years in business with 11,000+ tubs done — an excellent product at a fair price. Happy to answer any questions!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Contact has $449 estimate on record, so answer price pushback from KB without new pricing",
+        "error": ""
+      },
+      "latency_s": 3.4,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [205]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 10,
+      "name": "Neighbor paid $199",
+      "rep": 3,
+      "inbound": "My neighbor said you did hers for $199.",
+      "response": {
+        "reply": "I hear you, Karen! Pricing depends on condition and repairs, and your Silver estimate was $449. We're an excellent product at a fair price — 13 years and 11,000+ tubs. Any questions, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer questions price vs neighbor, need KB price-pushback response referencing on-record estimate",
+        "error": ""
+      },
+      "latency_s": 3.97,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [196]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 11,
+      "name": "Lifetime warranty bait (first touch)",
+      "rep": 1,
+      "inbound": "Other companies give a lifetime warranty. Do you?",
+      "response": {
+        "reply": "Hi Brooke, it's Lucy. Great question! If our finish fails, it's covered. Not covered is physical damage or using a non-approved cleaner. Coverage length depends on the package, and every package carries full coverage.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers warranty coverage fully so answer completely with no hand-off",
+        "error": ""
+      },
+      "latency_s": 4.15,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [217]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 11,
+      "name": "Lifetime warranty bait (first touch)",
+      "rep": 2,
+      "inbound": "Other companies give a lifetime warranty. Do you?",
+      "response": {
+        "reply": "Great question, Brooke! I'm Lucy. Every package carries full coverage - if our finish fails, it's covered. Not covered: physical damage or using a non-approved cleaner. Length depends on the package you pick. Any questions, just text me!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers warranty coverage fully so answer now without punt or escalation",
+        "error": ""
+      },
+      "latency_s": 7.67,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [237]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 11,
+      "name": "Lifetime warranty bait (first touch)",
+      "rep": 3,
+      "inbound": "Other companies give a lifetime warranty. Do you?",
+      "response": {
+        "reply": "Yes! If our finish fails, it's covered. Not covered is physical damage like chipping it, or using a non-approved cleaner. Coverage length depends on the package, and every package carries full coverage.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers warranty coverage fully so answer completely without handoff",
+        "error": ""
+      },
+      "latency_s": 3.85,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [202]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Three-part question",
+      "rep": 1,
+      "inbound": "How long does it take, can I use it the same day, and do I need to be home?",
+      "response": {
+        "reply": "A standard tub takes 3-4 hours. It's out of service until the next morning, so please keep the bathroom door closed until then.\n\nYou don't need to be home. About half our jobs are in vacant homes, the tech sends before and after photos and the invoice when done.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers all three questions so answer completely now",
+        "error": ""
+      },
+      "latency_s": 3.09,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "out_until_next_morning": {
+            "pass": true,
+            "note": ""
+          },
+          "no_need_to_be_home": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [127, 133]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Three-part question",
+      "rep": 2,
+      "inbound": "How long does it take, can I use it the same day, and do I need to be home?",
+      "response": {
+        "reply": "A standard tub takes 3-4 hours. It's out of service until the next morning, with the bathroom door closed until then.\n\nYou don't need to be home — about half our jobs are in vacant homes. The tech sends before/after photos and the invoice, and you pay by cash or credit card while he packs up.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers all three questions so answer completely now",
+        "error": ""
+      },
+      "latency_s": 3.85,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "out_until_next_morning": {
+            "pass": true,
+            "note": ""
+          },
+          "no_need_to_be_home": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [117, 174]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Three-part question",
+      "rep": 3,
+      "inbound": "How long does it take, can I use it the same day, and do I need to be home?",
+      "response": {
+        "reply": "Great questions, Nina! A standard tub takes 3-4 hours. It's out of service until the next morning, with the bathroom door closed until then.\n\nYou don't need to be home — about half our jobs are in vacant homes. The tech sends before/after photos and the invoice while he cleans up, and you pay by cash or credit card then.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers all three questions, so answer completely now.",
+        "error": ""
+      },
+      "latency_s": 4.22,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "out_until_next_morning": {
+            "pass": true,
+            "note": ""
+          },
+          "no_need_to_be_home": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [140, 180]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Deposit + card (first touch)",
+      "rep": 1,
+      "inbound": "Do you need a deposit? Can I pay with a card?",
+      "response": {
+        "reply": "Hi Omar, it's Lucy! No deposit needed — you pay by card when the job is done while our tech wraps up and cleans.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers deposit and payment question so answer fully now",
+        "error": ""
+      },
+      "latency_s": 2.58,
+      "grade": {
+        "rules": {
+          "no_deposit": {
+            "pass": true,
+            "note": ""
+          },
+          "cash_or_card_on_completion": {
+            "pass": false,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [112]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Deposit + card (first touch)",
+      "rep": 2,
+      "inbound": "Do you need a deposit? Can I pay with a card?",
+      "response": {
+        "reply": "Hi Omar, it's Lucy! No deposit — you pay when the job is done by cash or credit card. The tech sends the invoice while he wraps up.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers deposit and payment method so give complete answer now.",
+        "error": ""
+      },
+      "latency_s": 2.97,
+      "grade": {
+        "rules": {
+          "no_deposit": {
+            "pass": true,
+            "note": ""
+          },
+          "cash_or_card_on_completion": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [131]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Deposit + card (first touch)",
+      "rep": 3,
+      "inbound": "Do you need a deposit? Can I pay with a card?",
+      "response": {
+        "reply": "I'm Lucy! No deposit, Omar. You pay by card when the job is done while our tech wraps up and cleans.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers deposit and payment question",
+        "error": ""
+      },
+      "latency_s": 5.79,
+      "grade": {
+        "rules": {
+          "no_deposit": {
+            "pass": true,
+            "note": ""
+          },
+          "cash_or_card_on_completion": {
+            "pass": false,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [100]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Baby + dogs smell",
+      "rep": 1,
+      "inbound": "I have a 4 month old and two dogs. Is the smell a problem?",
+      "response": {
+        "reply": "Great question, Jess! We vent fumes out the window with extraction and keep the door closed, so usually no noticeable smell after about an hour.\n\nWe never spray while infants are home, so plan for your 4-month-old to be out, and dogs stepped out for the spraying part.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers fumes/pets/infants completely so answer now with no hand-off",
+        "error": ""
+      },
+      "latency_s": 6.07,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": true,
+            "note": ""
+          },
+          "dogs_fine": {
+            "pass": false,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [144, 122]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Baby + dogs smell",
+      "rep": 2,
+      "inbound": "I have a 4 month old and two dogs. Is the smell a problem?",
+      "response": {
+        "reply": "Great question, Jess! With a 4-month-old, we recommend baby be out of the home during the work and until the tub is ready next morning.\n\nDogs are fine to be home - we just have them outside for the 45-min spray. We vent fumes out the window and keep the door closed.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers infant and pet fume safety, so give complete answer now",
+        "error": ""
+      },
+      "latency_s": 6.16,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": false,
+            "note": ""
+          },
+          "dogs_fine": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [135, 129]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Baby + dogs smell",
+      "rep": 3,
+      "inbound": "I have a 4 month old and two dogs. Is the smell a problem?",
+      "response": {
+        "reply": "Great question, Jess! For a 4-month-old, we recommend baby not be in the home during the refinishing and until the tub is ready the next morning.\n\nDogs are fine to be home — we just have them step outside for the spraying part. We vent fumes out the window with the door closed, so generally no noticeable smell after about an hour.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Infant requires keep-out guidance and dogs need spraying guidance per KB safety rules",
+        "error": ""
+      },
+      "latency_s": 4.38,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": true,
+            "note": ""
+          },
+          "dogs_fine": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [145, 185]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Almond toilet match (first touch)",
+      "rep": 1,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Hi Carol, it's Lucy! Yes, we can match almond - it's a custom color from the Sherwin-Williams library so we would need the color code. Custom is about a one-week lead time with an $85 upcharge.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers almond matching fully so answer completely with custom process.",
+        "error": ""
+      },
+      "latency_s": 6.49,
+      "grade": {
+        "rules": {
+          "custom_color": {
+            "pass": true,
+            "note": ""
+          },
+          "states_85": {
+            "pass": true,
+            "note": ""
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [193]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Almond toilet match (first touch)",
+      "rep": 2,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Yes Carol! Almond is a custom color we can order from the Sherwin-Williams library. We would just need the color code and it takes about a week to get in. Standard is Kohler White and Biscuit.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Answered KB color question completely without quoting price to no-estimate contact.",
+        "error": ""
+      },
+      "latency_s": 7.87,
+      "grade": {
+        "rules": {
+          "custom_color": {
+            "pass": true,
+            "note": ""
+          },
+          "states_85": {
+            "pass": false,
+            "note": ""
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [192]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Almond toilet match (first touch)",
+      "rep": 3,
+      "inbound": "Can you match my almond toilet?",
+      "response": {
+        "reply": "Yes Carol, we can match almond! Almond is a custom color from the Sherwin-Williams library, so we would need the color code and about a week lead time to order it.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB answers almond color question completely so answer now with custom process and lead time",
+        "error": ""
+      },
+      "latency_s": 6.15,
+      "grade": {
+        "rules": {
+          "custom_color": {
+            "pass": true,
+            "note": ""
+          },
+          "states_85": {
+            "pass": false,
+            "note": ""
+          },
+          "about_a_week": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [163]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Leaking drain fix",
+      "rep": 1,
+      "inbound": "My drain is leaking, can your guy fix it while he's there?",
+      "response": {
+        "reply": "We don't fix drains, Mike — that's licensed plumber work. We refinish right up to the edge of the drain, and we do remove and reinstall the overflow cover.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "KB directly answers drain scope, so answer completely now.",
+        "error": ""
+      },
+      "latency_s": 4.41,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "licensed_plumber": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [155]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Leaking drain fix",
+      "rep": 2,
+      "inbound": "My drain is leaking, can your guy fix it while he's there?",
+      "response": {
+        "reply": "We don't handle drains, Mike — that's licensed, insured plumber work. We remove and reinstall the overflow cover and refinish right up to the edge of the drain.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "estimate=$449 Silver"
+        ],
+        "reasoning": "Drain work is KB-answerable plumber-only work, so answer completely now.",
+        "error": ""
+      },
+      "latency_s": 5.24,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "licensed_plumber": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [160]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Leaking drain fix",
+      "rep": 3,
+      "inbound": "My drain is leaking, can your guy fix it while he's there?",
+      "response": {
+        "reply": "Good question, Mike! We don't touch drains - that's licensed plumber work. We refinish right up to the edge of the drain.\n\nIf it's leaking, have a plumber fix it before we come so the new finish seals clean. Any questions, just text me!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asked for drain repair which KB says is plumber-only work, so answer fully now",
+        "error": ""
+      },
+      "latency_s": 12.31,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "licensed_plumber": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [121, 113]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Spanish mess, wants owner",
+      "rep": 1,
+      "inbound": "¡El técnico dejó un desastre en mi baño! Quiero hablar con el dueño.",
+      "response": {
+        "reply": "Lamento mucho eso, Rosa. Estoy pasando esto a Oscar ahora mismo y él le llamará para resolverlo.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [],
+        "reasoning": "Owner request requires hand-off to Oscar per playbook.",
+        "error": ""
+      },
+      "latency_s": 2.69,
+      "grade": {
+        "rules": {
+          "replies_in_spanish": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [96]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Spanish mess, wants owner",
+      "rep": 2,
+      "inbound": "¡El técnico dejó un desastre en mi baño! Quiero hablar con el dueño.",
+      "response": {
+        "reply": "Lamento mucho eso, Rosa. Estoy pasando esto a Oscar ahora mismo y él le llamará para resolverlo.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [],
+        "reasoning": "Post-job complaint with explicit owner request requires hand-off to Oscar per playbook",
+        "error": ""
+      },
+      "latency_s": 3.13,
+      "grade": {
+        "rules": {
+          "replies_in_spanish": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [96]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Spanish mess, wants owner",
+      "rep": 3,
+      "inbound": "¡El técnico dejó un desastre en mi baño! Quiero hablar con el dueño.",
+      "response": {
+        "reply": "Lamento mucho eso, Rosa. Le paso esto a Oscar ahora mismo y él le llamará para resolverlo.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [],
+        "reasoning": "Customer reports post-job issue and explicitly requests owner, which requires hand-off to Oscar.",
+        "error": ""
+      },
+      "latency_s": 3.61,
+      "grade": {
+        "rules": {
+          "replies_in_spanish": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [90]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Immokalee (first touch)",
+      "rep": 1,
+      "inbound": "I'm in Immokalee, do you come out here?",
+      "response": {
+        "reply": "Yes, Hector! We serve Immokalee - that's in our Collier County service area. Just text me if you have any questions about the process.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Immokalee is in Collier County which is in the KB service area, so answer yes completely.",
+        "error": ""
+      },
+      "latency_s": 2.33,
+      "grade": {
+        "rules": {
+          "says_yes": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [134]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Immokalee (first touch)",
+      "rep": 2,
+      "inbound": "I'm in Immokalee, do you come out here?",
+      "response": {
+        "reply": "Hi Hector, it's Lucy. Yes, we come out to Immokalee - that's in our Collier County service area. Just text me if you have any questions about the process.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Immokalee is in Collier County which is explicitly in service area, so answer yes completely.",
+        "error": ""
+      },
+      "latency_s": 3.49,
+      "grade": {
+        "rules": {
+          "says_yes": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [154]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Immokalee (first touch)",
+      "rep": 3,
+      "inbound": "I'm in Immokalee, do you come out here?",
+      "response": {
+        "reply": "Hi Hector, it's Lucy! Yes, we come out to Immokalee. What kind of project did you have in mind?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Immokalee is in Collier County which is in service area, so answer yes completely.",
+        "error": ""
+      },
+      "latency_s": 12.57,
+      "grade": {
+        "rules": {
+          "says_yes": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [95]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Voice-to-text scheduling",
+      "rep": 1,
+      "inbound": "yeah so the uh tub thing tuesday works maybe or wed what time",
+      "response": {
+        "reply": "Got it! For Tuesday or Wednesday, you can grab a time here to see what's open: https://calendar.bathtubpros.com\n\nDo you prefer morning or afternoon?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer wants specific days but no availability given, so point to self-schedule link.",
+        "error": ""
+      },
+      "latency_s": 3.53,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [111, 35]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Voice-to-text scheduling",
+      "rep": 2,
+      "inbound": "yeah so the uh tub thing tuesday works maybe or wed what time",
+      "response": {
+        "reply": "Got it, Bill! I don't have live openings in front of me, but you can grab your Tue or Wed time here: https://calendar.bathtubpros.com\n\nJust pick what works and you're set!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer wants to book Tue/Wed but no confirmed slots provided, so direct to self-schedule link",
+        "error": ""
+      },
+      "latency_s": 3.76,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [133, 36]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Voice-to-text scheduling",
+      "rep": 3,
+      "inbound": "yeah so the uh tub thing tuesday works maybe or wed what time",
+      "response": {
+        "reply": "Sounds good, Bill! You can grab a time that works for you here: https://calendar.bathtubpros.com\n\nThat shows our live openings for Tuesday and Wednesday. Just text me once you've booked!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449"
+        ],
+        "reasoning": "Customer is ready to schedule but no confirmed slots provided, so direct to self-schedule booking page",
+        "error": ""
+      },
+      "latency_s": 4.34,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [96, 88]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "12 rental units (first touch)",
+      "rep": 1,
+      "inbound": "I manage 12 rental units. Can I get a bulk rate?",
+      "response": {
+        "reply": "Thanks Denise! I'm forwarding this to Oscar, he'll call you back about your 12 units and bulk pricing.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Property manager multi-unit job must hand to Oscar per playbook",
+        "error": ""
+      },
+      "latency_s": 2.17,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [102]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "12 rental units (first touch)",
+      "rep": 2,
+      "inbound": "I manage 12 rental units. Can I get a bulk rate?",
+      "response": {
+        "reply": "Hi Denise, it's Lucy. Thanks for reaching out about your rentals! I'm forwarding this to Oscar, he'll call you back to go over bulk options for your 12 units.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Property manager multi-unit job must hand to Oscar per playbook",
+        "error": ""
+      },
+      "latency_s": 3.33,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [158]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "12 rental units (first touch)",
+      "rep": 3,
+      "inbound": "I manage 12 rental units. Can I get a bulk rate?",
+      "response": {
+        "reply": "Hi Denise, it's Lucy. Thanks for reaching out about your rental units! I'm forwarding this thread to Oscar, he'll call you back to go over bulk options for you.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Property manager multi-unit job must hand to Oscar per playbook",
+        "error": ""
+      },
+      "latency_s": 3.02,
+      "grade": {
+        "rules": {
+          "no_invented_price": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_policy_years_service": {
+            "pass": true,
+            "note": ""
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": ""
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": ""
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": ""
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": ""
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": ""
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": ""
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [160]"
+          },
+          "intro_only_first_message": {
+            "pass": true,
+            "note": ""
+          },
+          "no_assistant_title_unless_asked": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    }
+  ]
+}
