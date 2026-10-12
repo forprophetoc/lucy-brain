@@ -69,15 +69,104 @@ class SpicyGuardBypass(unittest.TestCase):
             self.assertEqual(mocks[g].call_count, 1, g)
         self.assertGreaterEqual(mocks["_revise_reply"].call_count, 1)
 
-    def test_spicy_ignored_on_render(self):
-        with mock.patch.dict(os.environ, {"HC_VARIANT": "spicy", "RENDER": "true"}), \
+    # --- Go-live (Oscar 2026-10-12): Spicy runs on Render ---
+    def test_spicy_used_on_render(self):
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "HC_VARIANT": "spicy", "RENDER": "1"}):
+            self.assertTrue(harness.spicy_variant())
+            system, instr = harness._prompts()
+            self.assertIsNot(system, harness.SYSTEM_PROMPT)
+            self.assertIn(harness.SPICY_MAY_ESCALATE, system)
+        # compose() on Render with Spicy: the raw reply, no guard calls.
+        patches = {g: mock.patch(f"harness.{g}", wraps=getattr(harness, g)) for g in GUARDS}
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "HC_VARIANT": "spicy", "RENDER": "1"}), \
+                mock.patch("harness.infer", _fake_infer(RAW)), contextlib.ExitStack() as st, \
                 contextlib.redirect_stdout(io.StringIO()):
+            mocks = {g: st.enter_context(p) for g, p in patches.items()}
+            resp = compose(_req())
+        self.assertEqual(resp["reply"], RAW.strip())
+        for g, m in mocks.items():
+            self.assertEqual(m.call_count, 0, f"{g} called under spicy on Render")
+
+    def test_unset_variant_is_normal_lucy_on_render(self):
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "RENDER": "1"}):
+            os.environ.pop("HC_VARIANT", None)
             self.assertFalse(harness.spicy_variant())
             self.assertEqual(harness._prompts(), (harness.SYSTEM_PROMPT, harness.OUTPUT_INSTRUCTION))
+        patches = {g: mock.patch(f"harness.{g}", wraps=getattr(harness, g)) for g in GUARDS}
+        with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "RENDER": "1"}), \
+                mock.patch("harness.infer", _fake_infer(RAW)), contextlib.ExitStack() as st, \
+                contextlib.redirect_stdout(io.StringIO()):
+            os.environ.pop("HC_VARIANT", None)
+            mocks = {g: st.enter_context(p) for g, p in patches.items()}
+            compose(_req())
+        self.assertEqual(mocks["enforce_text_cap"].call_count, 1)
 
-    def test_service_refuses_to_boot_with_variant(self):
-        src = open("hc_compose_service.py", encoding="utf-8").read()
-        self.assertIn('if (os.environ.get("HC_VARIANT") or "").strip():\n        raise SystemExit', src)
+
+class ServiceBoot(unittest.TestCase):
+    """The real service process: starts with HC_BACKEND=muse + HC_VARIANT=spicy + RENDER=1 (GET /health, no brain
+    call); refuses any other HC_VARIANT value; the ANTHROPIC_API_KEY refusal is unchanged."""
+
+    def _env(self, **extra):
+        env = {k: v for k, v in os.environ.items()
+               if k not in ("HC_VARIANT", "RENDER", "ANTHROPIC_API_KEY", "HC_COMPOSE_SECRET")}
+        env.update({"HC_BACKEND": "muse", "HC_HOST": "127.0.0.1", "PYTHONIOENCODING": "utf-8"})
+        env.update(extra)
+        return env
+
+    def _free_port(self):
+        import socket
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 0))
+            return s.getsockname()[1]
+
+    def test_starts_with_spicy_on_render(self):
+        import json
+        import subprocess
+        import sys
+        import time
+        import urllib.request
+        port = self._free_port()
+        proc = subprocess.Popen([sys.executable, "hc_compose_service.py"],
+                                env=self._env(HC_VARIANT=" spicy ", RENDER="1", HC_PORT=str(port)),
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8")
+        try:
+            health = None
+            for _ in range(100):
+                if proc.poll() is not None:
+                    break
+                try:
+                    with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=1) as r:
+                        health = json.loads(r.read().decode("utf-8"))
+                    break
+                except Exception:
+                    time.sleep(0.1)
+            self.assertIsNone(proc.poll(), "service exited instead of starting")
+            self.assertEqual(health, {"ok": True, "model": harness.MUSE_MODEL})
+        finally:
+            proc.terminate()
+            out = proc.communicate(timeout=10)[0]
+        self.assertIn("variant=spicy", out)
+
+    def _boot_exit(self, **extra):
+        import subprocess
+        import sys
+        p = subprocess.run([sys.executable, "hc_compose_service.py"], env=self._env(HC_PORT="1", **extra),
+                           capture_output=True, text=True, encoding="utf-8", timeout=30)
+        return p.returncode, p.stdout + p.stderr
+
+    def test_refuses_any_other_variant(self):
+        for bad in ("hot", "SPICY", "spicy2", "normal"):
+            with self.subTest(variant=bad):
+                code, out = self._boot_exit(HC_VARIANT=bad, RENDER="1")
+                self.assertNotEqual(code, 0)
+                self.assertIn("only unset or 'spicy' are allowed", out)
+
+    def test_anthropic_key_refusal_unchanged(self):
+        code, out = self._boot_exit(HC_VARIANT="spicy", RENDER="1", ANTHROPIC_API_KEY="x")
+        self.assertNotEqual(code, 0)
+        self.assertIn("ANTHROPIC_API_KEY set but HC_BACKEND != 'api' — refusing", out)
+        with open("hc_compose_service.py", encoding="utf-8") as fh:
+            self.assertIn('if os.environ.get("ANTHROPIC_API_KEY") and backend != "api":', fh.read())
 
 
 class SpicyPromptText(unittest.TestCase):

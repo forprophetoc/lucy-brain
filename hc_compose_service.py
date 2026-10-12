@@ -244,12 +244,16 @@ if __name__ == "__main__":
     # subscription brain (default) still refuses it, so a stray key can never meter the sub path.
     if os.environ.get("ANTHROPIC_API_KEY") and backend != "api":
         raise SystemExit("ANTHROPIC_API_KEY set but HC_BACKEND != 'api' — refusing (subscription-only brain).")
-    if (os.environ.get("HC_VARIANT") or "").strip():
-        raise SystemExit("HC_VARIANT is set — refusing (the spicy variant is a local bake-off only).")
+    # Go-live (Oscar 2026-10-12): Spicy runs in production. HC_VARIANT must be unset (normal Lucy) or
+    # "spicy" (compared after stripping whitespace); any other value refuses to boot.
+    variant = (os.environ.get("HC_VARIANT") or "").strip()
+    if variant not in ("", "spicy"):
+        raise SystemExit(f"HC_VARIANT={variant!r} — refusing (only unset or 'spicy' are allowed).")
     host = os.environ.get("HC_HOST") or "127.0.0.1"
     port = int(os.environ.get("HC_PORT") or "8787")
     secret_on = "yes" if os.environ.get("HC_COMPOSE_SECRET") else "no"
-    print(f"[HC] brain model pinned: {_active_model()} (backend={backend})", flush=True)
+    print(f"[HC] brain model pinned: {_active_model()} (backend={backend}, variant={variant or 'normal'})",
+          flush=True)
     print(f"[HC] /compose on http://{host}:{port}/compose + GET /health (backend={backend}, "
           f"secret={secret_on}, no-send)", flush=True)
     ThreadingHTTPServer((host, port), Handler).serve_forever()

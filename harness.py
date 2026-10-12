@@ -604,7 +604,7 @@ OUTPUT_INSTRUCTION = (
     "No prose, no markdown fences."
 )
 
-# --- SPICY VARIANT (HC_VARIANT=spicy — local bake-off ONLY, never set on Render) ---
+# --- SPICY VARIANT (HC_VARIANT=spicy — production since the 2026-10-12 go-live; unset = normal Lucy) ---
 # Same playbook + KB text, except every line that MANDATES escalation becomes discretionary.
 # Escalate stays an available decision. (old, new) pairs; each must match exactly once.
 SPICY_MAY_ESCALATE = "You may escalate to Oscar whenever you judge it's needed."
@@ -676,13 +676,9 @@ def _apply_edits(text: str, edits) -> str:
 
 
 def spicy_variant() -> bool:
-    """HC_VARIANT=spicy (whitespace-stripped). Refused on Render (RENDER is set there)."""
-    if (os.environ.get("HC_VARIANT") or "").strip() != "spicy":
-        return False
-    if os.environ.get("RENDER"):
-        print("[HC] HC_VARIANT=spicy ignored on Render", flush=True)
-        return False
-    return True
+    """HC_VARIANT=spicy (whitespace-stripped), on Render too (go-live, Oscar 2026-10-12). The service refuses to
+    boot with any other non-empty value, so here anything but "spicy" is normal Lucy."""
+    return (os.environ.get("HC_VARIANT") or "").strip() == "spicy"
 
 
 def _prompts():
@@ -1661,8 +1657,8 @@ def run_bakeoff(
                     confidence=Confidence.LOW, score=0.0, behavior=Behavior.SUPPRESS, would_be=Behavior.SUPPRESS,
                     message_to_oscar=f"LLM output parse error: {e}", rationale="Parse error", evidence=[])
 
-        # Spicy variant (local bake-off only): every post-model guard is bypassed and the model's
-        # reply is returned as-is.
+        # Spicy variant (production since the 2026-10-12 go-live): every post-model guard below is
+        # bypassed and the model's reply is returned as-is (compose() still maps it to send/escalate).
         if not spicy_variant():
             # Deterministic inbound timing override (after parsing, before state update).
             if is_inbound:
