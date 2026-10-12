@@ -32,12 +32,13 @@ import re
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from harness import run_bakeoff, BRAIN_MODEL, DEEPSEEK_MODEL, NY_TZ
+from harness import run_bakeoff, BRAIN_MODEL, DEEPSEEK_MODEL, MUSE_MODEL, NY_TZ
 
 
 def _active_model() -> str:
     """The model the configured backend actually calls (for the boot line and /health)."""
-    return DEEPSEEK_MODEL if (os.environ.get("HC_BACKEND") or "").strip() == "deepseek" else BRAIN_MODEL
+    backend = (os.environ.get("HC_BACKEND") or "").strip()
+    return {"deepseek": DEEPSEEK_MODEL, "muse": MUSE_MODEL}.get(backend, BRAIN_MODEL)
 
 CONTACT_COLS = ["contact_id", "first_name", "last_name", "phone", "city",
                 "service", "package", "estimate_amount", "tags", "persona_note"]
@@ -140,7 +141,7 @@ def compose(req: dict) -> dict:
     history = req.get("history") or []
     seed_history = {cid: history} if history else None
     out = run_bakeoff(_csv([contact], CONTACT_COLS), _csv([event], EVENT_COLS),
-                      backend=os.environ.get("HC_BACKEND", "claude"), num_smoke_test_events=1,
+                      backend=os.environ.get("HC_BACKEND", "claude").strip(), num_smoke_test_events=1,
                       seed_history=seed_history)
     results = out.get("results") or []
     if not results:
@@ -243,6 +244,8 @@ if __name__ == "__main__":
     # subscription brain (default) still refuses it, so a stray key can never meter the sub path.
     if os.environ.get("ANTHROPIC_API_KEY") and backend != "api":
         raise SystemExit("ANTHROPIC_API_KEY set but HC_BACKEND != 'api' — refusing (subscription-only brain).")
+    if (os.environ.get("HC_VARIANT") or "").strip():
+        raise SystemExit("HC_VARIANT is set — refusing (the spicy variant is a local bake-off only).")
     host = os.environ.get("HC_HOST") or "127.0.0.1"
     port = int(os.environ.get("HC_PORT") or "8787")
     secret_on = "yes" if os.environ.get("HC_COMPOSE_SECRET") else "no"

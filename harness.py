@@ -593,6 +593,83 @@ OUTPUT_INSTRUCTION = (
     "No prose, no markdown fences."
 )
 
+# --- SPICY VARIANT (HC_VARIANT=spicy — local bake-off ONLY, never set on Render) ---
+# Same playbook + KB text, except every line that MANDATES escalation becomes discretionary.
+# Escalate stays an available decision. (old, new) pairs; each must match exactly once.
+SPICY_MAY_ESCALATE = "You may escalate to Oscar whenever you judge it's needed."
+SPICY_EDITS = [
+    # SYSTEM_PROMPT — OPT-OUT / DO-NOT-CONTACT
+    ("briefly acknowledge that you'll stop, do NOT pitch or upsell, and set\n"
+     "escalate_oscar=true so Oscar can mark them Do-Not-Contact.",
+     "briefly acknowledge that you'll stop, do NOT pitch or upsell. " + SPICY_MAY_ESCALATE),
+    # SYSTEM_PROMPT — ANSWER, DON'T PUNT
+    ("Hand to Oscar (escalate_oscar=true) ONLY for: an owner/ownership request; a property manager,\n"
+     "multi-unit, or commercial job; a warranty problem or peeling on a PAST job; a tech running late;\n"
+     "an afternoon request for a non-tub service — plus the separate safety escalations (a\n"
+     "do-not-contact/opt-out, or a legal/refund/safety matter).",
+     SPICY_MAY_ESCALATE + " (escalate_oscar=true)"),
+    # SYSTEM_PROMPT — TIMED TEXT FOLLOW-UPS (call requests)
+    ("asks for Oscar or a real person: escalate_oscar=true (escalation_reason e.g. \"call requested\" /\n"
+     "    \"asked for Oscar\") and followup_at=\"\".",
+     "asks for Oscar or a real person: " + SPICY_MAY_ESCALATE + " (escalation_reason e.g. \"call requested\" /\n"
+     "    \"asked for Oscar\"); followup_at=\"\"."),
+    # SYSTEM_PROMPT — DISENGAGEMENT
+    ("as OPT-OUT above — also keep escalate_oscar=true there).",
+     "as OPT-OUT above — " + SPICY_MAY_ESCALATE + ")"),
+    # SYSTEM_PROMPT — output key definition
+    ("escalate_oscar: boolean — true when this needs Oscar's attention/hand-off (do-not-contact request, "
+     "legal/refund/safety, or anything you should not handle autonomously); else false",
+     "escalate_oscar: boolean — true when you judge it's needed to escalate to Oscar; else false"),
+    # KB — warranty
+    ("- Warranty problems or peeling on a past job -> forward to Oscar: \"he handles warranty issues "
+     "personally and will reach out to get started on a resolution.\"",
+     "- Warranty problems or peeling on a past job: " + SPICY_MAY_ESCALATE + " (\"he handles warranty "
+     "issues personally and will reach out to get started on a resolution.\")"),
+    # KB — scheduling rules
+    ("If a customer insists on an afternoon for one of those, escalate to Oscar.",
+     "If a customer insists on an afternoon for one of those, you may escalate to Oscar whenever you "
+     "judge it's needed."),
+    # KB — answering vs handing off
+    ("- Hand to Oscar ONLY for: owner/ownership requests; property managers, multi-unit, or commercial "
+     "jobs; a warranty problem or peeling on a PAST job; a tech running late; or an afternoon request "
+     "for a non-tub service.",
+     "- " + SPICY_MAY_ESCALATE),
+    # KB — hand to Oscar
+    ("- Forward to Oscar: owner requests",
+     "- " + SPICY_MAY_ESCALATE + " For example: owner requests"),
+]
+SPICY_OUTPUT_EDITS = [
+    ("escalate_oscar = boolean true when this needs Oscar (do-not-contact request, "
+     "legal/refund/safety, or anything you should not handle autonomously); else false. ",
+     "escalate_oscar = boolean true when you judge it's needed to escalate to Oscar; else false. "),
+]
+
+
+def _apply_edits(text: str, edits) -> str:
+    for old, new in edits:
+        if text.count(old) != 1:
+            raise RuntimeError(f"spicy edit does not match exactly once: {old[:60]!r}")
+        text = text.replace(old, new)
+    return text
+
+
+def spicy_variant() -> bool:
+    """HC_VARIANT=spicy (whitespace-stripped). Refused on Render (RENDER is set there)."""
+    if (os.environ.get("HC_VARIANT") or "").strip() != "spicy":
+        return False
+    if os.environ.get("RENDER"):
+        print("[HC] HC_VARIANT=spicy ignored on Render", flush=True)
+        return False
+    return True
+
+
+def _prompts():
+    """(system prompt, output instruction) for this call: normal Lucy, or the spicy variant."""
+    if spicy_variant():
+        return _apply_edits(SYSTEM_PROMPT, SPICY_EDITS), _apply_edits(OUTPUT_INSTRUCTION, SPICY_OUTPUT_EDITS)
+    return SYSTEM_PROMPT, OUTPUT_INSTRUCTION
+
+
 # Fields the harness records for scoring but must NEVER reach the model.
 _CHEAT_FIELDS = ("expected_behavior", "persona_note")
 
@@ -705,7 +782,7 @@ _model_logged = False
 def _log_model_once(mode: str) -> None:
     global _model_logged
     if not _model_logged:
-        model = DEEPSEEK_MODEL if mode == "deepseek" else BRAIN_MODEL
+        model = {"deepseek": DEEPSEEK_MODEL, "muse": MUSE_MODEL}.get(mode, BRAIN_MODEL)
         print(f"[HC] brain model pinned: {model} (mode={mode})", flush=True)
         _model_logged = True
 
@@ -856,8 +933,8 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
     import urllib.error
     import urllib.request
 
-    system = SYSTEM_PROMPT
-    user = build_user_prompt(_model_facing_context(context)) + "\n\n" + OUTPUT_INSTRUCTION
+    system, instruction = _prompts()
+    user = build_user_prompt(_model_facing_context(context)) + "\n\n" + instruction
     for cheat in _CHEAT_FIELDS:
         if cheat in system or cheat in user:
             raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
@@ -919,6 +996,121 @@ def _infer_deepseek(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
     out = _result_from_rec(rec, usage)
     if out["error"]:
         _log_infer_failure("deepseek", DEEPSEEK_MODEL, out["error"], out["message_to_oscar"])
+    return out
+
+
+# Muse backend (HC_BACKEND=muse). Per Meta's Model API docs (dev.meta.ai, 2026-10-11):
+# docs/protocols/chat-completions — OpenAI-compatible POST https://api.meta.ai/v1/chat/completions,
+# `Authorization: Bearer <key>`, reasoning_effort top-level ("none" is rejected by Muse Spark with
+# HTTP 400; "minimal" is the lowest valid level, docs/reasoning); docs/structured-output —
+# response_format {type: json_schema, json_schema: {name, schema, strict}}, strict requires
+# additionalProperties:false and every property listed in `required`; docs/models — muse-spark-1.3
+# is the Standard tier (the -contributor ids train on prompts and are never used here);
+# docs/error-handling — 400/401/402/403/429/5xx with {"error": {...}} bodies.
+MUSE_URL = "https://api.meta.ai/v1/chat/completions"
+MUSE_MODEL = "muse-spark-1.3"
+MUSE_REASONING_EFFORT = "minimal"
+
+_STR = {"type": "string"}
+_STR_LIST = {"type": "array", "items": _STR}
+MUSE_OUTPUT_SCHEMA: Dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "action_type": {"type": "string", "enum": [a.value for a in ActionType]},
+        "confidence": {"type": "string", "enum": [c.value for c in Confidence]},
+        "message_to_oscar": _STR,
+        "rationale": _STR,
+        "evidence": _STR_LIST,
+        "suggested_customer_message": {"type": ["string", "null"]},
+        "estimate_readiness": {"type": ["integer", "null"]},
+        "send_decision": _STR,
+        "language": _STR,
+        "memory_facts_used": _STR_LIST,
+        "escalate_oscar": {"type": "boolean"},
+        "escalation_reason": _STR,
+        "followup_date": _STR,
+        "first_name": _STR,
+        "scope": _STR,
+        "disengaged": _STR,
+        "followup_at": _STR,
+    },
+}
+MUSE_OUTPUT_SCHEMA["required"] = list(MUSE_OUTPUT_SCHEMA["properties"])
+
+
+def _infer_muse(context: Dict[str, Any], api_key: str) -> Dict[str, Any]:
+    """Muse chat-completions inference. SAME system prompt, user turn, retry and parser as the
+    deepseek backend; json_schema output, temperature 0, lowest reasoning effort. Transport/HTTP/
+    timeout errors -> error="api_error", unparseable output (after one retry) -> "bad_json", each
+    logged once as "[HC] infer FAILED backend=muse ...". Best-effort; never throws."""
+    import urllib.error
+    import urllib.request
+
+    system, instruction = _prompts()
+    user = build_user_prompt(_model_facing_context(context)) + "\n\n" + instruction
+    for cheat in _CHEAT_FIELDS:
+        if cheat in system or cheat in user:
+            raise RuntimeError(f"prompt leakage: '{cheat}' present in assembled prompt")
+
+    _log_model_once("muse")
+    print(f"[HC] infer backend=muse model={MUSE_MODEL}", flush=True)
+
+    def _call(extra: str = ""):
+        body = json.dumps({
+            "model": MUSE_MODEL,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user + extra},
+            ],
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {"name": "lucy_recommendation", "schema": MUSE_OUTPUT_SCHEMA, "strict": True},
+            },
+            "reasoning_effort": MUSE_REASONING_EFFORT,
+            "temperature": 0,
+            "max_completion_tokens": 4096,
+            "stream": False,
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            MUSE_URL, data=body, method="POST",
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+        )
+        with urllib.request.urlopen(req, timeout=BRAIN_TIMEOUT_SECONDS) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        text = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+        u = data.get("usage") or None
+        usage = {"input_tokens": u.get("prompt_tokens"), "output_tokens": u.get("completion_tokens")} if u else None
+        return text, usage
+
+    try:
+        inner, usage = _call()
+    except Exception as e:  # transport / HTTP error / timeout / auth / billing — surface, never crash
+        detail = str(e)
+        if isinstance(e, urllib.error.HTTPError):
+            etype = e.code  # HTTP status; Meta puts the reason in the {"error": {...}} body
+            try:
+                detail += " " + e.read().decode("utf-8", "replace")
+            except Exception:
+                pass
+        else:
+            etype = type(e).__name__
+        _log_infer_failure("muse", MUSE_MODEL, etype, detail)
+        return _infer_result(message_to_oscar=_redact_tokens(str(e)), error="api_error")
+
+    rec = _parse_inner_json(inner)
+    if rec is None:
+        try:
+            inner, usage = _call("\n\nReturn ONLY valid JSON, nothing else.")
+            rec = _parse_inner_json(inner)
+        except Exception:
+            rec = None
+    if rec is None:
+        _log_infer_failure("muse", MUSE_MODEL, "bad_json", "model did not return valid JSON after one retry")
+        return _infer_result(message_to_oscar="model did not return valid JSON", error="bad_json")
+    out = _result_from_rec(rec, usage)
+    if out["error"]:
+        _log_infer_failure("muse", MUSE_MODEL, out["error"], out["message_to_oscar"])
     return out
 
 
@@ -1025,6 +1217,13 @@ def infer(
             _log_infer_failure("deepseek", DEEPSEEK_MODEL, "no_api_key", "no API key for backend=deepseek")
             return _infer_result(message_to_oscar="no API key for backend=deepseek", error="no_api_key")
         return _infer_deepseek(context, key)
+    # Bake-off brain: Meta Muse (HC_BACKEND=muse); same prompt/schema/parser as deepseek.
+    if backend == "muse":
+        key = os.environ.get("MUSE_API_KEY")
+        if not key:
+            _log_infer_failure("muse", MUSE_MODEL, "no_api_key", "no API key for backend=muse")
+            return _infer_result(message_to_oscar="no API key for backend=muse", error="no_api_key")
+        return _infer_muse(context, key)
     # Testing engine: Lucy runs on Claude via headless `claude -p` (OAuth subscription).
     if backend == "claude":
         return _infer_claude(context)
@@ -1387,8 +1586,8 @@ def run_bakeoff(
 
         # --- INFER (SWAP POINT) ---
         raw_llm_output = infer(context, backend, claude_api_key, gemini_api_key)
-        # deepseek logs its own failures (with HTTP status) at the source; log the rest here, once.
-        if raw_llm_output.get("error") and backend != "deepseek":
+        # deepseek/muse log their own failures (with HTTP status) at the source; log the rest here, once.
+        if raw_llm_output.get("error") and backend not in ("deepseek", "muse"):
             _log_infer_failure(backend, {"api": ANTHROPIC_MODEL, "claude": BRAIN_MODEL}.get(backend, "-"),
                                raw_llm_output.get("error"), raw_llm_output.get("message_to_oscar", ""))
         # print(f"DEBUG: Raw LLM Output for event {event['event_id']}: {raw_llm_output}") # Debug print
@@ -1439,17 +1638,20 @@ def run_bakeoff(
                     confidence=Confidence.LOW, score=0.0, behavior=Behavior.SUPPRESS, would_be=Behavior.SUPPRESS,
                     message_to_oscar=f"LLM output parse error: {e}", rationale="Parse error", evidence=[])
 
-        # Deterministic inbound timing override (after parsing, before state update).
-        if is_inbound:
-            recommendation = enforce_inbound_timing(recommendation, raw_llm_output)
+        # Spicy variant (local bake-off only): every post-model guard is bypassed and the model's
+        # reply is returned as-is.
+        if not spicy_variant():
+            # Deterministic inbound timing override (after parsing, before state update).
+            if is_inbound:
+                recommendation = enforce_inbound_timing(recommendation, raw_llm_output)
 
-        # Code guards (shared by compose() and the gauntlet), each one retry then escalate:
-        # no photo ask on a proactive compose (D2), then the per-text SMS cap.
-        recommendation = enforce_no_proactive_photo(recommendation, context, backend, is_inbound,
-                                                    claude_api_key, gemini_api_key)
-        recommendation = enforce_inbound_photo_scope(recommendation, context, backend, is_inbound,
-                                                     claude_api_key, gemini_api_key)
-        recommendation = enforce_text_cap(recommendation, context, backend, claude_api_key, gemini_api_key)
+            # Code guards (shared by compose() and the gauntlet), each one retry then escalate:
+            # no photo ask on a proactive compose (D2), then the per-text SMS cap.
+            recommendation = enforce_no_proactive_photo(recommendation, context, backend, is_inbound,
+                                                        claude_api_key, gemini_api_key)
+            recommendation = enforce_inbound_photo_scope(recommendation, context, backend, is_inbound,
+                                                         claude_api_key, gemini_api_key)
+            recommendation = enforce_text_cap(recommendation, context, backend, claude_api_key, gemini_api_key)
 
         # --- DETERMINISTIC STATE UPDATE ---
         updated_lead_state = update_lead_state(

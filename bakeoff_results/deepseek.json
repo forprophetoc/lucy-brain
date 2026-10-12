@@ -1,0 +1,2790 @@
+{
+  "label": "deepseek",
+  "backend": "deepseek",
+  "variant": "",
+  "now_et": "2026-10-12T14:10:00-04:00",
+  "reps": 3,
+  "rows": [
+    {
+      "scenario": 1,
+      "name": "New lead price ask",
+      "rep": 1,
+      "inbound": "How much to refinish a tub?",
+      "response": {
+        "reply": "Hi Sam, it's Lucy with Bathtub Pros! To give you an exact price, just text a photo of your tub to (239) 539-4777 and I'll get you a quote right away.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Inbound price question with no estimate on record triggers the photo request per rule #15; no price or range may be quoted.",
+        "error": ""
+      },
+      "latency_s": 4.24,
+      "grade": {
+        "rules": {
+          "asks_photo_to_539": {
+            "pass": true,
+            "note": ""
+          },
+          "no_price_or_range": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [149]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 1,
+      "name": "New lead price ask",
+      "rep": 2,
+      "inbound": "How much to refinish a tub?",
+      "response": {
+        "reply": "Hi Sam! To give you an exact price, just text a photo of your tub to (239) 539-4777 and I'll send back a realistic before-and-after and the exact cost.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Inbound price question with no estimate on record triggers the photo request per rule #15.",
+        "error": ""
+      },
+      "latency_s": 3.62,
+      "grade": {
+        "rules": {
+          "asks_photo_to_539": {
+            "pass": true,
+            "note": ""
+          },
+          "no_price_or_range": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [151]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 1,
+      "name": "New lead price ask",
+      "rep": 3,
+      "inbound": "How much to refinish a tub?",
+      "response": {
+        "reply": "Hi Sam! To give you an exact price, just text a photo of your tub to (239) 539-4777 and I'll send back a realistic before-and-after and the exact quote.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Inbound price question with no estimate on record triggers the photo request per rule #15.",
+        "error": ""
+      },
+      "latency_s": 3.81,
+      "grade": {
+        "rules": {
+          "asks_photo_to_539": {
+            "pass": true,
+            "note": ""
+          },
+          "no_price_or_range": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [152]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Price recall",
+      "rep": 1,
+      "inbound": "What's my price again?",
+      "response": {
+        "reply": "Hi Sam! Your Gold estimate for your tub is $449. Here's the link again: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The contact has an estimate on record ($449 Gold), so I can restate the exact price without asking for a photo or escalating.",
+        "error": ""
+      },
+      "latency_s": 3.74,
+      "grade": {
+        "rules": {
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [115]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Price recall",
+      "rep": 2,
+      "inbound": "What's my price again?",
+      "response": {
+        "reply": "Hi Sam! Your Gold estimate for your tub is $449. Here's the link again: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The contact has an estimate on record ($449 Gold), so I can restate the price directly without asking for a photo.",
+        "error": ""
+      },
+      "latency_s": 3.79,
+      "grade": {
+        "rules": {
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [115]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 2,
+      "name": "Price recall",
+      "rep": 3,
+      "inbound": "What's my price again?",
+      "response": {
+        "reply": "Hi Sam! Your Gold estimate for your tub is $449. Here's the link again: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=gold"
+        ],
+        "reasoning": "The customer is asking for a price that is already on record in the transcript, so we can answer directly.",
+        "error": ""
+      },
+      "latency_s": 3.6,
+      "grade": {
+        "rules": {
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [115]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Is the estimate free",
+      "rep": 1,
+      "inbound": "Is the estimate free?",
+      "response": {
+        "reply": "No cost to you, Sam! Any questions on it, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asks a direct question about estimate cost; KB provides a ready answer.",
+        "error": ""
+      },
+      "latency_s": 3.13,
+      "grade": {
+        "rules": {
+          "says_no_cost_to_you": {
+            "pass": true,
+            "note": ""
+          },
+          "never_free": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [55]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Is the estimate free",
+      "rep": 2,
+      "inbound": "Is the estimate free?",
+      "response": {
+        "reply": "No cost to you, Sam! Any questions on it, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer asks a direct question about estimate cost; KB provides a clear answer without needing a photo or escalation.",
+        "error": ""
+      },
+      "latency_s": 3.57,
+      "grade": {
+        "rules": {
+          "says_no_cost_to_you": {
+            "pass": true,
+            "note": ""
+          },
+          "never_free": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [55]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 3,
+      "name": "Is the estimate free",
+      "rep": 3,
+      "inbound": "Is the estimate free?",
+      "response": {
+        "reply": "No cost to you, Sam! Any questions on it, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a direct question about estimate cost; the KB provides a scripted answer for this exact question.",
+        "error": ""
+      },
+      "latency_s": 3.44,
+      "grade": {
+        "rules": {
+          "says_no_cost_to_you": {
+            "pass": true,
+            "note": ""
+          },
+          "never_free": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [55]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "Timed text request",
+      "rep": 1,
+      "inbound": "Can you text me tomorrow at 2?",
+      "response": {
+        "reply": "Sure, Sam! I'll text you tomorrow at 2pm.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested a timed text follow-up for tomorrow at 2pm, which is a contact request, not a booking. Lucy should confirm and schedule the text.",
+        "error": "",
+        "followup_at": "2026-10-13T14:00:00-04:00"
+      },
+      "latency_s": 3.49,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_at_tomorrow_2pm": {
+            "pass": true,
+            "note": "followup_at='2026-10-13T14:00:00-04:00'"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [41]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "Timed text request",
+      "rep": 2,
+      "inbound": "Can you text me tomorrow at 2?",
+      "response": {
+        "reply": "Sure, Sam! I'll text you tomorrow at 2pm.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested a timed text follow-up for tomorrow at 2pm, which is a contact request, not a booking.",
+        "error": "",
+        "followup_at": "2026-10-13T14:00:00-04:00"
+      },
+      "latency_s": 3.04,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_at_tomorrow_2pm": {
+            "pass": true,
+            "note": "followup_at='2026-10-13T14:00:00-04:00'"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [41]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 4,
+      "name": "Timed text request",
+      "rep": 3,
+      "inbound": "Can you text me tomorrow at 2?",
+      "response": {
+        "reply": "Sure, Sam! I'll text you tomorrow at 2pm.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer requested a timed text follow-up for tomorrow at 2pm, which is a contact request, not a booking.",
+        "error": "",
+        "followup_at": "2026-10-13T14:00:00-04:00"
+      },
+      "latency_s": 3.39,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_at_tomorrow_2pm": {
+            "pass": true,
+            "note": "followup_at='2026-10-13T14:00:00-04:00'"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [41]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Call request",
+      "rep": 1,
+      "inbound": "Can Oscar call me?",
+      "response": {
+        "reply": "I'll let Oscar know you'd like a call, Sam. He'll reach out to you directly.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested a phone call from Oscar, which is a hand-off item per the playbook.",
+        "error": ""
+      },
+      "latency_s": 2.98,
+      "grade": {
+        "rules": {
+          "escalate": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [76]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Call request",
+      "rep": 2,
+      "inbound": "Can Oscar call me?",
+      "response": {
+        "reply": "I'll let Oscar know you'd like a call, Sam. He'll reach out to you directly.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested a phone call from Oscar, which is a hand-off item per the playbook.",
+        "error": ""
+      },
+      "latency_s": 2.83,
+      "grade": {
+        "rules": {
+          "escalate": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [76]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 5,
+      "name": "Call request",
+      "rep": 3,
+      "inbound": "Can Oscar call me?",
+      "response": {
+        "reply": "I'll let Oscar know you'd like a call, Sam. He'll reach out to you directly.",
+        "send_decision": "escalate_human",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested a phone call from Oscar, which is a hand-off item per the playbook.",
+        "error": ""
+      },
+      "latency_s": 3.06,
+      "grade": {
+        "rules": {
+          "escalate": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [76]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Drain replacement",
+      "rep": 1,
+      "inbound": "Do you replace the drain too?",
+      "response": {
+        "reply": "We don't replace drains — that's licensed plumber work. We do remove and reinstall the overflow cover, and we refinish right up to the edge of the drain. If you want a new drain, a plumber would remove it first, we refinish, and they reinstall it after.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a direct question about drain replacement, which is fully answered by the KB. No estimate on record, but this is not a price/quote request, so no photo request is triggered.",
+        "error": ""
+      },
+      "latency_s": 4.3,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "no_drain_removal_claim": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [253]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Drain replacement",
+      "rep": 2,
+      "inbound": "Do you replace the drain too?",
+      "response": {
+        "reply": "We don't replace drains — that's licensed plumber work. We do remove and reinstall the overflow cover, and we refinish right up to the edge of the drain. If you want a new drain, a plumber removes it first, we refinish, then they reinstall it.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a direct question about drain replacement, which is answered by the KB. No escalation needed.",
+        "error": ""
+      },
+      "latency_s": 3.55,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "no_drain_removal_claim": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [243]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 6,
+      "name": "Drain replacement",
+      "rep": 3,
+      "inbound": "Do you replace the drain too?",
+      "response": {
+        "reply": "We don't replace drains — that's licensed plumber work. We remove and reinstall the overflow cover, and with the drain in place we refinish right up to its edge. If you want a new drain, a plumber removes it first, we refinish, then they reinstall it.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a direct question about drain replacement, which is fully answered by the KB. No estimate or photo request is needed since an estimate is already on record.",
+        "error": ""
+      },
+      "latency_s": 3.72,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "no_drain_removal_claim": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [251]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Unlisted service",
+      "rep": 1,
+      "inbound": "Do you do tile steam cleaning?",
+      "response": {
+        "reply": "Hi Sam, we don't offer tile steam cleaning. We do refinish tubs, tile, and showers, and we can repair chips and cracks. Let me know if you'd like more info on any of those!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked about a service we don't provide, so I'll politely decline and offer our related services.",
+        "error": ""
+      },
+      "latency_s": 3.9,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [172]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Unlisted service",
+      "rep": 2,
+      "inbound": "Do you do tile steam cleaning?",
+      "response": {
+        "reply": "Hi Sam, we don't offer tile steam cleaning. We do refinish tubs, tile, and showers though — happy to help with any of those!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked about a service we don't provide; answer directly and politely decline.",
+        "error": ""
+      },
+      "latency_s": 3.99,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [124]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 7,
+      "name": "Unlisted service",
+      "rep": 3,
+      "inbound": "Do you do tile steam cleaning?",
+      "response": {
+        "reply": "Hi Sam, we don't offer tile steam cleaning. We specialize in bathtub, tile, and shower refinishing. Let me know if you'd like more info on those!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked about a service we don't provide. The KB says we don't do tile steam cleaning, so I should politely decline and offer our actual services.",
+        "error": ""
+      },
+      "latency_s": 3.79,
+      "grade": {
+        "rules": {
+          "says_no": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [145]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Service list",
+      "rep": 1,
+      "inbound": "What services do you offer?",
+      "response": {
+        "reply": "Hi Sam! We offer bathtub refinishing, tub & tile refinishing, shower refinishing, jacuzzi & soaking tub resurfacing, surface repairs (cracks, chips, holes), chip repair, countertop refinishing, and failed-coating removal. Anything specific you're interested in?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a straightforward KB-answerable question about services; answer fully and stop.",
+        "error": ""
+      },
+      "latency_s": 3.93,
+      "grade": {
+        "rules": {
+          "names_tub_service": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [261]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Service list",
+      "rep": 2,
+      "inbound": "What services do you offer?",
+      "response": {
+        "reply": "Hi Sam! We offer bathtub refinishing, tub & tile refinishing, shower refinishing, jacuzzi & soaking tub resurfacing, surface repairs (cracks, chips, holes), chip repair, countertop refinishing, and failed-coating removal. Anything specific you're interested in?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a straightforward question that the KB answers completely, so Lucy should reply with the service list and no hand-off.",
+        "error": ""
+      },
+      "latency_s": 3.71,
+      "grade": {
+        "rules": {
+          "names_tub_service": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [261]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 8,
+      "name": "Service list",
+      "rep": 3,
+      "inbound": "What services do you offer?",
+      "response": {
+        "reply": "Hi Sam! We offer bathtub refinishing, tub & tile refinishing, shower refinishing, jacuzzi & soaking tub resurfacing, surface repairs (cracks, chips, holes), chip repair, countertop refinishing, and failed-coating removal. Anything specific you're interested in?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a simple KB-answerable question about services; answer fully and stop.",
+        "error": ""
+      },
+      "latency_s": 3.66,
+      "grade": {
+        "rules": {
+          "names_tub_service": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [261]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Out of area (Tampa)",
+      "rep": 1,
+      "inbound": "Do you come out to Tampa?",
+      "response": {
+        "reply": "Hi Sam, thanks for reaching out! We serve Southwest Florida — Collier, Lee, Charlotte, and Sarasota counties. Tampa is just outside our area, so we wouldn't be able to help there. If you ever need us in our service area, we'd love to help!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Tampa is outside the KB service area (Collier, Lee, Charlotte, Sarasota), so a polite decline is the correct response.",
+        "error": ""
+      },
+      "latency_s": 3.8,
+      "grade": {
+        "rules": {
+          "declines": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [239]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Out of area (Tampa)",
+      "rep": 2,
+      "inbound": "Do you come out to Tampa?",
+      "response": {
+        "reply": "Hi Sam, thanks for reaching out! We serve Southwest Florida — Collier, Lee, Charlotte, and Sarasota counties. Tampa is a bit outside our area, so we wouldn't be able to help there. If you ever need us in our service area, just let me know!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Tampa is outside our service area (Collier, Lee, Charlotte, Sarasota), so we politely decline.",
+        "error": ""
+      },
+      "latency_s": 3.7,
+      "grade": {
+        "rules": {
+          "declines": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [239]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 9,
+      "name": "Out of area (Tampa)",
+      "rep": 3,
+      "inbound": "Do you come out to Tampa?",
+      "response": {
+        "reply": "Hi Sam, thanks for reaching out! We serve Southwest Florida — Collier, Lee, Charlotte, and Sarasota counties — so unfortunately Tampa is outside our service area. If you ever need us in our area, we'd be happy to help!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Tampa is outside our service area (Collier, Lee, Charlotte, Sarasota), so we politely decline.",
+        "error": ""
+      },
+      "latency_s": 3.82,
+      "grade": {
+        "rules": {
+          "declines": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [218]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 10,
+      "name": "In area (Port Charlotte)",
+      "rep": 1,
+      "inbound": "I'm in Port Charlotte",
+      "response": {
+        "reply": "Great, Sam! We cover Port Charlotte. How can I help you with your tub?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Sam is in our service area, so we can proceed. Since they have no estimate on record and this is an inbound reply, we should ask for a photo to start the quote process.",
+        "error": ""
+      },
+      "latency_s": 8.35,
+      "grade": {
+        "rules": {
+          "confirms_served": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [70]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": [
+        "[HC] inbound photo request outside D2 -> removed on retry"
+      ]
+    },
+    {
+      "scenario": 10,
+      "name": "In area (Port Charlotte)",
+      "rep": 2,
+      "inbound": "I'm in Port Charlotte",
+      "response": {
+        "reply": "Great, Sam! Port Charlotte is in our service area. How can I help you with your tub?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Sam is in Port Charlotte, which is within our service area, so we can proceed with the conversation.",
+        "error": ""
+      },
+      "latency_s": 3.04,
+      "grade": {
+        "rules": {
+          "confirms_served": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [84]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 10,
+      "name": "In area (Port Charlotte)",
+      "rep": 3,
+      "inbound": "I'm in Port Charlotte",
+      "response": {
+        "reply": "Great, Sam! We cover Port Charlotte. What can I help you with — a tub, tile, or something else?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Sam is in our service area, so we can proceed. Since they have no estimate on record and this is an inbound reply, we should ask for a photo to get them a quote.",
+        "error": ""
+      },
+      "latency_s": 8.34,
+      "grade": {
+        "rules": {
+          "confirms_served": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [95]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": [
+        "[HC] inbound photo request outside D2 -> removed on retry"
+      ]
+    },
+    {
+      "scenario": 11,
+      "name": "Job duration",
+      "rep": 1,
+      "inbound": "How long does a tub take?",
+      "response": {
+        "reply": "A standard tub takes about 3-4 hours, Sam!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB provides job duration for a standard tub, so answer directly without escalation.",
+        "error": ""
+      },
+      "latency_s": 3.06,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [42]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 11,
+      "name": "Job duration",
+      "rep": 2,
+      "inbound": "How long does a tub take?",
+      "response": {
+        "reply": "A standard tub takes about 3-4 hours, Sam!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB provides job duration for a standard tub, so answer directly without escalation.",
+        "error": ""
+      },
+      "latency_s": 3.19,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [42]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 11,
+      "name": "Job duration",
+      "rep": 3,
+      "inbound": "How long does a tub take?",
+      "response": {
+        "reply": "A standard tub takes about 3-4 hours, Sam!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB provides job duration for a standard tub, so answer directly without escalation.",
+        "error": ""
+      },
+      "latency_s": 3.32,
+      "grade": {
+        "rules": {
+          "says_3_to_4_hours": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [42]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Shower tonight",
+      "rep": 1,
+      "inbound": "Can we shower tonight?",
+      "response": {
+        "reply": "Hi Sam! After we refinish, the tub stays out of service until the next morning. If you need it sooner, wait at least 4 hours after we finish, but we recommend waiting until the next day.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asks a process question that the KB answers directly; no escalation needed.",
+        "error": ""
+      },
+      "latency_s": 3.75,
+      "grade": {
+        "rules": {
+          "out_until_next_morning": {
+            "pass": true,
+            "note": ""
+          },
+          "4h_only_if_unavoidable": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [186]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Shower tonight",
+      "rep": 2,
+      "inbound": "Can we shower tonight?",
+      "response": {
+        "reply": "Hi Sam! After we refinish, the tub is out of service until the next morning. We recommend waiting until then, but if you must, wait at least 4 hours after we finish. Just keep the bathroom door closed.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The customer is asking about using the tub tonight, which is a process question answerable from the KB. The estimate is on record, so no photo request or price discussion is needed.",
+        "error": ""
+      },
+      "latency_s": 4.21,
+      "grade": {
+        "rules": {
+          "out_until_next_morning": {
+            "pass": true,
+            "note": ""
+          },
+          "4h_only_if_unavoidable": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [201]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 12,
+      "name": "Shower tonight",
+      "rep": 3,
+      "inbound": "Can we shower tonight?",
+      "response": {
+        "reply": "Hi Sam! It looks like your tub refinishing hasn't been scheduled yet, so the tub is still usable tonight. Would you like me to help you book a time?",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer is asking about using the tub tonight, which implies they may think the job is done or scheduled. Since no job is on record, I should clarify that the refinishing hasn't been scheduled yet and offer to help with booking.",
+        "error": ""
+      },
+      "latency_s": 3.88,
+      "grade": {
+        "rules": {
+          "out_until_next_morning": {
+            "pass": false,
+            "note": ""
+          },
+          "4h_only_if_unavoidable": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [148]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Veteran discount",
+      "rep": 1,
+      "inbound": "I'm a veteran, any discount?",
+      "response": {
+        "reply": "Thank you for your service, Sam! Yes, veterans get 10% off. That would bring your Gold estimate to $404.10. Any questions, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The KB states veterans get 10% off, and Sam has an estimate on record, so I can answer directly.",
+        "error": ""
+      },
+      "latency_s": 4.08,
+      "grade": {
+        "rules": {
+          "offers_10pct": {
+            "pass": true,
+            "note": ""
+          },
+          "not_combined": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": false,
+            "note": "stated [404] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [136]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Veteran discount",
+      "rep": 2,
+      "inbound": "I'm a veteran, any discount?",
+      "response": {
+        "reply": "Yes, Sam! We offer a 10% discount for veterans. Thank you for your service!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asks about a veteran discount, which is answered directly by the KB (10% for veterans).",
+        "error": ""
+      },
+      "latency_s": 2.81,
+      "grade": {
+        "rules": {
+          "offers_10pct": {
+            "pass": true,
+            "note": ""
+          },
+          "not_combined": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [75]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 13,
+      "name": "Veteran discount",
+      "rep": 3,
+      "inbound": "I'm a veteran, any discount?",
+      "response": {
+        "reply": "Thank you for your service, Sam! Yes, veterans get 10% off. That would bring your Gold estimate to $404.10. Any questions on it, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The KB states veterans get 10% off, and Sam has an estimate on record, so I can answer directly.",
+        "error": ""
+      },
+      "latency_s": 4.12,
+      "grade": {
+        "rules": {
+          "offers_10pct": {
+            "pass": true,
+            "note": ""
+          },
+          "not_combined": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": false,
+            "note": "stated [404] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [142]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Warranty",
+      "rep": 1,
+      "inbound": "What's the warranty?",
+      "response": {
+        "reply": "If our finish fails, it's covered. Not covered: physical damage or using a non-approved cleaner or method. Coverage length depends on your package, and every package carries full coverage.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a KB-answerable question about warranty coverage, so I answered fully without escalating.",
+        "error": ""
+      },
+      "latency_s": 3.65,
+      "grade": {
+        "rules": {
+          "no_years_or_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guarantee_lifetime_nqa": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [188]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Warranty",
+      "rep": 2,
+      "inbound": "What's the warranty?",
+      "response": {
+        "reply": "Great question, Sam! If our finish fails, it's covered. Not covered: physical damage or using a non-approved cleaner or method. Coverage length depends on your package, and every package carries full coverage.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB fully answers warranty coverage questions, so Lucy should answer directly without escalating.",
+        "error": ""
+      },
+      "latency_s": 3.79,
+      "grade": {
+        "rules": {
+          "no_years_or_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guarantee_lifetime_nqa": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [209]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 14,
+      "name": "Warranty",
+      "rep": 3,
+      "inbound": "What's the warranty?",
+      "response": {
+        "reply": "If our finish fails, it's covered. Not covered: physical damage or using a non-approved cleaner or method. Coverage length depends on your package, and every package carries full coverage.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The customer asked a KB-answerable question about warranty coverage, so I answered fully without escalating.",
+        "error": ""
+      },
+      "latency_s": 3.56,
+      "grade": {
+        "rules": {
+          "no_years_or_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "no_guarantee_lifetime_nqa": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [188]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Newborn safety",
+      "rep": 1,
+      "inbound": "We have a newborn, is it safe?",
+      "response": {
+        "reply": "Hi Sam, congratulations on the newborn! For safety, we recommend the baby not be in the home during the refinishing process or until the surface is ready. We can work with you on timing.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB explicitly addresses newborn safety during refinishing, so Lucy can answer directly without escalating.",
+        "error": ""
+      },
+      "latency_s": 3.41,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [186]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Newborn safety",
+      "rep": 2,
+      "inbound": "We have a newborn, is it safe?",
+      "response": {
+        "reply": "Hi Sam, congratulations on your newborn! For safety, we recommend the baby not be in the home during the refinishing process or until the surface is ready. We use professional fume extraction and keep the bathroom door closed, but it's best to keep the little one away until the next morning.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB directly answers newborn safety during refinishing, so I can respond fully without escalation.",
+        "error": ""
+      },
+      "latency_s": 3.95,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [292]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 15,
+      "name": "Newborn safety",
+      "rep": 3,
+      "inbound": "We have a newborn, is it safe?",
+      "response": {
+        "reply": "Hi Sam, congratulations on your newborn! For safety, we recommend the newborn not be in the home during the refinishing process or until the surface is ready. Let me know if you have any other questions.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "The KB directly answers newborn safety during refinishing, so I can respond fully without escalation.",
+        "error": ""
+      },
+      "latency_s": 3.38,
+      "grade": {
+        "rules": {
+          "no_spray_with_infant": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [203]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Defer to January",
+      "rep": 1,
+      "inbound": "Not ready till January",
+      "response": {
+        "reply": "No problem, Sam! Just text me if you have any questions. We'll check back in January.",
+        "send_decision": "send_now",
+        "facts": {
+          "followup_date": "2027-01-05"
+        },
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer stated a clear timeline (January), so we should schedule a follow-up for that window.",
+        "error": "",
+        "followup_at": "2027-01-05T10:00:00-05:00"
+      },
+      "latency_s": 3.62,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_in_january": {
+            "pass": true,
+            "note": "followup_date='2027-01-05' followup_at='2027-01-05T10:00:00-05:00'"
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [85]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Defer to January",
+      "rep": 2,
+      "inbound": "Not ready till January",
+      "response": {
+        "reply": "No problem, Sam! I'll check back with you in January. If you have any questions before then, just text me.",
+        "send_decision": "send_now",
+        "facts": {
+          "followup_date": "2027-01-05"
+        },
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer stated a timeline (January), so we should schedule a follow-up and acknowledge their timing.",
+        "error": "",
+        "followup_at": "2027-01-05T10:00:00-05:00"
+      },
+      "latency_s": 3.64,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_in_january": {
+            "pass": true,
+            "note": "followup_date='2027-01-05' followup_at='2027-01-05T10:00:00-05:00'"
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [106]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 16,
+      "name": "Defer to January",
+      "rep": 3,
+      "inbound": "Not ready till January",
+      "response": {
+        "reply": "No problem, Sam! I'll check back with you in January. If you have any questions before then, just text me.",
+        "send_decision": "send_now",
+        "facts": {
+          "followup_date": "2027-01-05"
+        },
+        "language": "en",
+        "memory_facts_used": [
+          "estimate_url=https://app.esticlose.com/estimate/bp-20417",
+          "price=449",
+          "package=gold"
+        ],
+        "reasoning": "Customer stated a clear timeline (January), so we should schedule a warm follow-up then and acknowledge their timing now.",
+        "error": "",
+        "followup_at": "2027-01-05T10:00:00-05:00"
+      },
+      "latency_s": 4.36,
+      "grade": {
+        "rules": {
+          "send_now": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "followup_in_january": {
+            "pass": true,
+            "note": "followup_date='2027-01-05' followup_at='2027-01-05T10:00:00-05:00'"
+          },
+          "no_pressure": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [106]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Opt-out",
+      "rep": 1,
+      "inbound": "Stop texting me",
+      "response": {
+        "reply": "Understood, Sam. I'll stop texting you. Have a great day.",
+        "send_decision": "escalate_human",
+        "facts": {
+          "disengaged": "opt_out"
+        },
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested to stop texting, which is an opt-out requiring acknowledgment and escalation to Oscar.",
+        "error": ""
+      },
+      "latency_s": 3.14,
+      "grade": {
+        "rules": {
+          "no_sales_content": {
+            "pass": true,
+            "note": ""
+          },
+          "opt_out_flagged": {
+            "pass": true,
+            "note": "disengaged='opt_out'"
+          },
+          "escalated_for_dnc": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [57]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Opt-out",
+      "rep": 2,
+      "inbound": "Stop texting me",
+      "response": {
+        "reply": "Understood, Sam. I'll stop texting you. Have a great day.",
+        "send_decision": "escalate_human",
+        "facts": {
+          "disengaged": "opt_out"
+        },
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested to stop texting, which is an opt-out requiring acknowledgment and escalation to Oscar.",
+        "error": ""
+      },
+      "latency_s": 3.36,
+      "grade": {
+        "rules": {
+          "no_sales_content": {
+            "pass": true,
+            "note": ""
+          },
+          "opt_out_flagged": {
+            "pass": true,
+            "note": "disengaged='opt_out'"
+          },
+          "escalated_for_dnc": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [57]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 17,
+      "name": "Opt-out",
+      "rep": 3,
+      "inbound": "Stop texting me",
+      "response": {
+        "reply": "Understood, Sam. I'll stop texting you. Have a great day.",
+        "send_decision": "escalate_human",
+        "facts": {
+          "disengaged": "opt_out"
+        },
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer explicitly requested to stop texting, which is an opt-out requiring acknowledgment and escalation to Oscar for DNC marking.",
+        "error": ""
+      },
+      "latency_s": 3.1,
+      "grade": {
+        "rules": {
+          "no_sales_content": {
+            "pass": true,
+            "note": ""
+          },
+          "opt_out_flagged": {
+            "pass": true,
+            "note": "disengaged='opt_out'"
+          },
+          "escalated_for_dnc": {
+            "pass": true,
+            "note": "decision=escalate_human"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [57]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Price pushback",
+      "rep": 1,
+      "inbound": "That's a ripoff",
+      "response": {
+        "reply": "I hear you, Sam. We're an excellent product at a fair price — 13 years in business, 11,000+ tubs. I'd encourage you to get 2-3 estimates to compare. If you have any questions about what's included, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Gold"
+        ],
+        "reasoning": "Customer is expressing price pushback on an on-record estimate. KB says to encourage getting other estimates and close warm, never pushy.",
+        "error": ""
+      },
+      "latency_s": 4.37,
+      "grade": {
+        "rules": {
+          "no_new_price": {
+            "pass": true,
+            "note": "stated []"
+          },
+          "calm": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [211]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Price pushback",
+      "rep": 2,
+      "inbound": "That's a ripoff",
+      "response": {
+        "reply": "I hear you, Sam. The Gold package includes our premium finish and full coverage. If you'd like, I can have Oscar review your tub details to see if there's a better fit. Just let me know.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "Customer is expressing price objection to a previously sent estimate. Best response is to acknowledge, reaffirm value, and invite questions or offer to review.",
+        "error": ""
+      },
+      "latency_s": 4.95,
+      "grade": {
+        "rules": {
+          "no_new_price": {
+            "pass": true,
+            "note": "stated []"
+          },
+          "calm": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [186]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 18,
+      "name": "Price pushback",
+      "rep": 3,
+      "inbound": "That's a ripoff",
+      "response": {
+        "reply": "I hear you, Sam. We're an excellent product at a fair price — 13 years in business, 11,000+ tubs refinished. I'd encourage you to get 2-3 estimates to compare. If you have any questions about what's included, just text me.",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Gold"
+        ],
+        "reasoning": "Customer is expressing price dissatisfaction with an on-record estimate. Per KB, Lucy should encourage getting other estimates and highlight value without being pushy.",
+        "error": ""
+      },
+      "latency_s": 4.38,
+      "grade": {
+        "rules": {
+          "no_new_price": {
+            "pass": true,
+            "note": "stated []"
+          },
+          "calm": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [222]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Spanish price",
+      "rep": 1,
+      "inbound": "¿Cuánto cuesta?",
+      "response": {
+        "reply": "¡Hola Sam! Su presupuesto Gold para la bañera es de $449. Aquí está el enlace: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [
+          "price=449",
+          "package=gold"
+        ],
+        "reasoning": "The contact has an estimate on record ($449 Gold), so I can answer the price question directly without asking for a photo.",
+        "error": ""
+      },
+      "latency_s": 3.45,
+      "grade": {
+        "rules": {
+          "spanish_reply": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "no_photo_ask": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [122]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Spanish price",
+      "rep": 2,
+      "inbound": "¿Cuánto cuesta?",
+      "response": {
+        "reply": "¡Hola Sam! Tu presupuesto Gold para la bañera es de $449. Aquí está el enlace: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "El contacto ya tiene un presupuesto en registro ($449, paquete Gold), así que respondo con ese precio exacto y sin pedir foto.",
+        "error": ""
+      },
+      "latency_s": 3.75,
+      "grade": {
+        "rules": {
+          "spanish_reply": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "no_photo_ask": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [122]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 19,
+      "name": "Spanish price",
+      "rep": 3,
+      "inbound": "¿Cuánto cuesta?",
+      "response": {
+        "reply": "¡Hola Sam! Su presupuesto Gold para la bañera es de $449. Aquí está el enlace: https://app.esticlose.com/estimate/bp-20417",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "es",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "The customer asked for the price and an estimate is already on record, so I can state the exact amount without asking for a photo.",
+        "error": ""
+      },
+      "latency_s": 3.83,
+      "grade": {
+        "rules": {
+          "spanish_reply": {
+            "pass": true,
+            "note": "language='es'"
+          },
+          "states_449": {
+            "pass": true,
+            "note": ""
+          },
+          "no_photo_ask": {
+            "pass": true,
+            "note": ""
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [449] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [122]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": true
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "Promised follow-up (sweep)",
+      "rep": 1,
+      "inbound": "",
+      "response": {
+        "reply": "Hi Sam, it's Lucy with Bathtub Pros! Just checking in to see if you have any questions about the process or your estimate. If you're ready to move forward, you can grab a time here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "This is a scheduled touch 2 follow-up. The customer has viewed the estimate and previously said they'd have an answer after meeting with their wife. Per touch 2 guidance, include the booking link.",
+        "error": ""
+      },
+      "latency_s": 4.17,
+      "grade": {
+        "rules": {
+          "references_wife_answer": {
+            "pass": false,
+            "note": ""
+          },
+          "moves_toward_booking": {
+            "pass": true,
+            "note": ""
+          },
+          "sends": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [214]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "Promised follow-up (sweep)",
+      "rep": 2,
+      "inbound": "",
+      "response": {
+        "reply": "Hi Sam, it's Lucy with Bathtub Pros! Just checking in—any questions on your Gold estimate? If you're ready to move forward, you can grab a time that works for you here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449",
+          "estimate_url=https://app.esticlose.com/estimate/bp-20417"
+        ],
+        "reasoning": "This is a scheduled touch 2 follow-up. The customer has an estimate on record and has viewed it, so we do not resend the estimate link. We include the booking link to make it easy for them to schedule.",
+        "error": ""
+      },
+      "latency_s": 4.63,
+      "grade": {
+        "rules": {
+          "references_wife_answer": {
+            "pass": false,
+            "note": ""
+          },
+          "moves_toward_booking": {
+            "pass": true,
+            "note": ""
+          },
+          "sends": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [201]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    },
+    {
+      "scenario": 20,
+      "name": "Promised follow-up (sweep)",
+      "rep": 3,
+      "inbound": "",
+      "response": {
+        "reply": "Hi Sam, it's Lucy with Bathtub Pros! Just checking in—any questions on your Gold estimate? If you're ready to move forward, you can grab a time that works for you here: https://calendar.bathtubpros.com",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=gold",
+          "price=449"
+        ],
+        "reasoning": "This is a scheduled touch 2 follow-up. The customer has an estimate on record and has viewed it, so we do not resend the estimate link. We include the booking link to make it easy for them to schedule.",
+        "error": ""
+      },
+      "latency_s": 4.3,
+      "grade": {
+        "rules": {
+          "references_wife_answer": {
+            "pass": false,
+            "note": ""
+          },
+          "moves_toward_booking": {
+            "pass": true,
+            "note": ""
+          },
+          "sends": {
+            "pass": true,
+            "note": "decision=send_now"
+          },
+          "price_from_record": {
+            "pass": true,
+            "note": "stated [] allowed [85, 449]"
+          },
+          "no_banned_terms": {
+            "pass": true,
+            "note": ""
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "1 text(s), lengths [201]"
+          },
+          "no_unlisted_service": {
+            "pass": true,
+            "note": ""
+          }
+        },
+        "all_pass": false
+      },
+      "log": []
+    }
+  ]
+}
