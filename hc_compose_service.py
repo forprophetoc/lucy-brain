@@ -4,7 +4,7 @@ hc_compose_service.py — HTTP wrapper around Lucy's brain (harness.run_bakeoff)
 
 POST /compose
   req:  { trigger, now, contact_id,
-          identity:{first_name,last_name,city,service},
+          identity:{first_name,last_name,city,service,package?,estimate_amount?,tags?,persona_note?},
           inbound_text, history:[{from,text,ts}], memory:{followup_date?} }
   resp: { reply, send_decision:"send_now"|"escalate_human", facts:{followup_date?},
           language, memory_facts_used:[], reasoning, error }
@@ -104,7 +104,12 @@ def compose(req: dict) -> dict:
         "phone": "+1",
         "city": ident.get("city") or "",
         "service": ident.get("service") or "tub_refinish",
-        "package": "", "estimate_amount": "", "tags": "", "persona_note": "",
+        # Fact fields from the request when present (identity first, then top-level), so a
+        # stated estimate reaches the guard as a fact — not via transcript regex luck.
+        "package": ident.get("package") or req.get("package") or "",
+        "estimate_amount": str(ident.get("estimate_amount") or req.get("estimate_amount") or ""),
+        "tags": ident.get("tags") or req.get("tags") or "",
+        "persona_note": ident.get("persona_note") or req.get("persona_note") or "",
     }
     # Proactive due-date sweep (TS-decided who's due; date math is NOT the brain's job).
     # A non-inbound event_type means harness skips enforce_inbound_timing's never-silent

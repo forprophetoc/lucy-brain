@@ -1,6 +1,6 @@
 """
-Spicy-variant unit tests (no network, no model). HC_VARIANT=spicy returns the model's raw reply
-with no guard calls; HC_VARIANT unset is normal Lucy, unchanged.
+Spicy-variant unit tests (no network, no model). HC_VARIANT=spicy keeps its prompt edits
+but runs the same post-model guards as normal Lucy (architect's ruling 2026-10-19).
 
 Run: python -m unittest -v test_spicy_variant
 """
@@ -33,7 +33,7 @@ def _fake_infer(reply, **extra):
     return f
 
 
-class SpicyGuardBypass(unittest.TestCase):
+class SpicyRunsGuards(unittest.TestCase):
     def _run(self, variant, req, infer):
         env = {"HC_BACKEND": "muse"}
         if variant:
@@ -48,14 +48,18 @@ class SpicyGuardBypass(unittest.TestCase):
             resp = compose(req)
         return resp, mocks
 
-    def test_spicy_returns_raw_reply_no_guard_calls(self):
+    def test_spicy_reply_passes_through_guards(self):
+        # Architect's ruling 2026-10-19: guards are safety equipment, not a per-model option —
+        # under spicy they run exactly as under normal Lucy.
         for trig, inbound in (("due_date_sweep", ""), ("inbound_reply", "What's my price?")):
             with self.subTest(trigger=trig):
                 resp, mocks = self._run(" spicy ", _req(trig, inbound), _fake_infer(RAW))
-                self.assertEqual(resp["reply"], RAW.strip())  # photo ask + >320 chars, untouched
-                self.assertEqual(resp["send_decision"], "send_now")
-                for g, m in mocks.items():
-                    self.assertEqual(m.call_count, 0, f"{g} called under spicy")
+                # Escalation keeps the raw draft in the reply field; send_decision is what proves
+                # the guards caught it (same shape as test_normal_path_runs_guards).
+                self.assertEqual(resp["send_decision"], "escalate_human")  # retries return RAW -> escalate
+                for g in ("enforce_no_proactive_photo", "enforce_inbound_photo_scope", "enforce_text_cap"):
+                    self.assertGreaterEqual(mocks[g].call_count, 1, f"{g} not called under spicy")
+                self.assertGreaterEqual(mocks["_revise_reply"].call_count, 1)
 
     def test_spicy_keeps_model_escalation_decision(self):
         resp, _ = self._run("spicy", _req("inbound_reply", "Call me"),
@@ -76,16 +80,17 @@ class SpicyGuardBypass(unittest.TestCase):
             system, instr = harness._prompts()
             self.assertIsNot(system, harness.SYSTEM_PROMPT)
             self.assertIn(harness.SPICY_MAY_ESCALATE, system)
-        # compose() on Render with Spicy: the raw reply, no guard calls.
+        # compose() on Render with Spicy: guards still run (architect's ruling 2026-10-19).
         patches = {g: mock.patch(f"harness.{g}", wraps=getattr(harness, g)) for g in GUARDS}
         with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "HC_VARIANT": "spicy", "RENDER": "1"}), \
                 mock.patch("harness.infer", _fake_infer(RAW)), contextlib.ExitStack() as st, \
                 contextlib.redirect_stdout(io.StringIO()):
             mocks = {g: st.enter_context(p) for g, p in patches.items()}
             resp = compose(_req())
-        self.assertEqual(resp["reply"], RAW.strip())
-        for g, m in mocks.items():
-            self.assertEqual(m.call_count, 0, f"{g} called under spicy on Render")
+        self.assertEqual(resp["send_decision"], "escalate_human")  # guards caught the photo ask + cap
+        for g in ("enforce_no_proactive_photo", "enforce_inbound_photo_scope", "enforce_text_cap"):
+            self.assertGreaterEqual(mocks[g].call_count, 1, f"{g} not called under spicy on Render")
+        self.assertGreaterEqual(mocks["_revise_reply"].call_count, 1)
 
     def test_unset_variant_is_normal_lucy_on_render(self):
         with mock.patch.dict(os.environ, {"HC_BACKEND": "muse", "RENDER": "1"}):

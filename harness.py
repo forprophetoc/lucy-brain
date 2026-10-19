@@ -1495,6 +1495,44 @@ def enforce_inbound_photo_scope(
     return _escalate(recommendation, "photo request outside D2 after one retry")
 
 
+def _norm_dup_text(msg: str) -> str:
+    # Case/whitespace/punctuation-insensitive form for the never-repeat seatbelt.
+    return " ".join(re.findall(r"[a-z0-9]+", (msg or "").lower()))
+
+
+def enforce_no_repeat(
+    recommendation: Recommendation,
+    context: Dict[str, Any],
+    backend: str,
+    claude_api_key: Optional[str] = None,
+    gemini_api_key: Optional[str] = None,
+) -> Recommendation:
+    # Oct 14 hold-repeat bug in code: Lucy never sends the identical message twice in one
+    # thread. A final draft equal (normalization-insensitively) to any prior [shop] line in
+    # the transcript gets ONE retry for a fresh-worded equivalent; still a duplicate -> escalate.
+    msg = (recommendation.suggested_customer_message or "").strip()
+    if (not msg or recommendation.send_decision == ESCALATE_HUMAN or recommendation.escalate_oscar):
+        return recommendation
+    prior = {_norm_dup_text(line[len("[shop] "):])
+             for line in (context.get("transcript") or "").splitlines()
+             if line.startswith("[shop] ")}
+    if _norm_dup_text(msg) not in prior:
+        return recommendation
+    fresh = _revise_reply(
+        context,
+        "Your draft suggested_customer_message repeats VERBATIM a message Lucy already sent in "
+        "this thread. Return the SAME reply — same meaning, same decision, same rules — worded "
+        f"DIFFERENTLY so no sentence matches an earlier Lucy message. Draft: {msg}",
+        backend, claude_api_key, gemini_api_key,
+    )
+    if fresh and _norm_dup_text(fresh) not in prior:
+        print("[HC] duplicate of a prior Lucy message -> reworded on retry")
+        recommendation.suggested_customer_message = fresh
+        return recommendation
+    print("[HC] duplicate of a prior Lucy message after one retry -> escalate")
+    return _escalate(recommendation, "repeat of a prior Lucy message after one retry")
+
+
 def _revise_reply(context: Dict[str, Any], note: str, backend: str,
                   claude_api_key: Optional[str] = None, gemini_api_key: Optional[str] = None) -> str:
     """ONE follow-up model call on the same context plus a revision note. Returns the revised
@@ -1657,20 +1695,21 @@ def run_bakeoff(
                     confidence=Confidence.LOW, score=0.0, behavior=Behavior.SUPPRESS, would_be=Behavior.SUPPRESS,
                     message_to_oscar=f"LLM output parse error: {e}", rationale="Parse error", evidence=[])
 
-        # Spicy variant (production since the 2026-10-12 go-live): every post-model guard below is
-        # bypassed and the model's reply is returned as-is (compose() still maps it to send/escalate).
-        if not spicy_variant():
-            # Deterministic inbound timing override (after parsing, before state update).
-            if is_inbound:
-                recommendation = enforce_inbound_timing(recommendation, raw_llm_output)
+        # Post-model guards run on every backend and every variant (architect's ruling 2026-10-19):
+        # no raw model reply ships unguarded.
+        # Deterministic inbound timing override (after parsing, before state update).
+        if is_inbound:
+            recommendation = enforce_inbound_timing(recommendation, raw_llm_output)
 
-            # Code guards (shared by compose() and the gauntlet), each one retry then escalate:
-            # no photo ask on a proactive compose (D2), then the per-text SMS cap.
-            recommendation = enforce_no_proactive_photo(recommendation, context, backend, is_inbound,
-                                                        claude_api_key, gemini_api_key)
-            recommendation = enforce_inbound_photo_scope(recommendation, context, backend, is_inbound,
-                                                         claude_api_key, gemini_api_key)
-            recommendation = enforce_text_cap(recommendation, context, backend, claude_api_key, gemini_api_key)
+        # Code guards (shared by compose() and the gauntlet), each one retry then escalate:
+        # no photo ask on a proactive compose (D2), then the per-text SMS cap.
+        recommendation = enforce_no_proactive_photo(recommendation, context, backend, is_inbound,
+                                                    claude_api_key, gemini_api_key)
+        recommendation = enforce_inbound_photo_scope(recommendation, context, backend, is_inbound,
+                                                     claude_api_key, gemini_api_key)
+        recommendation = enforce_text_cap(recommendation, context, backend, claude_api_key, gemini_api_key)
+        # Seatbelt: the identical Lucy message never sends twice in the same thread.
+        recommendation = enforce_no_repeat(recommendation, context, backend, claude_api_key, gemini_api_key)
 
         # --- DETERMINISTIC STATE UPDATE ---
         updated_lead_state = update_lead_state(

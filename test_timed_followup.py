@@ -374,6 +374,62 @@ class InboundPhotoScopeGuard(unittest.TestCase):
         self.assertEqual(resp["send_decision"], "escalate_human")
         self.assertIn("after one retry -> escalate", log)
 
+    def test_estimate_amount_field_photo_ask_fires_with_empty_history(self):
+        # Stage 4 (2026-10-19): the estimate arrives as a contact FACT (identity.estimate_amount),
+        # not via the transcript regex — history is EMPTY, so only the contact field can tell
+        # the guard an estimate is on record.
+        req = _req(inbound_text="I'm ready to book")
+        req["identity"]["estimate_amount"] = "449"
+        calls = []
+
+        def fake_infer(context, backend, *a, **k):
+            calls.append(context)
+            return harness._infer_result(action_type="suggest_message", confidence="high",
+                                         suggested_customer_message=(self.PHOTO, self.CLEAN)[len(calls) - 1],
+                                         send_decision="send_now")
+
+        with mock.patch("harness.infer", fake_infer), contextlib.redirect_stdout(io.StringIO()) as log:
+            resp = compose(req)
+        log = log.getvalue()
+        self.assertEqual(len(calls), 2)
+        self.assertIn("NO request", calls[1]["revision_request"])
+        self.assertEqual(resp["reply"], self.CLEAN)
+        self.assertEqual(resp["send_decision"], "send_now")
+        self.assertIn("inbound photo request outside D2 -> removed on retry", log)
+
+    def test_ready_to_book_regression_all_backend_variant_combos(self):
+        # Stage 5 (2026-10-19): today's customer-facing failure, locked. Estimate link in
+        # history, inbound "I'm ready to book", model drafts the photo-ask opener. On EVERY
+        # backend x variant combo the photo ask must never ship send_now: the outcome is the
+        # clean booking reply or an escalate_human. Exact strings from preflight_repro.py.
+        PHOTO = "Great! Just text a photo of your tub to (239) 539-4777 and I'll send you an estimate."
+        CLEAN = "Perfect — here are the next openings to get you booked."
+        for backend in ("deepseek", "muse"):
+            for variant in (None, "spicy"):
+                with self.subTest(backend=backend, variant=variant):
+                    env = {"HC_BACKEND": backend}
+                    if variant:
+                        env["HC_VARIANT"] = variant
+                    calls = []
+
+                    def fake_infer(context, backend, *a, **k):
+                        calls.append(context)
+                        return harness._infer_result(
+                            action_type="suggest_message", confidence="high",
+                            suggested_customer_message=(PHOTO, CLEAN)[len(calls) - 1],
+                            send_decision="send_now")
+
+                    with mock.patch.dict(os.environ, env), \
+                            mock.patch("harness.infer", fake_infer), \
+                            contextlib.redirect_stdout(io.StringIO()):
+                        os.environ.pop("RENDER", None)
+                        if not variant:
+                            os.environ.pop("HC_VARIANT", None)
+                        resp = compose(_req(inbound_text="I'm ready to book", history=self.EST_THREAD))
+                    self.assertEqual(len(calls), 2, "photo ask must be revised exactly once")
+                    self.assertTrue(resp["send_decision"] == "escalate_human" or resp["reply"] == CLEAN,
+                                    f"photo ask shipped: {resp}")
+
     def test_no_estimate_interest_photo_ask_untouched(self):
         # Widened 2026-10-12: any interest from a no-estimate contact, not only price/quote/getting started.
         for q in ("Do you cover Naples?", "What services do you offer?", "Do you need a deposit?"):
@@ -406,6 +462,60 @@ class InboundPhotoScopeGuard(unittest.TestCase):
         self.assertTrue(on({"contact_details": {}, "transcript": "[shop] Gold is $449"}))
         self.assertTrue(on({"contact_details": {}, "current_event": {"followup": {"estimate_url": "u"}}}))
         self.assertFalse(on({"contact_details": {"package": "", "estimate_amount": None}, "transcript": "[customer] hi"}))
+
+
+class NoRepeatSeatbelt(unittest.TestCase):
+    """Oct 14 hold-repeat bug in code — harness.run_bakeoff: Lucy never sends the identical
+    message twice in one thread. A draft duplicating a prior [shop] line gets one retry for
+    fresh wording, else escalate. Driven through compose(), model mocked."""
+
+    HOLD = "Got it, let me check on that for you — I'll get right back to you."
+    FRESH = "Still on it — checking now and I'll update you shortly."
+
+    def setUp(self):
+        self._env = mock.patch.dict(os.environ, {"HC_BACKEND": "api"}, clear=False)
+        self._env.start()
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+
+    def tearDown(self):
+        self._env.stop()
+
+    def _run(self, history, *replies):
+        calls = []
+
+        def fake_infer(context, backend, *a, **k):
+            calls.append(context)
+            return harness._infer_result(action_type="suggest_message", confidence="high",
+                                         suggested_customer_message=replies[len(calls) - 1],
+                                         send_decision="send_now")
+
+        with mock.patch("harness.infer", fake_infer), contextlib.redirect_stdout(io.StringIO()) as log:
+            resp = compose(_req(inbound_text="Any update?", history=history))
+        return resp, calls, log.getvalue()
+
+    def test_duplicate_of_prior_lucy_message_never_ships(self):
+        thread = [{"from": "lucy", "text": self.HOLD, "ts": "2026-10-05T10:00:00-04:00"}]
+        with self.subTest(retry="fresh wording"):
+            resp, calls, log = self._run(thread, self.HOLD, self.FRESH)
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(resp["reply"], self.FRESH)
+            self.assertEqual(resp["send_decision"], "send_now")
+            self.assertIn("duplicate of a prior Lucy message -> reworded on retry", log)
+        with self.subTest(retry="still duplicate"):
+            resp, calls, log = self._run(thread, self.HOLD, self.HOLD)
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(resp["send_decision"], "escalate_human")
+            self.assertIn("duplicate of a prior Lucy message after one retry -> escalate", log)
+
+    def test_fresh_reply_ships_untouched(self):
+        # Control: a prior Lucy message is in the thread, but the draft is new —
+        # no retry, ships exactly as drafted (the seatbelt is not a blanket blocker).
+        thread = [{"from": "lucy", "text": "Your estimate is ready: https://app.esticlose.com/estimate/bathtub-pros/p1",
+                   "ts": "2026-10-05T10:00:00-04:00"}]
+        resp, calls, _ = self._run(thread, self.FRESH)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(resp["reply"], self.FRESH)
+        self.assertEqual(resp["send_decision"], "send_now")
 
 
 GOOD = {"action_type": "suggest_message", "confidence": "high", "message_to_oscar": "n",
