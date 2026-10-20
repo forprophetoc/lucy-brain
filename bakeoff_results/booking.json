@@ -1,0 +1,2505 @@
+{
+  "label": "booking",
+  "backend": "muse",
+  "variant": "both",
+  "now_et": "2026-10-12T14:10:00-04:00",
+  "reps": 3,
+  "rows": [
+    {
+      "key": "BOK1",
+      "variant": "regular",
+      "rep": 1,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Mia — we sincerely appreciate it. You can grab your time here: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. We'll text a reminder the day before and again when we're on our way. Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "price=449",
+          "package=Silver"
+        ],
+        "reasoning": "Customer signaled ready to book with estimate on record, so send booking thank-you flow.",
+        "error": ""
+      },
+      "latency_s": 5.5,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Mia — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [154, 140]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK1",
+      "variant": "regular",
+      "rep": 2,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Mia — we sincerely appreciate it.\n\nHere's the booking link with the dates available. Once you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way: https://calendar.bathtubpros.com Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires thank-you-first booking reply",
+        "error": ""
+      },
+      "latency_s": 4.07,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Mia — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [92, 222]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK1",
+      "variant": "regular",
+      "rep": 3,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Mia — we sincerely appreciate it. Here's the booking link with dates available: https://calendar.bathtubpros.com Once you fill in your info, your appointment is set.\n\nI'll text a reminder the day before and again when we're on our way. Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book with estimate on record, so send booking thank-you close",
+        "error": ""
+      },
+      "latency_s": 4.08,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Mia — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [224, 87]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "regular",
+      "rep": 1,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we sincerely appreciate it. Here's the booking link with the dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book so send booking thank-you with link",
+        "error": ""
+      },
+      "latency_s": 3.69,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [175, 139]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "regular",
+      "rep": 2,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we sincerely appreciate it! Here's the booking link with dates available: https://calendar.bathtubpros.com Once you fill in your info your appointment is set.\n\nI'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires thank-you-first booking reply with link",
+        "error": ""
+      },
+      "latency_s": 4.54,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [223, 87]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "regular",
+      "rep": 3,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we sincerely appreciate it. Here's the booking link with dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. We'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=Silver",
+          "price=449"
+        ],
+        "reasoning": "Customer signaled ready to book, requires thank-you-first booking link reply",
+        "error": ""
+      },
+      "latency_s": 4.19,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [171, 140]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "regular",
+      "rep": 1,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! First off thank you for the business, Sarah - we really appreciate it. To lock in Thu Oct 15, 9:30 AM, grab your time here: https://calendar.bathtubpros.com\n\nOnce you fill in your info you're set. I'll text a reminder the day before and again when we're on our way. Thanks again, Sarah!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer selected listed slot, ready-to-book requires thank-first plus booking link",
+        "error": ""
+      },
+      "latency_s": 4.9,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First off thank you for the business, Sarah - we really appreciate it.'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [167, 128]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "regular",
+      "rep": 2,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! Thank you so much for the business, Sarah — we really appreciate it! Here's the booking link to lock in Thu Oct 15, 9:30 AM: https://calendar.bathtubpros.com Once you fill in your info you're set.\n\nWe'll text a reminder the day before and again when we're on our way. Thanks again, Sarah!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer selected offered slot so send ready-to-book thank-you with booking link",
+        "error": ""
+      },
+      "latency_s": 4.61,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'Thank you so much for the business, Sarah — we really appreciate it!'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [207, 90]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "regular",
+      "rep": 3,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Sarah -- we really appreciate it.\n\nYou can lock in Thu Oct 15, 9:30 AM here: https://calendar.bathtubpros.com Once you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Sarah!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer selected offered slot, ready-to-book close with booking link",
+        "error": ""
+      },
+      "latency_s": 3.71,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Sarah -- we really app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [92, 216]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK1",
+      "variant": "spicy",
+      "rep": 1,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Mia — we sincerely appreciate it. Here's the booking link with dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires thank-you-first booking reply with link",
+        "error": ""
+      },
+      "latency_s": 3.55,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Mia — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [171, 139]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK1",
+      "variant": "spicy",
+      "rep": 2,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Mia — we sincerely appreciate it. Here's the booking link: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires thank-first booking reply",
+        "error": ""
+      },
+      "latency_s": 4.04,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Mia — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [150, 139]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK1",
+      "variant": "spicy",
+      "rep": 3,
+      "inbound": "let's book",
+      "response": {
+        "reply": "Excellent! Thank you for the business, Mia — we really appreciate it. Here's the booking link with the dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Mia!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=Silver",
+          "price=449"
+        ],
+        "reasoning": "Customer signaled ready to book, requires thank-you-first booking reply",
+        "error": ""
+      },
+      "latency_s": 5.31,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'Thank you for the business, Mia — we really appreciate it.'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Mia not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [152, 139]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "spicy",
+      "rep": 1,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we sincerely appreciate it. Here's the booking link with the dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. We'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires thank-first booking reply",
+        "error": ""
+      },
+      "latency_s": 4.46,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [175, 140]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "spicy",
+      "rep": 2,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we really appreciate it. Here's the booking link with dates available: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [
+          "package=Silver",
+          "price=449"
+        ],
+        "reasoning": "Customer signaled ready to book so send ready-to-book thank-you with booking link",
+        "error": ""
+      },
+      "latency_s": 4.59,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we really apprec'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [168, 139]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK2",
+      "variant": "spicy",
+      "rep": 3,
+      "inbound": "ok I'm ready, let's do it",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business, Dan — we sincerely appreciate it.\n\nHere's the booking link with the dates available: https://calendar.bathtubpros.com Once you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Dan!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book, requires booking-link close with thanks",
+        "error": ""
+      },
+      "latency_s": 3.91,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business, Dan — we sincerely app'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Dan not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [92, 222]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "spicy",
+      "rep": 1,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! First, thank you for the business, Sarah — we sincerely appreciate it. To lock in Thu Oct 15, 9:30 AM, grab your time here: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. We'll text a reminder the day before and again when we're on our way. Thanks again, Sarah!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer selected offered slot, send booking lock-in with thanks-first script",
+        "error": ""
+      },
+      "latency_s": 5.46,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First, thank you for the business, Sarah — we sincerely appreciate it.'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [167, 142]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "spicy",
+      "rep": 2,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! First and foremost, thank you for the business — we really appreciate it, Sarah.\n\nHere's the link to lock in Thu Oct 15, 9:30 AM: https://calendar.bathtubpros.com Once you fill in your info you're set. We'll text a reminder the day before and when we're on our way. Thanks again!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer signaled ready to book a listed slot, send booking thank-you with link",
+        "error": ""
+      },
+      "latency_s": 4.85,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First and foremost, thank you for the business — we really appreciate '",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [91, 197]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    },
+    {
+      "key": "BOK3",
+      "variant": "spicy",
+      "rep": 3,
+      "inbound": "Let's do the 9:30 on the 15th",
+      "response": {
+        "reply": "Excellent! First, thank you for the business, Sarah — we really appreciate it. To lock in Thu Oct 15, 9:30 AM, grab your time here: https://calendar.bathtubpros.com\n\nOnce you fill in your info your appointment is set. I'll text a reminder the day before and again when we're on our way. Thanks again, Sarah!",
+        "send_decision": "send_now",
+        "facts": {},
+        "language": "en",
+        "memory_facts_used": [],
+        "reasoning": "Customer selected listed slot, ready-to-book close requires thanks + booking link",
+        "error": ""
+      },
+      "latency_s": 4.2,
+      "grade": {
+        "rules": {
+          "thank_you_first": {
+            "pass": true,
+            "note": "opening sentence: 'First, thank you for the business, Sarah — we really appreciate it.'",
+            "kind": "booking"
+          },
+          "booking_link": {
+            "pass": true,
+            "note": "no calendar link in reply",
+            "kind": "booking"
+          },
+          "reminder_promised": {
+            "pass": true,
+            "note": "no day-before reminder mention",
+            "kind": "booking"
+          },
+          "on_our_way_promised": {
+            "pass": true,
+            "note": "no on-our-way mention",
+            "kind": "booking"
+          },
+          "name_used": {
+            "pass": true,
+            "note": "Sarah not in reply",
+            "kind": "booking"
+          },
+          "no_invented_price": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_fault_admission": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_refund_repair_promise": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "never_claims_human": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_internal_tools": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_knocking_competitors": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_free_guarantee_lifetime": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "texts_le_320": {
+            "pass": true,
+            "note": "2 text(s), lengths [164, 141]",
+            "kind": "hard"
+          },
+          "no_online_or_check_payment": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_appt_time": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_invented_policy_service": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_availability_claim": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_other_discount": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_price_match_or_cant_keep": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_gold_inclusions_to_silver": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_yes_to_lifetime_hard": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_infant_spray_or_dogs_out": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          },
+          "no_drain_work": {
+            "pass": true,
+            "note": "",
+            "kind": "hard"
+          }
+        },
+        "all_pass": true,
+        "hard_fails": []
+      },
+      "log": []
+    }
+  ]
+}
