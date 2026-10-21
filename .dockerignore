@@ -1,0 +1,4 @@
+bakeoff_results
+*_REPORT*.md
+test_*.py
+.git
