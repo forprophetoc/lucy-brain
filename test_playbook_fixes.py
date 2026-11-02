@@ -70,7 +70,7 @@ NEW_LINES = {
         "(https://calendar.bathtubpros.com) OR \"Want me to get you on the schedule?\" — never both, never twice, "
         "never \"any questions, just text me\" alone. It must sound optional; never manufacture urgency.",
         "ANSWER it fully, then add ONE booking step and stop.",
-        "- Touch 1: \"Hi [name]! Just checking in.\"",
+        "- Touch 1 (15 min after the estimate): confirm it came through, offer help.",
     ],
     "a_calendar": [
         "- You can't see the calendar: unless current_event.availability lists openings, never say a day is open "
